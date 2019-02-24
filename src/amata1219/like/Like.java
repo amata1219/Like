@@ -1,0 +1,130 @@
+package amata1219.like;
+
+import java.text.SimpleDateFormat;
+import java.util.UUID;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
+
+import com.gmail.filoghost.holographicdisplays.api.Hologram;
+import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
+
+public class Like {
+
+	public static final String PLACE_HOLDER_OF_LIKE_COUNT = "%like_count%";
+	public static final String PLACE_HOLDER_OF_PLAYER_NAME = "%player%";
+	private static final SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd (E) HH:mm:ss");
+
+	private final Hologram hologram;
+	private UUID owner;
+	private int likeCount;
+
+	public Like(Hologram hologram, UUID owner){
+		this.hologram = hologram;
+		this.owner = owner;
+		this.likeCount = 0;
+
+		hologram.appendTextLine(Util.Counter.replace(Like.PLACE_HOLDER_OF_LIKE_COUNT, "0"));
+		hologram.appendTextLine(Util.Lore.replace(Like.PLACE_HOLDER_OF_PLAYER_NAME, Util.getName(owner)));
+		hologram.appendTextLine(Util.Message);
+
+		Util.embedTouchHandler(this);
+	}
+
+	public Like(Hologram hologram, UUID owner, int likeCount){
+		this.hologram = hologram;
+		this.owner = owner;
+		this.likeCount = likeCount;
+
+		Util.embedTouchHandler(this);
+	}
+
+	public Hologram getHologram(){
+		return hologram;
+	}
+
+	public long getId(){
+		return hologram.getCreationTimestamp();
+	}
+
+	public String getStringId(){
+		return String.valueOf(getId());
+	}
+
+	public String getCreationTimestamp(){
+		return Like.format.format(getId());
+	}
+
+	public UUID getOwner(){
+		return owner;
+	}
+
+	public void setOwner(UUID owner){
+		this.owner = owner;
+	}
+
+	public boolean isOwner(UUID uuid){
+		return owner.equals(uuid);
+	}
+
+	public int getLikeCount(){
+		return likeCount;
+	}
+
+	public int incrementLikeCount(){
+		likeCount++;
+		updateLikeCountDisplayer();
+		return likeCount;
+	}
+
+	public int decrementLikeCount(){
+		if(likeCount > 0)
+			likeCount--;
+
+		updateLikeCountDisplayer();
+		return likeCount;
+	}
+
+	public void updateLikeCountDisplayer(){
+		getLikeCountDisplayer().setText(Util.Counter.replace(Like.PLACE_HOLDER_OF_LIKE_COUNT, String.valueOf(likeCount)));
+	}
+
+	public void editLore(String lore){
+		getLore().setText(lore.replace(Like.PLACE_HOLDER_OF_PLAYER_NAME, Bukkit.getOfflinePlayer(owner).getName()));
+	}
+
+	public World getWorld(){
+		return hologram.getWorld();
+	}
+
+	public int getX(){
+		return Util.toInt(hologram.getX());
+	}
+
+	public int getY(){
+		return Util.toInt(hologram.getY());
+	}
+
+	public int getZ(){
+		return Util.toInt(hologram.getZ());
+	}
+
+	public void move(Location location){
+		hologram.teleport(location);
+	}
+
+	public TextLine getLikeCountDisplayer(){
+		return Util.castTextLine(hologram.getLine(0));
+	}
+
+	public TextLine getLore(){
+		return Util.castTextLine(hologram.getLine(1));
+	}
+
+	@Override
+	public String toString(){
+		return getId() + "," + owner.toString() + "," + likeCount;
+	}
+
+}

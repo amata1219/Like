@@ -1,0 +1,24 @@
+Worlds:
+- "world:メイン"
+#ワールド名:エイリアス
+TextLines:
+  Counter: "&d&l %like_count% &e&l★"
+  Lore: "&6&l%player%&r&6's Like"
+  Message: "&6Right click to Like!"
+TIP: "&a【Like】Open like list >> /like list"
+CooldownTime: 10
+#秒単位
+UpperLimit: 3
+#1チャンク内にいくつまでLikeを作成できるか
+Items:
+  LikeCount: "DIAMOND"
+  Timestamp: "DIAMOND"
+  Id: "DIAMOND"
+  Edit: "DIAMOND"
+  Remove1: "DIAMOND"
+  Remove2: "DIAMOND"
+  Unfavorite: "DIAMOND"
+  OtherLike: "DIAMOND"
+  ChangeOwner: "DIAMOND"
+  PageButton: "DIAMOND"
+  LikeIcon: "DIAMOND"
