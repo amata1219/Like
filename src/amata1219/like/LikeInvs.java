@@ -6,17 +6,17 @@ import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class LikeInvs {
 
-	public static final ChatColor MINES_COLOR = ChatColor.GREEN;
-	public static final ChatColor LIKES_COLOR = ChatColor.BLUE;
-
 	private List<Inventory> mines = new LinkedList<>();
 	private List<Inventory> likes = new LinkedList<>();
+	private List<Long> mineList = new ArrayList<>();
+	private List<Long> likeList = new ArrayList<>();
 	private int mineLen;
 	private int likeLen;
 
@@ -28,11 +28,16 @@ public class LikeInvs {
 		.forEach(this::addLike);
 	}
 
+	public boolean hasMine(Like like){
+		return mineList.contains(like.getId());
+	}
+
 	public void addMine(Like like){
 		if(isFull(mineLen))
 			mines.add(newPage(mines.size() - 1, true));
 
 		mines.get(mines.size() - 1).addItem(newIcon(like, true));
+		mineList.add(like.getId());
 		mineLen++;
 	}
 
@@ -43,6 +48,7 @@ public class LikeInvs {
 				continue;
 
 			inventory.remove(item);
+			mineList.remove(like.getId());
 			mineLen--;
 			break;
 		}
@@ -53,11 +59,42 @@ public class LikeInvs {
 		addMine(like);
 	}
 
+	public Inventory firstMine(){
+		return mines.get(0);
+	}
+
+	public boolean hasBeforeMine(int page){
+		return page > 0;
+	}
+
+	public Inventory getBeforeMine(int page){
+		if(!hasBeforeMine(page))
+			return mines.get(page);
+
+		return mines.get(page - 1);
+	}
+
+	public boolean hasNextMine(int page){
+		return page < mines.size() - 1;
+	}
+
+	public Inventory getNextMine(int page){
+		if(!hasNextMine(page))
+			return mines.get(page);
+
+		return mines.get(page + 1);
+	}
+
+	public boolean hasLike(Like like){
+		return likeList.contains(like.getId());
+	}
+
 	public void addLike(Like like){
 		if(isFull(likeLen))
 			likes.add(newPage(likes.size() - 1, false));
 
 		likes.get(likes.size() - 1).addItem(newIcon(like, false));
+		likeList.add(like.getId());
 		likeLen++;
 	}
 
@@ -68,6 +105,7 @@ public class LikeInvs {
 				continue;
 
 			inventory.remove(item);
+			likeList.remove(like.getId());
 			likeLen--;
 			break;
 		}
@@ -78,14 +116,40 @@ public class LikeInvs {
 		addLike(like);
 	}
 
+	public Inventory firstLike(){
+		return likes.get(0);
+	}
+
+	public boolean hasBeforeLike(int page){
+		return page > 0;
+	}
+
+	public Inventory getBeforeLike(int page){
+		if(!hasBeforeLike(page))
+			return likes.get(page);
+
+		return likes.get(page - 1);
+	}
+
+	public boolean hasNextLike(int page){
+		return page < likes.size() - 1;
+	}
+
+	public Inventory getNextLike(int page){
+		if(!hasNextLike(page))
+			return likes.get(page);
+
+		return likes.get(page + 1);
+	}
+
 	private boolean isFull(int len){
 		return len % 52 == 0;
 	}
 
 	private Inventory newPage(int page, boolean isMine){
-		Inventory inventory = Util.createInventory(54, String.valueOf(page));
-		inventory.setItem(45, Util.newItem(Util.PageButton, (isMine ? LikeInvs.MINES_COLOR : LikeInvs.LIKES_COLOR) + "前のページへ"));
-		inventory.setItem(53, Util.newItem(Util.PageButton, (isMine ? LikeInvs.MINES_COLOR : LikeInvs.LIKES_COLOR) + "次のページへ"));
+		Inventory inventory = Util.createInventory(54, (isMine ? "Mine" : "MyLike") + String.valueOf(page));
+		inventory.setItem(45, Util.newItem(Util.PageButton, ChatColor.GREEN + "前のページへ"));
+		inventory.setItem(53, Util.newItem(Util.PageButton, ChatColor.GREEN + "次のページへ"));
 		return inventory;
 	}
 
@@ -103,6 +167,17 @@ public class LikeInvs {
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
+	}
+
+	public static Like toLike(ItemStack icon){
+		if(icon == null || icon.getType() == Material.AIR)
+			return null;
+
+		ItemMeta meta = icon.getItemMeta();
+		if(meta == null || !meta.hasDisplayName())
+			return null;
+
+		return Util.Likes.get(Long.parseLong(meta.getDisplayName().substring(2)));
 	}
 
 }

@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -51,9 +53,12 @@ public class Util {
 	public static Material LikeIcon;
 
 	public static HashMap<Long, Like> Likes = new HashMap<>();
+	public static LikeMap likeMap;
 	public static HashMap<UUID, List<Like>> Mines = new HashMap<>();
 	public static HashMap<UUID, LikeMap> MyLikes = new HashMap<>();
 	public static HashMap<UUID, LikeInvs> LikeInvs = new HashMap<>();
+	public static HashMap<UUID, Like> edit = new HashMap<>();
+	public static List<UUID> cooldown = new ArrayList<>();
 
 	public static final String OP_PERMISSION = "like.likeop";
 
@@ -73,9 +78,10 @@ public class Util {
 		.map(s -> new Like(holograms.get(Long.parseLong(s[0])), UUID.fromString(s[1]), Integer.parseInt(s[2])))
 		.forEach(like -> Likes.put(like.getId(), like));
 
-		Likes.values().parallelStream().forEach(Util::embedTouchHandler);
-
-		Likes.values().parallelStream().forEach(Util::addMine);
+		Stream<Like> stream = Likes.values().parallelStream();
+		stream.forEach(Util::embedTouchHandler);
+		stream.forEach(likeMap::registerLike);
+		stream.forEach(Util::addMine);
 	}
 
 	public static void loadConfigValues(){
@@ -214,15 +220,10 @@ public class Util {
 			public void onTouch(Player player) {
 				UUID uuid = player.getUniqueId();
 				if(player.isSneaking()){
-					if(like.isOwner(uuid)){
-						//edit
-					}else{
-						if(player.hasPermission(OP_PERMISSION)){
-							//admin
-						}else{
-							//info
-						}
-					}
+					if(like.isOwner(uuid))
+						player.openInventory(createEditMenu(like));
+					else
+						player.openInventory(player.hasPermission(OP_PERMISSION) ? createAdminMenu(like) : createInfoMenu(like));
 				}else{
 					LikeMap map = MyLikes.get(uuid);
 					if(like.isOwner(uuid)){
@@ -234,7 +235,8 @@ public class Util {
 						tell(player, ChatColor.RED, "このLikeは既にお気に入りに登録しています。");
 						return;
 					}
-					register(player, like);
+
+					register(like);
 				}
 			}
 
@@ -251,7 +253,7 @@ public class Util {
 
 	public static Inventory createInfoMenu(Like like){
 		UUID uuid = like.getOwner();
-		Inventory inventory = createInventory(18, like.getStringId());
+		Inventory inventory = createInventory(18, "Info@" + like.getStringId());
 
 		ItemStack owner = new ItemStack(Material.PLAYER_HEAD);
 		SkullMeta meta = (SkullMeta) owner.getItemMeta();
@@ -259,27 +261,85 @@ public class Util {
 		meta.setDisplayName(ChatColor.WHITE + getName(uuid));
 		meta.setOwningPlayer(player);
 		owner.setItemMeta(meta);
-
 		inventory.setItem(1, owner);
+
+		inventory.setItem(4, newItem(LikeCount, "お気に入りの数:" + like.getLikeCount()));
+		inventory.setItem(5, newItem(Timestamp, "作成日時: " + like.getCreationTimestamp()));
+		inventory.setItem(6, newItem(Id, "管理ID: " + like.getId()));
+		inventory.setItem(7, newItem(Unfavorite, "お気に入りの解除"));
+		inventory.setItem(9, newItem(OtherLike, "この作者の他のLike情報"));
+
+		setOtherLike(inventory, like);
+		return inventory;
+	}
+
+	public static Inventory createEditMenu(Like like){
+		UUID uuid = like.getOwner();
+		Inventory inventory = createInventory(9, "Edit@" + like.getStringId());
+
+		ItemStack owner = new ItemStack(Material.PLAYER_HEAD);
+		SkullMeta meta = (SkullMeta) owner.getItemMeta();
+		OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
+		meta.setDisplayName(ChatColor.WHITE + getName(uuid));
+		meta.setOwningPlayer(player);
+		owner.setItemMeta(meta);
+		inventory.setItem(1, owner);
+
+		inventory.setItem(3, newItem(LikeCount, "お気に入りの数:" + like.getLikeCount()));
+		inventory.setItem(4, newItem(Timestamp, "作成日時: " + like.getCreationTimestamp()));
+		inventory.setItem(5, newItem(Id, "管理ID: " + like.getId()));
+		inventory.setItem(6, newItem(Edit, "表示内容の編集"));
+		inventory.setItem(7, newItem(Remove1, "Likeの削除"));
+		return inventory;
+	}
+
+	public static Inventory createConfirmMenu(Like like){
+		Inventory inventory = createInventory(9, "Remove@" + like.getStringId());
+		inventory.setItem(4, newItem(Remove2, ChatColor.RED + "Likeを削除する(※元に戻せません)"));
+		return inventory;
+	}
+
+	public static Inventory createAdminMenu(Like like){
+		UUID uuid = like.getOwner();
+		Inventory inventory = createInventory(18, "Admin@" + like.getStringId());
+
+		ItemStack owner = new ItemStack(Material.PLAYER_HEAD);
+		SkullMeta meta = (SkullMeta) owner.getItemMeta();
+		OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
+		meta.setDisplayName(ChatColor.WHITE + getName(uuid));
+		meta.setOwningPlayer(player);
+		owner.setItemMeta(meta);
+		inventory.setItem(1, owner);
+
 		inventory.setItem(3, newItem(LikeCount, "お気に入りの数:" + like.getLikeCount()));
 		inventory.setItem(4, newItem(Timestamp, "作成日時: " + like.getCreationTimestamp()));
 		inventory.setItem(5, newItem(Id, "管理ID: " + like.getId()));
 		inventory.setItem(6, newItem(Edit, "表示内容の編集"));
 		inventory.setItem(7, newItem(Remove1, "Likeの削除"));
 		inventory.setItem(9, newItem(OtherLike, "この作者の他のLike情報"));
-		return null;
+
+		setOtherLike(inventory, like);
+		return inventory;
 	}
 
-	public static Inventory createEditMenu(Like like){
-		return null;
-	}
+	public static void setOtherLike(Inventory inventory, Like like){
+		List<Like> list = Mines.get(like.getOwner());
+		if(list == null)
+			return;
 
-	public static Inventory createConfirmMenu(){
-		return null;
-	}
+		sort(list, 0, list.size() - 1);
 
-	public static Inventory createAdminMenu(){
-		return null;
+		for(int i = 0; i < (list.size() > 8 ? 8 : list.size()); i++){
+			ItemStack item = newItem(OtherLike, like.getLore().getText());
+			ItemMeta meta = item.getItemMeta();
+			List<String> lore = new ArrayList<>();
+			String world = like.getWorld().getName();
+			lore.add(ChatColor.GRAY + "ワールド: " + (Worlds.containsKey(world) ? Worlds.get(world) : "Unknown"));
+			lore.add(ChatColor.GRAY + "座標: (X: " + like.getX() + ", Y: " + like.getY() + ", Z: " + like.getZ() + ")");
+			lore.add(ChatColor.GRAY + "お気に入り数: " + like.getLikeCount());
+			meta.setLore(lore);
+			item.setItemMeta(meta);
+		}
 	}
 
 	public static ItemStack newItem(Material material, String displayName){
@@ -290,36 +350,116 @@ public class Util {
 		return item;
 	}
 
-	public static void register(Player player, Like like){
-		UUID uuid = player.getUniqueId();
-		MyLikes.get(uuid).registerlLike(like);
+	public static long getNumber(String s){
+		String[] split = s.split("@");
+		if(split.length < 2)
+			return 0;
+
+		return Long.parseLong(split[1]);
+	}
+
+	public static void register(Like like){
+		UUID uuid = like.getOwner();
+		likeMap.registerLike(like);
+		MyLikes.get(uuid).registerLike(like);
 		LikeInvs.get(uuid).addLike(like);
 	}
 
-	public static void unregister(Player player, Like like){
-		UUID uuid = player.getUniqueId();
+	public static void unregister(Like like){
+		UUID uuid = like.getOwner();
+		likeMap.unregisterLike(like);
 		MyLikes.get(uuid).unregisterLike(like);
 		LikeInvs.get(uuid).removeLike(like);
 	}
 
-	public static void create(){
+	public static void create(Player player){
+		UUID uuid = player.getUniqueId();
+		if(cooldown.contains(uuid)){
+			tell(player, ChatColor.RED, "クールダウン中です。");
+			return;
+		}
 
+		if(likeMap.getChunkSize(player.getLocation()) >= UpperLimit){
+			tell(player, ChatColor.RED, "このチャンクではこれ以上Likeを作成出来ません。");
+		}
+
+		Hologram hologram = HologramsAPI.createHologram(Main.getPlugin(), player.getLocation().clone().add(0, 2, 0));
+		Like like = new Like(hologram, uuid);
+		register(like);
 	}
 
-	public static void changeLore(){
-
+	public static void changeLore(Like like, String lore){
+		like.getLore().setText(lore.replace(Like.PLACE_HOLDER_OF_PLAYER_NAME, getName(like.getOwner())));
+		update(like, true);
 	}
 
-	public static void changeOwner(){
-
+	public static void changeOwner(Like like, UUID newOwner){
+		unregister(like);
+		like.setOwner(newOwner);
+		register(like);
+		update(like, true);
 	}
 
-	public static void move(){
-
+	public static void move(Like like, Location loc){
+		unregister(like);
+		like.getHologram().teleport(loc.clone().add(0, 2, 0));
+		register(like);
+		update(like, true);
 	}
 
-	public static void delete(){
+	public static void unfavorite(Player player, Like like){
+		UUID uuid = player.getUniqueId();
+		LikeInvs.get(uuid).removeLike(like);
+		MyLikes.get(uuid).unregisterLike(like);
+		like.decrementLikeCount();
+	}
 
+	public static void delete(Like like){
+		like.getHologram().delete();
+		update(like, false);
+	}
+
+	public static void update(Like like, boolean reAdd){
+		Bukkit.getScheduler().runTaskAsynchronously(Main.getPlugin(), new Runnable(){
+
+			@Override
+			public void run() {
+				LikeInvs likeInvs = LikeInvs.get(like.getOwner());
+				likeInvs.removeMine(like);
+				if(reAdd)
+					likeInvs.addMine(like);
+				Stream<LikeInvs> stream = LikeInvs.values().parallelStream()
+				.filter(invs -> invs.hasLike(like));
+				stream.forEach(invs -> invs.removeLike(like));
+				if(reAdd)
+					stream.forEach(invs -> invs.addLike(like));
+			}
+
+		});
+	}
+
+	public static void sort(List<Like> list, int left, int right){
+		if(left >= right)
+			return;
+
+		int p = list.get((left + right) / 2).getLikeCount();
+		int l = left, r = right;
+		Like tmp = null;
+		while(l <= r){
+			while(list.get(l).getLikeCount() > p)
+				l++;
+			while(list.get(r).getLikeCount() < p)
+				r++;
+			if(l > r)
+				continue;
+
+			tmp = list.get(l);
+			list.set(l, list.get(r));
+			list.set(r, tmp);
+		}
+
+		sort(list, left, r);
+		sort(list, l, right);
 	}
 
 }

@@ -110,6 +110,15 @@ public class Like {
 		return Util.toInt(hologram.getZ());
 	}
 
+	public Location getLocation(Location location){
+		Location loc = location.clone();
+		loc.setWorld(getWorld());
+		loc.setX(hologram.getX());
+		loc.setY(hologram.getY());
+		loc.setZ(hologram.getZ());
+		return loc;
+	}
+
 	public void move(Location location){
 		hologram.teleport(location);
 	}

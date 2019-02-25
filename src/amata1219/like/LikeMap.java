@@ -18,7 +18,7 @@ public class LikeMap {
 	public LikeMap(UUID uuid){
 		Arrays.stream(Util.PlayerConfig.get().getString(uuid.toString()).split(",")).parallel()
 		.map(Long::parseLong)
-		.forEach(id -> registerlLike(Util.Likes.get(id)));
+		.forEach(id -> registerLike(Util.Likes.get(id)));
 	}
 
 	public List<Like> getLikes(){
@@ -52,7 +52,7 @@ public class LikeMap {
 		return getNearLikes(like).contains(like);
 	}
 
-	public void registerlLike(Like like){
+	public void registerLike(Like like){
 		long hash = toChunkHash(like);
 		List<Like> list = likes.get(like);
 		if(list == null)
@@ -65,7 +65,7 @@ public class LikeMap {
 	}
 
 	public void moveLike(Like like){
-		registerlLike(like);
+		registerLike(like);
 		unregisterLike(like);
 	}
 
@@ -92,6 +92,10 @@ public class LikeMap {
 
 	public static long toChunkHash(Like hologram){
 		return toChunkHash(hologram.getX(), hologram.getZ());
+	}
+
+	public static long toChunkHash(Location location){
+		return toChunkHash(location.getBlockX(), location.getBlockZ());
 	}
 
 }
