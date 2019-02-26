@@ -22,3 +22,11 @@ Items:
   ChangeOwner: "DIAMOND"
   PageButton: "DIAMOND"
   LikeIcon: "DIAMOND"
+#GUIで表示されるアイテム、参考は→https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
+TPCost: 100.0
+Invite:
+  Cost: 100.0
+  Range: 32
+  #半径
+  Message: "&3&l【Like TP】%Like_text% by %player%\n&3 [Invite user >> %invete_user%] Click to Teleport!"
+  #改行は\n

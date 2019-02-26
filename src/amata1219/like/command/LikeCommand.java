@@ -13,8 +13,27 @@ public class LikeCommand implements CommandExecutor {
 			return;
 
 		Player player = Util.castPlayer(sender);
-		switch(args.get(0)){
+		switch(args.get()){
+		case "create":
+			System.out.println(player.getWorld().getName());
+			Util.create(player);
+			break;
+		case "list":
+			Util.status(player, args.get().equals("me"));
+			break;
+		case "status":
+			Util.status(player, true);
+			break;
+		default:
+			if(!args.ref().equals(Util.TOKEN))
+				break;
 
+			long id = args.getNumber();
+			if(!Util.Likes.containsKey(id))
+				break;
+
+			player.teleport(Util.Likes.get(id).getLocation(player.getLocation()));
+			break;
 		}
 	}
 

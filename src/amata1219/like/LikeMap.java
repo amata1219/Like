@@ -15,8 +15,16 @@ public class LikeMap {
 
 	private final HashMap<Long, List<Like>> likes = new HashMap<>();
 
+	public LikeMap(){
+
+	}
+
 	public LikeMap(UUID uuid){
-		Arrays.stream(Util.PlayerConfig.get().getString(uuid.toString()).split(",")).parallel()
+		String data = Util.PlayerConfig.get().getString(uuid.toString());
+		if(data == null)
+			return;
+
+		Arrays.stream(data.split(",")).parallel()
 		.map(Long::parseLong)
 		.forEach(id -> registerLike(Util.Likes.get(id)));
 	}

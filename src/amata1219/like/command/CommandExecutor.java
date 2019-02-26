@@ -14,16 +14,26 @@ public interface CommandExecutor {
 	public final class Args {
 
 		public final String[] args;
+		private int index = -1;
 
 		public Args(String[] args){
 			this.args = args;
 		}
 
-		public String get(int index){
-			return index < args.length ? args[index] : "";
+		public String get(){
+			index++;
+			return get(index);
 		}
 
-		public boolean isNumber(int index){
+		public String ref(){
+			return get(index);
+		}
+
+		public long getNumber(){
+			return Long.parseLong(get());
+		}
+
+		public boolean isNumber(){
 			try{
 				Long.parseLong(get(index));
 			}catch(NumberFormatException e){
@@ -32,8 +42,8 @@ public interface CommandExecutor {
 			return true;
 		}
 
-		public long getNumber(int index){
-			return Long.parseLong(get(index));
+		private String get(int index){
+			return index < args.length ? args[index] : "-1";
 		}
 
 	}

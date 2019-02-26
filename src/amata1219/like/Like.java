@@ -12,8 +12,6 @@ import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
 
 public class Like {
 
-	public static final String PLACE_HOLDER_OF_LIKE_COUNT = "%like_count%";
-	public static final String PLACE_HOLDER_OF_PLAYER_NAME = "%player%";
 	private static final SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd (E) HH:mm:ss");
 
 	private final Hologram hologram;
@@ -25,8 +23,8 @@ public class Like {
 		this.owner = owner;
 		this.likeCount = 0;
 
-		hologram.appendTextLine(Util.Counter.replace(Like.PLACE_HOLDER_OF_LIKE_COUNT, "0"));
-		hologram.appendTextLine(Util.Lore.replace(Like.PLACE_HOLDER_OF_PLAYER_NAME, Util.getName(owner)));
+		hologram.appendTextLine(Util.Counter.replace(Util.PLACE_HOLDER_OF_LIKE_COUNT, "0"));
+		hologram.appendTextLine(Util.Lore.replace(Util.PLACE_HOLDER_OF_PLAYER_NAME, Util.getName(owner)));
 		hologram.appendTextLine(Util.Message);
 
 		Util.embedTouchHandler(this);
@@ -87,11 +85,11 @@ public class Like {
 	}
 
 	public void updateLikeCountDisplayer(){
-		getLikeCountDisplayer().setText(Util.Counter.replace(Like.PLACE_HOLDER_OF_LIKE_COUNT, String.valueOf(likeCount)));
+		getLikeCountDisplayer().setText(Util.Counter.replace(Util.PLACE_HOLDER_OF_LIKE_COUNT, String.valueOf(likeCount)));
 	}
 
 	public void editLore(String lore){
-		getLore().setText(lore.replace(Like.PLACE_HOLDER_OF_PLAYER_NAME, Bukkit.getOfflinePlayer(owner).getName()));
+		getLore().setText(lore.replace(Util.PLACE_HOLDER_OF_PLAYER_NAME, Bukkit.getOfflinePlayer(owner).getName()));
 	}
 
 	public World getWorld(){

@@ -1,0 +1,33 @@
+name: LikeLike
+main: amata1219.like.Main
+version: 1.0.0
+api-version: 1.13
+depend: [HolographicDisplays, Vault, Essentials]
+author: amata1219(Twitter@amata1219)
+
+commands:
+  like:
+    description: main command.
+    usage: /<command>
+    permission: like.like
+    permission-message: You do not have permission.
+  likec:
+    description: main command.
+    usage: /<command>
+    permission: like.like
+    permission-message: You do not have permission.
+  likel:
+    description: main command.
+    usage: /<command>
+    permission: like.like
+    permission-message: You do not have permission.
+  likes:
+    description: main command.
+    usage: /<command>
+    permission: like.like
+    permission-message: You do not have permission.
+  likeop:
+    description: main command.
+    usage: /<command>
+    permission: like.likeop
+    permission-message: You do not have permission.

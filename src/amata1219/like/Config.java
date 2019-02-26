@@ -20,6 +20,7 @@ public class Config {
 	public Config(String name){
 		this.name = name + ".yml";
 		this.file = new File(plugin.getDataFolder(), this.name);
+		make();
 	}
 
 	public FileConfiguration get(){
@@ -27,7 +28,8 @@ public class Config {
 	}
 
 	public void make(){
-		plugin.saveResource(name, false);
+		if(!file.exists())
+			plugin.saveResource(name, false);
 	}
 
 	public void save(){

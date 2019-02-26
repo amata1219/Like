@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -27,13 +26,22 @@ import com.gmail.filoghost.holographicdisplays.api.line.HologramLine;
 import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
 import com.gmail.filoghost.holographicdisplays.api.line.TouchableLine;
 
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.ClickEvent.Action;
+
 public class Util {
 
 	public static Config Config;
 	public static Config LikeConfig;
 	public static Config PlayerConfig;
 
-	public static HashMap<String, String> Worlds;
+	public static final String PLACE_HOLDER_OF_LIKE_COUNT = "%like_count%";
+	public static final String PLACE_HOLDER_OF_PLAYER_NAME = "%player%";
+	public static final String PLACE_HOLDER_OF_LIKE_TEXT = "%Like_text%";
+	public static final String PLACE_HOLDER_OF_INVITE_USER = "%invete_user%";
+
+	public static HashMap<String, String> Worlds = new HashMap<>();
 	public static String Counter;
 	public static String Lore;
 	public static String Message;
@@ -51,14 +59,20 @@ public class Util {
 	public static Material ChangeOwner;
 	public static Material PageButton;
 	public static Material LikeIcon;
+	public static double Tp;
+	public static double Invite;
+	public static int Range;
+	public static String InviteMessage;
 
 	public static HashMap<Long, Like> Likes = new HashMap<>();
-	public static LikeMap likeMap;
+	public static LikeMap LikeMap = new LikeMap();
 	public static HashMap<UUID, List<Like>> Mines = new HashMap<>();
 	public static HashMap<UUID, LikeMap> MyLikes = new HashMap<>();
 	public static HashMap<UUID, LikeInvs> LikeInvs = new HashMap<>();
 	public static HashMap<UUID, Like> edit = new HashMap<>();
 	public static List<UUID> cooldown = new ArrayList<>();
+
+	public static final String TOKEN = String.valueOf(System.nanoTime());
 
 	public static final String OP_PERMISSION = "like.likeop";
 
@@ -66,6 +80,8 @@ public class Util {
 		Config = new Config("config");
 		LikeConfig = new Config("like_data");
 		PlayerConfig = new Config("player_data");
+
+		loadConfigValues();
 
 		HashMap<Long, Hologram> holograms = new HashMap<>();
 		HologramsAPI.getHolograms(Main.getPlugin()).parallelStream()
@@ -78,10 +94,9 @@ public class Util {
 		.map(s -> new Like(holograms.get(Long.parseLong(s[0])), UUID.fromString(s[1]), Integer.parseInt(s[2])))
 		.forEach(like -> Likes.put(like.getId(), like));
 
-		Stream<Like> stream = Likes.values().parallelStream();
-		stream.forEach(Util::embedTouchHandler);
-		stream.forEach(likeMap::registerLike);
-		stream.forEach(Util::addMine);
+		Likes.values().parallelStream().forEach(Util::embedTouchHandler);
+		Likes.values().parallelStream().forEach(LikeMap::registerLike);
+		Likes.values().parallelStream().forEach(Util::addMine);
 	}
 
 	public static void loadConfigValues(){
@@ -92,11 +107,11 @@ public class Util {
 		.forEach(s -> Worlds.put(s[0], color(s[1])));
 
 		ConfigurationSection lines = config.getConfigurationSection("TextLines");
-		Counter = lines.getString("Counter");
-		Lore = lines.getString("Lore");
-		Message = lines.getString("Message");
+		Counter = color(lines.getString("Counter"));
+		Lore = color(lines.getString("Lore"));
+		Message = color(lines.getString("Message"));
 
-		Tip = config.getString("TIP");
+		Tip = color(config.getString("TIP"));
 		CooldownTime = config.getInt("CooldownTime") * 20;
 		UpperLimit = config.getInt("UpperLimit");
 
@@ -112,6 +127,13 @@ public class Util {
 		ChangeOwner = type(items.getString("ChangeOwner"));
 		PageButton = type(items.getString("PageButton"));
 		LikeIcon = type(items.getString("LikeIcon"));
+
+		Tp = config.getDouble("TPCost");
+
+		ConfigurationSection invite = config.getConfigurationSection("Invite");
+		Invite = invite.getDouble("Cost");
+		Range = invite.getInt("Range");
+		InviteMessage = color(invite.getString("Message"));
 	}
 
 	public static void loadPlayerData(UUID uuid){
@@ -121,27 +143,18 @@ public class Util {
 
 	private static final StringBuilder fastBuilder = new StringBuilder();
 
-	public static void savePlayerData(UUID uuid, boolean shouldUpdate, boolean fast){
+	public static void savePlayerData(UUID uuid, boolean shouldUpdate){
 		List<Like> likes = MyLikes.get(uuid).getLikes();
 		if(likes.isEmpty())
 			return;
 
 		String data = null;
-		if(fast){
-			for(Like like : likes){
-				fastBuilder.append(like.getCreationTimestamp())
-				.append(',');
-			}
-			data = fastBuilder.toString();
-			fastBuilder.setLength(0);
-		}else{
-			StringBuilder builder = new StringBuilder();
-			for(Like like : likes){
-				builder.append(like.getCreationTimestamp())
-				.append(',');
-			}
-			data = builder.toString();
+		for(Like like : likes){
+			fastBuilder.append(like.getStringId())
+			.append(',');
 		}
+		data = fastBuilder.toString();
+		fastBuilder.setLength(0);
 		PlayerConfig.get().set(uuid.toString(), data);
 		if(shouldUpdate)
 			PlayerConfig.update();
@@ -237,6 +250,8 @@ public class Util {
 					}
 
 					register(like);
+					tell(player, ChatColor.GREEN, "このLikeをお気に入りに登録しました。");
+					player.sendMessage(Tip);
 				}
 			}
 
@@ -360,26 +375,33 @@ public class Util {
 
 	public static void register(Like like){
 		UUID uuid = like.getOwner();
-		likeMap.registerLike(like);
+		Likes.put(like.getId(), like);
+		LikeMap.registerLike(like);
 		MyLikes.get(uuid).registerLike(like);
 		LikeInvs.get(uuid).addLike(like);
 	}
 
 	public static void unregister(Like like){
 		UUID uuid = like.getOwner();
-		likeMap.unregisterLike(like);
-		MyLikes.get(uuid).unregisterLike(like);
 		LikeInvs.get(uuid).removeLike(like);
+		MyLikes.get(uuid).unregisterLike(like);
+		LikeMap.unregisterLike(like);
+		Likes.remove(like.getId());
 	}
 
 	public static void create(Player player){
 		UUID uuid = player.getUniqueId();
+		if(!Worlds.containsKey(player.getWorld().getName())){
+			tell(player, ChatColor.RED, "このワールドではLikeを作成出来ません。");
+			return;
+		}
+
 		if(cooldown.contains(uuid)){
 			tell(player, ChatColor.RED, "クールダウン中です。");
 			return;
 		}
 
-		if(likeMap.getChunkSize(player.getLocation()) >= UpperLimit){
+		if(LikeMap.getChunkSize(player.getLocation()) >= UpperLimit){
 			tell(player, ChatColor.RED, "このチャンクではこれ以上Likeを作成出来ません。");
 		}
 
@@ -389,7 +411,7 @@ public class Util {
 	}
 
 	public static void changeLore(Like like, String lore){
-		like.getLore().setText(lore.replace(Like.PLACE_HOLDER_OF_PLAYER_NAME, getName(like.getOwner())));
+		like.getLore().setText(lore.replace(Util.PLACE_HOLDER_OF_PLAYER_NAME, getName(like.getOwner())));
 		update(like, true);
 	}
 
@@ -407,6 +429,11 @@ public class Util {
 		update(like, true);
 	}
 
+	public static void status(Player player, boolean me){
+		LikeInvs invs = LikeInvs.get(player.getUniqueId());
+		player.openInventory(me ? invs.firstMine() : invs.firstLike());
+	}
+
 	public static void unfavorite(Player player, Like like){
 		UUID uuid = player.getUniqueId();
 		LikeInvs.get(uuid).removeLike(like);
@@ -415,8 +442,8 @@ public class Util {
 	}
 
 	public static void delete(Like like){
-		like.getHologram().delete();
 		update(like, false);
+		like.getHologram().delete();
 	}
 
 	public static void update(Like like, boolean reAdd){
@@ -428,14 +455,19 @@ public class Util {
 				likeInvs.removeMine(like);
 				if(reAdd)
 					likeInvs.addMine(like);
-				Stream<LikeInvs> stream = LikeInvs.values().parallelStream()
-				.filter(invs -> invs.hasLike(like));
-				stream.forEach(invs -> invs.removeLike(like));
+				LikeInvs.values().parallelStream().filter(invs -> invs.hasLike(like));
+				LikeInvs.values().parallelStream().forEach(invs -> invs.removeLike(like));
 				if(reAdd)
-					stream.forEach(invs -> invs.addLike(like));
+					LikeInvs.values().parallelStream().forEach(invs -> invs.addLike(like));
 			}
 
 		});
+	}
+
+	public static TextComponent createInviteButton(String message, Like like){
+		TextComponent component = new TextComponent(message);
+		component.setClickEvent(new ClickEvent(Action.RUN_COMMAND, "/like " + TOKEN + " " + like.getStringId()));
+		return component;
 	}
 
 	public static void sort(List<Like> list, int left, int right){

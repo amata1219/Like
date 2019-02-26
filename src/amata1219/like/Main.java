@@ -1,8 +1,9 @@
 package amata1219.like;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -16,19 +17,24 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import amata1219.like.command.CommandExecutor;
 import amata1219.like.command.CommandExecutor.Args;
 import amata1219.like.command.LikeCCommand;
 import amata1219.like.command.LikeCommand;
-import amata1219.like.command.LikeICommand;
 import amata1219.like.command.LikeLCommand;
+import amata1219.like.command.LikeOpCommand;
 import amata1219.like.command.LikeSCommand;
+import net.milkbowl.vault.Vault;
+import net.milkbowl.vault.economy.Economy;
 
 public class Main extends JavaPlugin implements Listener {
 
 	private static Main plugin;
+	private static Economy economy;
 
 	private HashMap<String, CommandExecutor> commands;
 
@@ -36,14 +42,24 @@ public class Main extends JavaPlugin implements Listener {
 	public void onEnable(){
 		plugin = this;
 
+		Plugin pl = getServer().getPluginManager().getPlugin("Vault");
+		if(!(pl instanceof Vault))
+			new NullPointerException("Not find Vault.");
+
+		RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+		if(rsp == null)
+			new NullPointerException("Not find Vault.");
+
+		economy = rsp.getProvider();
+
 		Util.init();
 
 		commands = new HashMap<>();
 		commands.put("like", new LikeCommand());
 		commands.put("likec", new LikeCCommand());
 		commands.put("likel", new LikeLCommand());
-		commands.put("likei", new LikeICommand());
 		commands.put("likes", new LikeSCommand());
+		commands.put("likeop", new LikeOpCommand());
 
 		getServer().getOnlinePlayers().parallelStream()
 		.map(Player::getUniqueId)
@@ -56,14 +72,12 @@ public class Main extends JavaPlugin implements Listener {
 	public void onDisable(){
 		HandlerList.unregisterAll((JavaPlugin) this);
 
-		Stream<UUID> stream = getServer().getOnlinePlayers().parallelStream()
-		.map(Player::getUniqueId);
-
-		stream.forEach(uuid -> Util.savePlayerData(uuid, false, true));
+		List<UUID> list = getServer().getOnlinePlayers().parallelStream().map(Player::getUniqueId).collect(Collectors.toList());
+		list.forEach(uuid -> Util.savePlayerData(uuid, false));
 
 		Util.PlayerConfig.update();
 
-		stream.forEach(Util::unloadPlayerData);
+		list.forEach(Util::unloadPlayerData);
 	}
 
 	@Override
@@ -76,6 +90,10 @@ public class Main extends JavaPlugin implements Listener {
 		return plugin;
 	}
 
+	public static Economy getEconomy(){
+		return economy;
+	}
+
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e){
 		Util.loadPlayerData(e.getPlayer().getUniqueId());
@@ -84,7 +102,7 @@ public class Main extends JavaPlugin implements Listener {
 	@EventHandler
 	public void onQuit(PlayerQuitEvent e){
 		UUID uuid = e.getPlayer().getUniqueId();
-		Util.savePlayerData(uuid, true, false);
+		Util.savePlayerData(uuid, true);
 		Util.unloadPlayerData(uuid);
 	}
 
@@ -138,12 +156,78 @@ public class Main extends JavaPlugin implements Listener {
 			Util.tell(player, ChatColor.GREEN, "Likeを削除しました。");
 			break;
 		case "§8Mine":
+			e.setCancelled(true);
+			if(slot == 45){
+				LikeInvs invs = Util.LikeInvs.get(player.getUniqueId());
+				int page = Integer.parseInt(prefix[1]);
+				if(!invs.hasBeforeMine(page))
+					return;
 
+				player.openInventory(invs.getBeforeMine(page));
+			}else if(slot == 53){
+				LikeInvs invs = Util.LikeInvs.get(player.getUniqueId());
+				int page = Integer.parseInt(prefix[1]);
+				if(!invs.hasNextMine(page))
+					return;
+
+				player.openInventory(invs.getNextMine(page));
+			}else{
+				touchIcon(player, e);
+			}
 			break;
 		case "§8MyLike":
+			e.setCancelled(true);
+			if(slot == 45){
+				LikeInvs invs = Util.LikeInvs.get(player.getUniqueId());
+				int page = Integer.parseInt(prefix[1]);
+				if(!invs.hasBeforeLike(page))
+					return;
 
+				player.openInventory(invs.getBeforeLike(page));
+			}else if(slot == 53){
+				LikeInvs invs = Util.LikeInvs.get(player.getUniqueId());
+				int page = Integer.parseInt(prefix[1]);
+				if(!invs.hasNextLike(page))
+					return;
+
+				player.openInventory(invs.getNextLike(page));
+			}else{
+				touchIcon(player, e);
+			}
 		default:
 			return;
+		}
+	}
+
+	private void touchIcon(Player player, InventoryClickEvent e){
+		Like like = LikeInvs.toLike(e.getCurrentItem());
+		if(like == null)
+			return;
+
+		Economy economy = Main.getEconomy();
+		if(e.isLeftClick()){
+			if(!economy.has(player, Util.Tp)){
+				Util.tell(player, ChatColor.RED, "所持金が足りません。");
+				return;
+			}
+
+			player.closeInventory();
+			economy.withdrawPlayer(player, Util.Tp);
+			player.teleport(like.getLocation(player.getLocation()));
+		}else if(e.isRightClick()){
+			if(!economy.has(player, Util.Invite)){
+				Util.tell(player, ChatColor.RED, "所持金が足りません。");
+				return;
+			}
+
+			player.closeInventory();
+			economy.withdrawPlayer(player, Util.Invite);
+			String message = Util.InviteMessage.replace(Util.PLACE_HOLDER_OF_PLAYER_NAME, player.getName())
+			.replace(Util.PLACE_HOLDER_OF_LIKE_TEXT, like.getLore().getText());
+			player.getNearbyEntities(Util.Range, Util.Range, Util.Range).parallelStream()
+			.filter(Player.class::isInstance)
+			.map(Player.class::cast)
+			.forEach(user -> user.spigot().sendMessage(Util.createInviteButton(message.replace(Util.PLACE_HOLDER_OF_INVITE_USER, user.getName()), like)));
 		}
 	}
 

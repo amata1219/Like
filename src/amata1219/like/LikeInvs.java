@@ -11,6 +11,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import net.milkbowl.vault.economy.Economy;
+
 public class LikeInvs {
 
 	private List<Inventory> mines = new LinkedList<>();
@@ -21,11 +23,14 @@ public class LikeInvs {
 	private int likeLen;
 
 	public LikeInvs(UUID uuid){
-		Util.Mines.get(uuid).parallelStream()
-		.forEach(this::addMine);
-
 		Util.MyLikes.get(uuid).getLikes().parallelStream()
 		.forEach(this::addLike);
+
+		if(!Util.Mines.containsKey(uuid))
+			return;
+
+		Util.Mines.get(uuid).parallelStream()
+		.forEach(this::addMine);
 	}
 
 	public boolean hasMine(Like like){
@@ -48,7 +53,7 @@ public class LikeInvs {
 				continue;
 
 			inventory.remove(item);
-			mineList.remove(like.getId());
+			mineList.remove((Object) like.getId());
 			mineLen--;
 			break;
 		}
@@ -99,13 +104,14 @@ public class LikeInvs {
 	}
 
 	public void removeLike(Like like){
-		ItemStack item = newIcon(like, false);
-		for(Inventory inventory :likes){
+		String id = like.getStringId();
+		for(Inventory inventory : likes){
+			CraftInventory
 			if(!inventory.contains(item))
 				continue;
 
 			inventory.remove(item);
-			likeList.remove(like.getId());
+			likeList.remove((Object) like.getId());
 			likeLen--;
 			break;
 		}
@@ -164,6 +170,11 @@ public class LikeInvs {
 		lore.add(ChatColor.GRAY + "作成日 - " + like.getCreationTimestamp());
 		lore.add(ChatColor.GRAY + "ワールド - " + Util.Worlds.get(like.getWorld().getName()));
 		lore.add(ChatColor.GRAY + "座標 - X:" + like.getX() + " Y: " + like.getY() + " Z: " + like.getZ());
+		lore.add("");
+		lore.add(ChatColor.GRAY + "操作説明");
+		Economy economy = Main.getEconomy();
+		lore.add(ChatColor.GRAY + "左クリック - Likeの座標にテレポート(コスト: " + economy.format(Util.Tp) + ")");
+		lore.add(ChatColor.GRAY + "右クリック - 半径" + Util.Range + "マス以内にいるプレイヤーに招待ボタンを表示(コスト: " + economy.format(Util.Invite) + ")");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
