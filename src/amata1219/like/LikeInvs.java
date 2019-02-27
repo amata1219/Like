@@ -23,6 +23,10 @@ public class LikeInvs {
 	private int likeLen;
 
 	public LikeInvs(UUID uuid){
+		mines.add(newPage(0, true));
+		likes.add(newPage(0, false));
+
+
 		Util.MyLikes.get(uuid).getLikes().parallelStream()
 		.forEach(this::addLike);
 
@@ -40,22 +44,29 @@ public class LikeInvs {
 	public void addMine(Like like){
 		if(isFull(mineLen))
 			mines.add(newPage(mines.size() - 1, true));
-
 		mines.get(mines.size() - 1).addItem(newIcon(like, true));
 		mineList.add(like.getId());
 		mineLen++;
 	}
 
 	public void removeMine(Like like){
-		ItemStack item = newIcon(like, true);
+		String id = like.getStringId();
 		for(Inventory inventory : mines){
-			if(!inventory.contains(item))
-				continue;
+			for(ItemStack item : inventory.getContents()){
+				if(item == null || item.getType() == Material.AIR)
+					continue;
 
-			inventory.remove(item);
-			mineList.remove((Object) like.getId());
-			mineLen--;
-			break;
+				if(!item.hasItemMeta())
+					continue;
+
+				if(!id.equals(item.getItemMeta().getDisplayName()))
+					continue;
+
+				inventory.remove(item);
+				mineList.remove((Object) like.getId());
+				mineLen--;
+				break;
+			}
 		}
 	}
 
@@ -106,14 +117,21 @@ public class LikeInvs {
 	public void removeLike(Like like){
 		String id = like.getStringId();
 		for(Inventory inventory : likes){
-			CraftInventory
-			if(!inventory.contains(item))
-				continue;
+			for(ItemStack item : inventory.getContents()){
+				if(item == null || item.getType() == Material.AIR)
+					continue;
 
-			inventory.remove(item);
-			likeList.remove((Object) like.getId());
-			likeLen--;
-			break;
+				if(!item.hasItemMeta())
+					continue;
+
+				if(!id.equals(item.getItemMeta().getDisplayName()))
+					continue;
+
+				inventory.remove(item);
+				likeList.remove((Object) like.getId());
+				likeLen--;
+				break;
+			}
 		}
 	}
 
@@ -149,11 +167,11 @@ public class LikeInvs {
 	}
 
 	private boolean isFull(int len){
-		return len % 52 == 0;
+		return len == 0 ? false : len % 52 == 0;
 	}
 
 	private Inventory newPage(int page, boolean isMine){
-		Inventory inventory = Util.createInventory(54, (isMine ? "Mine" : "MyLike") + String.valueOf(page));
+		Inventory inventory = Util.createInventory(54, (isMine ? "Mine" : "MyLike") + "@" + String.valueOf(page));
 		inventory.setItem(45, Util.newItem(Util.PageButton, ChatColor.GREEN + "前のページへ"));
 		inventory.setItem(53, Util.newItem(Util.PageButton, ChatColor.GREEN + "次のページへ"));
 		return inventory;
@@ -173,8 +191,8 @@ public class LikeInvs {
 		lore.add("");
 		lore.add(ChatColor.GRAY + "操作説明");
 		Economy economy = Main.getEconomy();
-		lore.add(ChatColor.GRAY + "左クリック - Likeの座標にテレポート(コスト: " + economy.format(Util.Tp) + ")");
-		lore.add(ChatColor.GRAY + "右クリック - 半径" + Util.Range + "マス以内にいるプレイヤーに招待ボタンを表示(コスト: " + economy.format(Util.Invite) + ")");
+		lore.add(ChatColor.GRAY + "左クリック - LikeにTP(コスト: " + economy.format(Util.Tp) + ")");
+		lore.add(ChatColor.GRAY + "右クリック - 半径" + Util.Range + "マス以内にいるプレイヤーに招待ボタンを送信(コスト: " + economy.format(Util.Invite) + ")");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
@@ -188,7 +206,7 @@ public class LikeInvs {
 		if(meta == null || !meta.hasDisplayName())
 			return null;
 
-		return Util.Likes.get(Long.parseLong(meta.getDisplayName().substring(2)));
+		return Util.Likes.get(Long.parseLong(meta.getDisplayName()));
 	}
 
 }

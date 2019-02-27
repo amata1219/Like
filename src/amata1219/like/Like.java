@@ -7,18 +7,19 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
+import com.gmail.filoghost.holographicdisplays.disk.HologramDatabase;
+import com.gmail.filoghost.holographicdisplays.object.NamedHologram;
 
 public class Like {
 
 	private static final SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd (E) HH:mm:ss");
 
-	private final Hologram hologram;
+	private final NamedHologram hologram;
 	private UUID owner;
 	private int likeCount;
 
-	public Like(Hologram hologram, UUID owner){
+	public Like(NamedHologram hologram, UUID owner){
 		this.hologram = hologram;
 		this.owner = owner;
 		this.likeCount = 0;
@@ -30,7 +31,7 @@ public class Like {
 		Util.embedTouchHandler(this);
 	}
 
-	public Like(Hologram hologram, UUID owner, int likeCount){
+	public Like(NamedHologram hologram, UUID owner, int likeCount){
 		this.hologram = hologram;
 		this.owner = owner;
 		this.likeCount = likeCount;
@@ -38,16 +39,16 @@ public class Like {
 		Util.embedTouchHandler(this);
 	}
 
-	public Hologram getHologram(){
+	public NamedHologram getHologram(){
 		return hologram;
 	}
 
 	public long getId(){
-		return hologram.getCreationTimestamp();
+		return Long.parseLong(hologram.getName());
 	}
 
 	public String getStringId(){
-		return String.valueOf(getId());
+		return String.valueOf(hologram.getName());
 	}
 
 	public String getCreationTimestamp(){
@@ -127,6 +128,11 @@ public class Like {
 
 	public TextLine getLore(){
 		return Util.castTextLine(hologram.getLine(1));
+	}
+
+	public void save(){
+		HologramDatabase.saveHologram(hologram);
+		HologramDatabase.trySaveToDisk();
 	}
 
 	@Override

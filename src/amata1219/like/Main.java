@@ -38,6 +38,11 @@ public class Main extends JavaPlugin implements Listener {
 
 	private HashMap<String, CommandExecutor> commands;
 
+	/*
+	 * 招待ボタンのホバー表示追加
+	 * Likeのセーブ->like_data
+	 */
+
 	@Override
 	public void onEnable(){
 		plugin = this;
@@ -78,6 +83,8 @@ public class Main extends JavaPlugin implements Listener {
 		Util.PlayerConfig.update();
 
 		list.forEach(Util::unloadPlayerData);
+
+		Util.unload();
 	}
 
 	@Override
@@ -224,6 +231,7 @@ public class Main extends JavaPlugin implements Listener {
 			economy.withdrawPlayer(player, Util.Invite);
 			String message = Util.InviteMessage.replace(Util.PLACE_HOLDER_OF_PLAYER_NAME, player.getName())
 			.replace(Util.PLACE_HOLDER_OF_LIKE_TEXT, like.getLore().getText());
+			player.spigot().sendMessage(Util.createInviteButton(message.replace(Util.PLACE_HOLDER_OF_INVITE_USER, player.getName()), like));
 			player.getNearbyEntities(Util.Range, Util.Range, Util.Range).parallelStream()
 			.filter(Player.class::isInstance)
 			.map(Player.class::cast)
@@ -241,6 +249,7 @@ public class Main extends JavaPlugin implements Listener {
 		if(!Util.edit.containsKey(uuid))
 			return;
 
+		e.setCancelled(true);
 		Util.changeLore(Util.edit.get(uuid), Util.color(e.getMessage()));
 		Util.edit.remove(uuid);
 		Util.tell(player, ChatColor.GREEN, "Likeの表示内容を更新しました。");

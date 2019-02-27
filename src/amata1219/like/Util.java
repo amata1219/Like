@@ -20,15 +20,17 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.gmail.filoghost.holographicdisplays.api.handler.TouchHandler;
 import com.gmail.filoghost.holographicdisplays.api.line.HologramLine;
 import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
 import com.gmail.filoghost.holographicdisplays.api.line.TouchableLine;
+import com.gmail.filoghost.holographicdisplays.disk.HologramDatabase;
+import com.gmail.filoghost.holographicdisplays.object.NamedHologram;
+import com.gmail.filoghost.holographicdisplays.object.NamedHologramManager;
 
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.ClickEvent.Action;
+import net.md_5.bungee.api.chat.HoverEvent;
 
 public class Util {
 
@@ -83,11 +85,14 @@ public class Util {
 
 		loadConfigValues();
 
-		HashMap<Long, Hologram> holograms = new HashMap<>();
-		HologramsAPI.getHolograms(Main.getPlugin()).parallelStream()
-		.forEach(hologram -> holograms.put(hologram.getCreationTimestamp(), hologram));
+		HashMap<Long, NamedHologram> holograms = new HashMap<>();
 
 		FileConfiguration likeConfig = LikeConfig.get();
+
+		likeConfig.getKeys(false).parallelStream()
+		.map(NamedHologramManager::getHologram)
+		.forEach(hologram -> holograms.put(Long.parseLong(hologram.getName()), hologram));
+
 		likeConfig.getKeys(false).parallelStream()
 		.map(likeConfig::getString)
 		.map(s -> s.split(","))
@@ -97,6 +102,16 @@ public class Util {
 		Likes.values().parallelStream().forEach(Util::embedTouchHandler);
 		Likes.values().parallelStream().forEach(LikeMap::registerLike);
 		Likes.values().parallelStream().forEach(Util::addMine);
+	}
+
+	public static void unload(){
+		Util.Likes.values().parallelStream()
+		.forEach(Like::save);
+
+		Util.Likes.values().parallelStream()
+		.forEach(like -> LikeConfig.get().set(like.getStringId(), like.toString()));
+
+		LikeConfig.update();
 	}
 
 	public static void loadConfigValues(){
@@ -249,7 +264,7 @@ public class Util {
 						return;
 					}
 
-					register(like);
+					register(like, false);
 					tell(player, ChatColor.GREEN, "このLikeをお気に入りに登録しました。");
 					player.sendMessage(Tip);
 				}
@@ -373,18 +388,30 @@ public class Util {
 		return Long.parseLong(split[1]);
 	}
 
-	public static void register(Like like){
+	public static void register(Like like, boolean me){
 		UUID uuid = like.getOwner();
 		Likes.put(like.getId(), like);
 		LikeMap.registerLike(like);
-		MyLikes.get(uuid).registerLike(like);
-		LikeInvs.get(uuid).addLike(like);
+		LikeInvs invs = LikeInvs.get(uuid);
+		if(me){
+			addMine(like);
+			invs.addMine(like);
+		}else{
+			MyLikes.get(uuid).registerLike(like);
+			invs.addLike(like);
+		}
 	}
 
-	public static void unregister(Like like){
+	public static void unregister(Like like, boolean me){
 		UUID uuid = like.getOwner();
-		LikeInvs.get(uuid).removeLike(like);
-		MyLikes.get(uuid).unregisterLike(like);
+		LikeInvs invs = LikeInvs.get(uuid);
+		if(me){
+			removeMine(like);
+			invs.removeMine(like);
+		}else{
+			MyLikes.get(uuid).unregisterLike(like);
+			invs.removeLike(like);
+		}
 		LikeMap.unregisterLike(like);
 		Likes.remove(like.getId());
 	}
@@ -405,9 +432,15 @@ public class Util {
 			tell(player, ChatColor.RED, "このチャンクではこれ以上Likeを作成出来ません。");
 		}
 
-		Hologram hologram = HologramsAPI.createHologram(Main.getPlugin(), player.getLocation().clone().add(0, 2, 0));
+		NamedHologram hologram = new NamedHologram(player.getLocation().clone().add(0, 2, 0), String.valueOf(System.nanoTime()));
+		NamedHologramManager.addHologram(hologram);
+		hologram.refreshAll();
+		HologramDatabase.saveHologram(hologram);
+		HologramDatabase.trySaveToDisk();
+		//Hologram hologram = HologramsAPI.createHologram(Main.getPlugin(), player.getLocation().clone().add(0, 2, 0));
 		Like like = new Like(hologram, uuid);
-		register(like);
+		register(like, true);
+		tell(player, ChatColor.GREEN, "Likeを作成しました。");
 	}
 
 	public static void changeLore(Like like, String lore){
@@ -416,16 +449,16 @@ public class Util {
 	}
 
 	public static void changeOwner(Like like, UUID newOwner){
-		unregister(like);
+		unregister(like, true);
 		like.setOwner(newOwner);
-		register(like);
+		register(like, true);
 		update(like, true);
 	}
 
 	public static void move(Like like, Location loc){
-		unregister(like);
+		unregister(like, true);
 		like.getHologram().teleport(loc.clone().add(0, 2, 0));
-		register(like);
+		register(like, true);
 		update(like, true);
 	}
 
@@ -446,19 +479,25 @@ public class Util {
 		like.getHologram().delete();
 	}
 
-	public static void update(Like like, boolean reAdd){
+	public static void update(Like like, boolean delete){
 		Bukkit.getScheduler().runTaskAsynchronously(Main.getPlugin(), new Runnable(){
 
 			@Override
 			public void run() {
-				LikeInvs likeInvs = LikeInvs.get(like.getOwner());
-				likeInvs.removeMine(like);
-				if(reAdd)
-					likeInvs.addMine(like);
-				LikeInvs.values().parallelStream().filter(invs -> invs.hasLike(like));
-				LikeInvs.values().parallelStream().forEach(invs -> invs.removeLike(like));
-				if(reAdd)
-					LikeInvs.values().parallelStream().forEach(invs -> invs.addLike(like));
+				UUID owner = like.getOwner();
+				LikeInvs invs = LikeInvs.get(owner);
+				invs.removeMine(like);
+				if(!delete)
+					invs.addMine(like);
+
+				LikeInvs.entrySet().parallelStream()
+				.filter(entry -> !entry.getKey().equals(owner))
+				.forEach(entry -> entry.getValue().removeLike(like));
+				if(!delete){
+					LikeInvs.entrySet().parallelStream()
+					.filter(entry -> !entry.getKey().equals(owner))
+					.forEach(entry -> entry.getValue().addLike(like));
+				}
 			}
 
 		});
@@ -466,7 +505,8 @@ public class Util {
 
 	public static TextComponent createInviteButton(String message, Like like){
 		TextComponent component = new TextComponent(message);
-		component.setClickEvent(new ClickEvent(Action.RUN_COMMAND, "/like " + TOKEN + " " + like.getStringId()));
+		component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/like " + TOKEN + " " + like.getStringId()));
+		component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponent[]{new TextComponent(ChatColor.GRAY + "クリックでLikeにTP！")}));
 		return component;
 	}
 

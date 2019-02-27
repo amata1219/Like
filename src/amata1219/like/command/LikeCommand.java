@@ -15,7 +15,6 @@ public class LikeCommand implements CommandExecutor {
 		Player player = Util.castPlayer(sender);
 		switch(args.get()){
 		case "create":
-			System.out.println(player.getWorld().getName());
 			Util.create(player);
 			break;
 		case "list":
