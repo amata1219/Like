@@ -12,7 +12,6 @@ import org.bukkit.Location;
 
 public class LikeMap {
 
-
 	private final HashMap<Long, List<Like>> likes = new HashMap<>();
 
 	public LikeMap(){
@@ -62,7 +61,7 @@ public class LikeMap {
 
 	public void registerLike(Like like){
 		long hash = toChunkHash(like);
-		List<Like> list = likes.get(like);
+		List<Like> list = likes.get(hash);
 		if(list == null)
 			likes.put(hash, list = new ArrayList<>());
 		list.add(like);
@@ -83,6 +82,9 @@ public class LikeMap {
 
 	@Override
 	public String toString(){
+		if(getLikes().isEmpty())
+			return null;
+
 		StringBuilder builder = new StringBuilder();
 		for(Like like : getLikes())
 			builder.append(String.valueOf(like.getId())).append(",");
@@ -91,7 +93,7 @@ public class LikeMap {
 	}
 
 	public static long toChunkHash(int x, int z){
-		return (x >> 4) ^ (z << 28);
+		return (z >> 4) ^ ((x >> 4) << 32);
 	}
 
 	public static long toChunkHash(Chunk chunk){

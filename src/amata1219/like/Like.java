@@ -91,6 +91,7 @@ public class Like {
 
 	public void editLore(String lore){
 		getLore().setText(lore.replace(Util.PLACE_HOLDER_OF_PLAYER_NAME, Bukkit.getOfflinePlayer(owner).getName()));
+		hologram.refreshAll();
 	}
 
 	public World getWorld(){
@@ -132,12 +133,11 @@ public class Like {
 
 	public void save(){
 		HologramDatabase.saveHologram(hologram);
-		HologramDatabase.trySaveToDisk();
 	}
 
 	@Override
 	public String toString(){
-		return getId() + "," + owner.toString() + "," + likeCount;
+		return owner.toString() + "," + likeCount;
 	}
 
 }

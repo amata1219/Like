@@ -39,8 +39,7 @@ public class Main extends JavaPlugin implements Listener {
 	private HashMap<String, CommandExecutor> commands;
 
 	/*
-	 * 招待ボタンのホバー表示追加
-	 * Likeのセーブ->like_data
+	 * インベントリにアイテムを入れられないように
 	 */
 
 	@Override
@@ -121,7 +120,7 @@ public class Main extends JavaPlugin implements Listener {
 		if(!(e.getWhoClicked() instanceof Player))
 			return;
 
-		Inventory inventory = e.getClickedInventory();
+		Inventory inventory = e.getInventory();
 		if(inventory == null)
 			return;
 

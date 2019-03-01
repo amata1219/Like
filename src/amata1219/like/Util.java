@@ -1,6 +1,7 @@
 package amata1219.like;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -18,6 +19,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.handler.TouchHandler;
@@ -25,6 +27,9 @@ import com.gmail.filoghost.holographicdisplays.api.line.HologramLine;
 import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
 import com.gmail.filoghost.holographicdisplays.api.line.TouchableLine;
 import com.gmail.filoghost.holographicdisplays.disk.HologramDatabase;
+import com.gmail.filoghost.holographicdisplays.exception.HologramNotFoundException;
+import com.gmail.filoghost.holographicdisplays.exception.InvalidFormatException;
+import com.gmail.filoghost.holographicdisplays.exception.WorldNotFoundException;
 import com.gmail.filoghost.holographicdisplays.object.NamedHologram;
 import com.gmail.filoghost.holographicdisplays.object.NamedHologramManager;
 
@@ -69,8 +74,10 @@ public class Util {
 	public static HashMap<Long, Like> Likes = new HashMap<>();
 	public static LikeMap LikeMap = new LikeMap();
 	public static HashMap<UUID, List<Like>> Mines = new HashMap<>();
+
 	public static HashMap<UUID, LikeMap> MyLikes = new HashMap<>();
 	public static HashMap<UUID, LikeInvs> LikeInvs = new HashMap<>();
+
 	public static HashMap<UUID, Like> edit = new HashMap<>();
 	public static List<UUID> cooldown = new ArrayList<>();
 
@@ -90,23 +97,34 @@ public class Util {
 		FileConfiguration likeConfig = LikeConfig.get();
 
 		likeConfig.getKeys(false).parallelStream()
-		.map(NamedHologramManager::getHologram)
+		.map(t -> {
+			try {
+				return HologramDatabase.loadHologram(t);
+			} catch (HologramNotFoundException | InvalidFormatException | WorldNotFoundException e) {
+				e.printStackTrace();
+			}
+			return null;
+		})
+		.filter(hologram -> hologram != null)
 		.forEach(hologram -> holograms.put(Long.parseLong(hologram.getName()), hologram));
 
-		likeConfig.getKeys(false).parallelStream()
-		.map(likeConfig::getString)
-		.map(s -> s.split(","))
-		.map(s -> new Like(holograms.get(Long.parseLong(s[0])), UUID.fromString(s[1]), Integer.parseInt(s[2])))
-		.forEach(like -> Likes.put(like.getId(), like));
+		for(String key : likeConfig.getKeys(false)){
+			long id = Long.parseLong(key);
+			String[] data = likeConfig.getString(key).split(",");
+			Likes.put(id, new Like(holograms.get(id), UUID.fromString(data[0]), Integer.parseInt(data[1])));
+		}
 
-		Likes.values().parallelStream().forEach(Util::embedTouchHandler);
-		Likes.values().parallelStream().forEach(LikeMap::registerLike);
-		Likes.values().parallelStream().forEach(Util::addMine);
+		Collection<Like> values = Likes.values();
+		values.parallelStream().forEach(Util::embedTouchHandler);
+		values.parallelStream().forEach(LikeMap::registerLike);
+		values.parallelStream().forEach(Util::addMine);
 	}
 
 	public static void unload(){
 		Util.Likes.values().parallelStream()
 		.forEach(Like::save);
+
+		HologramDatabase.trySaveToDisk();
 
 		Util.Likes.values().parallelStream()
 		.forEach(like -> LikeConfig.get().set(like.getStringId(), like.toString()));
@@ -156,22 +174,18 @@ public class Util {
 		LikeInvs.put(uuid, new LikeInvs(uuid));
 	}
 
-	private static final StringBuilder fastBuilder = new StringBuilder();
-
-	public static void savePlayerData(UUID uuid, boolean shouldUpdate){
-		List<Like> likes = MyLikes.get(uuid).getLikes();
-		if(likes.isEmpty())
-			return;
-
+	public static void savePlayerData(UUID uuid, boolean update){
 		String data = null;
-		for(Like like : likes){
-			fastBuilder.append(like.getStringId())
-			.append(',');
+		StringBuilder builder = new StringBuilder();
+		if(Mines.containsKey(uuid)){
+			for(Like like : Mines.get(uuid)){
+				builder.append(like.getStringId());
+				builder.append(",");
+			}
+			data = builder.length() > 0 ? builder.substring(0, builder.length() - 1).toString() : builder.toString();
 		}
-		data = fastBuilder.toString();
-		fastBuilder.setLength(0);
 		PlayerConfig.get().set(uuid.toString(), data);
-		if(shouldUpdate)
+		if(update)
 			PlayerConfig.update();
 	}
 
@@ -246,6 +260,7 @@ public class Util {
 
 			@Override
 			public void onTouch(Player player) {
+				System.out.println("touch");
 				UUID uuid = player.getUniqueId();
 				if(player.isSneaking()){
 					if(like.isOwner(uuid))
@@ -253,13 +268,12 @@ public class Util {
 					else
 						player.openInventory(player.hasPermission(OP_PERMISSION) ? createAdminMenu(like) : createInfoMenu(like));
 				}else{
-					LikeMap map = MyLikes.get(uuid);
 					if(like.isOwner(uuid)){
 						tell(player, ChatColor.RED, "自分のLikeはお気に入りに登録出来ません。");
 						return;
 					}
 
-					if(map.isRegisteredLike(like)){
+					if(MyLikes.get(uuid).isRegisteredLike(like)){
 						tell(player, ChatColor.RED, "このLikeは既にお気に入りに登録しています。");
 						return;
 					}
@@ -271,10 +285,9 @@ public class Util {
 			}
 
 		};
-
 		Hologram hologram = like.getHologram();
-		for(int i = 0; i < hologram.size(); i++)
-			castTouchableLine(hologram.getLine(i)).setTouchHandler(handler);
+		castTouchableLine(hologram.getLine(0)).setTouchHandler(handler);
+		System.out.println("embed");
 	}
 
 	public static Inventory createInventory(int size, String title){
@@ -430,36 +443,42 @@ public class Util {
 
 		if(LikeMap.getChunkSize(player.getLocation()) >= UpperLimit){
 			tell(player, ChatColor.RED, "このチャンクではこれ以上Likeを作成出来ません。");
+			return;
 		}
 
-		NamedHologram hologram = new NamedHologram(player.getLocation().clone().add(0, 2, 0), String.valueOf(System.nanoTime()));
+		NamedHologram hologram = new NamedHologram(player.getLocation().clone().add(0, 2, 0), String.valueOf(System.currentTimeMillis()));
 		NamedHologramManager.addHologram(hologram);
-		hologram.refreshAll();
 		HologramDatabase.saveHologram(hologram);
 		HologramDatabase.trySaveToDisk();
-		//Hologram hologram = HologramsAPI.createHologram(Main.getPlugin(), player.getLocation().clone().add(0, 2, 0));
 		Like like = new Like(hologram, uuid);
 		register(like, true);
 		tell(player, ChatColor.GREEN, "Likeを作成しました。");
+		cooldown.add(uuid);
+		new BukkitRunnable(){
+			@Override
+			public void run(){
+				cooldown.remove(uuid);
+			}
+		}.runTaskLater(Main.getPlugin(), CooldownTime);
 	}
 
 	public static void changeLore(Like like, String lore){
 		like.getLore().setText(lore.replace(Util.PLACE_HOLDER_OF_PLAYER_NAME, getName(like.getOwner())));
-		update(like, true);
+		update(like, false);
 	}
 
 	public static void changeOwner(Like like, UUID newOwner){
 		unregister(like, true);
 		like.setOwner(newOwner);
 		register(like, true);
-		update(like, true);
+		update(like, false);
 	}
 
 	public static void move(Like like, Location loc){
 		unregister(like, true);
 		like.getHologram().teleport(loc.clone().add(0, 2, 0));
 		register(like, true);
-		update(like, true);
+		update(like, false);
 	}
 
 	public static void status(Player player, boolean me){
@@ -475,7 +494,7 @@ public class Util {
 	}
 
 	public static void delete(Like like){
-		update(like, false);
+		update(like, true);
 		like.getHologram().delete();
 	}
 
