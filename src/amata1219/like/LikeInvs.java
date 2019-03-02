@@ -30,11 +30,14 @@ public class LikeInvs {
 		Util.MyLikes.get(uuid).getLikes().parallelStream()
 		.forEach(this::addLike);
 
+		for(Like like : Util.MyLikes.get(uuid).getLikes())
+			addLike(like);
+
 		if(!Util.Mines.containsKey(uuid))
 			return;
 
-		Util.Mines.get(uuid).parallelStream()
-		.forEach(this::addMine);
+		for(Like like : Util.Mines.get(uuid))
+			addMine(like);
 	}
 
 	public boolean hasMine(Like like){
@@ -167,7 +170,7 @@ public class LikeInvs {
 	}
 
 	private boolean isFull(int len){
-		return len == 0 ? false : len % 52 == 0;
+		return len < 52 ? false : len % 52 == 0;
 	}
 
 	private Inventory newPage(int page, boolean isMine){
@@ -183,16 +186,17 @@ public class LikeInvs {
 		List<String> lore = new ArrayList<>();
 		lore.add(ChatColor.GRAY + like.getLore().getText());
 		if(!isMine)
-			lore.add(ChatColor.GRAY + "作成者 - " + Util.getName(like.getOwner()));
-		lore.add(ChatColor.GRAY + "お気に入り数 - " + like.getLikeCount());
-		lore.add(ChatColor.GRAY + "作成日 - " + like.getCreationTimestamp());
-		lore.add(ChatColor.GRAY + "ワールド - " + Util.Worlds.get(like.getWorld().getName()));
-		lore.add(ChatColor.GRAY + "座標 - X:" + like.getX() + " Y: " + like.getY() + " Z: " + like.getZ());
+			lore.add(ChatColor.WHITE + "作成者 §b-§f " + Util.getName(like.getOwner()));
+		lore.add(ChatColor.WHITE + "お気に入り数 §b-§f " + like.getLikeCount());
+		lore.add(ChatColor.WHITE + "作成日 §b-§f " + like.getCreationTimestamp());
+		lore.add(ChatColor.WHITE + "ワールド §b-§f " + Util.Worlds.get(like.getWorld().getName()));
+		lore.add(ChatColor.WHITE + "座標 §b-§f X: " + like.getX() + " Y: " + like.getY() + " Z: " + like.getZ());
 		lore.add("");
 		lore.add(ChatColor.GRAY + "操作説明");
 		Economy economy = Main.getEconomy();
 		lore.add(ChatColor.GRAY + "左クリック - LikeにTP(コスト: " + economy.format(Util.Tp) + ")");
-		lore.add(ChatColor.GRAY + "右クリック - 半径" + Util.Range + "マス以内にいるプレイヤーに招待ボタンを送信(コスト: " + economy.format(Util.Invite) + ")");
+		lore.add(ChatColor.GRAY + "右クリック - 半径" + Util.Range + "マス以内にいるプレイヤーに");
+		lore.add(ChatColor.GRAY + "               招待ボタンを送信(コスト: " + economy.format(Util.Invite) + ")");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

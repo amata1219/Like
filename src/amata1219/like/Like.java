@@ -28,15 +28,13 @@ public class Like {
 		hologram.appendTextLine(Util.Lore.replace(Util.PLACE_HOLDER_OF_PLAYER_NAME, Util.getName(owner)));
 		hologram.appendTextLine(Util.Message);
 
-		Util.embedTouchHandler(this);
+		Main.applyTouchHandler(this, false);
 	}
 
 	public Like(NamedHologram hologram, UUID owner, int likeCount){
 		this.hologram = hologram;
 		this.owner = owner;
 		this.likeCount = likeCount;
-
-		Util.embedTouchHandler(this);
 	}
 
 	public NamedHologram getHologram(){

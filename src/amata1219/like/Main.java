@@ -1,11 +1,16 @@
 package amata1219.like;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -20,6 +25,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import com.gmail.filoghost.holographicdisplays.api.handler.TouchHandler;
+import com.gmail.filoghost.holographicdisplays.object.NamedHologram;
+import com.gmail.filoghost.holographicdisplays.object.line.CraftTouchableLine;
 
 import amata1219.like.command.CommandExecutor;
 import amata1219.like.command.CommandExecutor.Args;
@@ -38,21 +47,17 @@ public class Main extends JavaPlugin implements Listener {
 
 	private HashMap<String, CommandExecutor> commands;
 
-	/*
-	 * インベントリにアイテムを入れられないように
-	 */
-
 	@Override
 	public void onEnable(){
 		plugin = this;
 
 		Plugin pl = getServer().getPluginManager().getPlugin("Vault");
 		if(!(pl instanceof Vault))
-			new NullPointerException("Not find Vault.");
+			new NullPointerException("Not found Vault.");
 
 		RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
 		if(rsp == null)
-			new NullPointerException("Not find Vault.");
+			new NullPointerException("Not found Vault.");
 
 		economy = rsp.getProvider();
 
@@ -249,9 +254,70 @@ public class Main extends JavaPlugin implements Listener {
 			return;
 
 		e.setCancelled(true);
-		Util.changeLore(Util.edit.get(uuid), Util.color(e.getMessage()));
-		Util.edit.remove(uuid);
-		Util.tell(player, ChatColor.GREEN, "Likeの表示内容を更新しました。");
+
+		Bukkit.getScheduler().runTask(this, () -> {
+			Util.changeLore(Util.edit.get(uuid), Util.color(e.getMessage()));
+			Util.edit.remove(uuid);
+			Util.tell(player, ChatColor.GREEN, "Likeの表示内容を更新しました。");
+		});
+	}
+
+	public static final Method setTouchHandler;
+	static{
+		Method arg1 = null;
+		try {
+			Class<?> CraftTouchableLine = CraftTouchableLine.class;
+			arg1 = CraftTouchableLine.getDeclaredMethod("setTouchHandler", TouchHandler.class, World.class, double.class, double.class, double.class);
+			arg1.setAccessible(true);
+		} catch (NoSuchMethodException | SecurityException e) {
+			e.printStackTrace();
+		}
+		setTouchHandler = arg1;
+	}
+
+	public static void applyTouchHandler(Like like, boolean delete){
+		NamedHologram hologram = like.getHologram();
+		Location loc = hologram.getLocation();
+		loc.setPitch(90.0F);
+		CraftTouchableLine line = (CraftTouchableLine) hologram.getLine(0);
+		try {
+			setTouchHandler.invoke(line, delete ? null : createTouchHandler(like), loc.getWorld(), loc.getX(), loc.getY() - line.getHeight() * 3, loc.getZ());
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static TouchHandler createTouchHandler(Like like){
+		return new TouchHandler(){
+
+			@Override
+			public void onTouch(Player player) {
+				UUID uuid = player.getUniqueId();
+				if(player.isSneaking()){
+					if(like.isOwner(uuid))
+						player.openInventory(Util.createEditMenu(like));
+					else
+						player.openInventory(player.hasPermission(Util.OP_PERMISSION) ? Util.createAdminMenu(like) : Util.createInfoMenu(like));
+				}else{
+					if(like.isOwner(uuid)){
+						Util.tell(player, ChatColor.RED, "自分のLikeはお気に入りに登録出来ません。");
+						return;
+					}
+
+					if(Util.MyLikes.get(uuid).isRegisteredLike(like)){
+						Util.tell(player, ChatColor.RED, "このLikeは既にお気に入りに登録しています。");
+						return;
+					}
+
+					Util.register(like, false);
+					like.incrementLikeCount();
+					Util.refresh(like);
+					Util.tell(player, ChatColor.GREEN, "このLikeをお気に入りに登録しました。");
+					player.sendMessage(Util.Tip);
+				}
+			}
+
+		};
 	}
 
 }

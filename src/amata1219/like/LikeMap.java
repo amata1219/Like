@@ -1,7 +1,6 @@
 package amata1219.like;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -20,12 +19,11 @@ public class LikeMap {
 
 	public LikeMap(UUID uuid){
 		String data = Util.PlayerConfig.get().getString(uuid.toString());
-		if(data == null)
+		if(data == null || data.isEmpty())
 			return;
 
-		Arrays.stream(data.split(",")).parallel()
-		.map(Long::parseLong)
-		.forEach(id -> registerLike(Util.Likes.get(id)));
+		for(String id : data.split(","))
+			registerLike(Util.Likes.get(Long.parseLong(id)));
 	}
 
 	public List<Like> getLikes(){
