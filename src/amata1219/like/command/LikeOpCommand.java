@@ -1,11 +1,15 @@
 package amata1219.like.command;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
+
+import com.gmail.filoghost.holographicdisplays.disk.HologramDatabase;
 
 import amata1219.like.Like;
 import amata1219.like.Util;
@@ -39,7 +43,7 @@ public class LikeOpCommand implements CommandExecutor {
 			Util.delete(delete);
 			Util.tell(sender, ChatColor.GREEN, "Like(" + delete.getId() + ")を削除しました。");
 			break;
-		case "alldelete":
+		case "deleteplayer":
 			OfflinePlayer target = Bukkit.getOfflinePlayer(args.get());
 			if(target == null){
 				Util.tell(sender, ChatColor.RED, "指定されたプレイヤーは存在しません。");
@@ -52,10 +56,31 @@ public class LikeOpCommand implements CommandExecutor {
 				return;
 			}
 
-			Util.Mines.get(uuid).stream()
-			.forEach(Util::delete);
-			Util.tell(sender, ChatColor.GREEN, target.getName() + "が作成したLikeを全て削除しました。");
+			int counter = 0;
+			for(Like like : new ArrayList<>(Util.Mines.get(uuid))){
+				Util.del(like);
+				counter++;
+			}
+			HologramDatabase.trySaveToDisk();
+			Util.tell(sender, ChatColor.GREEN, target.getName() + "が作成したLike(" + counter + "個)を全て削除しました。");
 			break;
+		case "deleteworld":
+			World world = Bukkit.getWorld(args.get());
+			if(world == null){
+				Util.tell(sender, ChatColor.RED, "指定されたワールドは存在しません。");
+				return;
+			}
+
+			int count = 0;
+			for(Like like : Util.Likes.values()){
+				if(!like.getWorld().equals(world))
+					continue;
+
+				Util.del(like);
+				count++;
+			}
+			HologramDatabase.trySaveToDisk();
+			Util.tell(sender, ChatColor.GREEN, world.getName() + "ワールドに存在するLike(" + count +"個)を全て削除しました。");
 		case "reload":
 			Util.Config.reload();
 			Util.loadConfigValues();

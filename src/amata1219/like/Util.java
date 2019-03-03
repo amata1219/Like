@@ -416,6 +416,8 @@ public class Util {
 		like.getLore().setText(lore.replace(Util.PLACE_HOLDER_OF_PLAYER_NAME, getName(like.getOwner())));
 		update(like, false);
 		refresh(like);
+		like.save();
+		HologramDatabase.trySaveToDisk();
 	}
 
 	public static void changeOwner(Like like, UUID newOwner){
@@ -426,11 +428,14 @@ public class Util {
 	}
 
 	public static void move(Like like, Location loc){
+		NamedHologram hologram = like.getHologram();
 		unregister(like, true);
-		like.getHologram().teleport(loc.clone().add(0, 2, 0));
+		hologram.teleport(loc.clone().add(0, 2, 0));
+		hologram.despawnEntities();
+		refresh(like);
 		register(like, true);
 		update(like, false);
-		refresh(like);
+		like.save(true);
 	}
 
 	public static void status(Player player, boolean me){
@@ -438,21 +443,25 @@ public class Util {
 		player.openInventory(me ? invs.firstMine() : invs.firstLike());
 	}
 
+	public static void favorite(Player player, Like like){
+		UUID uuid = player.getUniqueId();
+		LikeInvs.get(uuid).addLike(like);
+		MyLikes.get(uuid).registerLike(like);
+		like.incrementLikeCount();
+		like.getHologram().refreshAll();
+		like.save(true);
+	}
+
 	public static void unfavorite(Player player, Like like){
 		UUID uuid = player.getUniqueId();
 		LikeInvs.get(uuid).removeLike(like);
 		MyLikes.get(uuid).unregisterLike(like);
 		like.decrementLikeCount();
-		refresh(like);
-	}
-
-	public static void refresh(Like like){
 		like.getHologram().refreshAll();
-		Main.applyTouchHandler(like, true);
-		Main.applyTouchHandler(like, false);
+		like.save(true);
 	}
 
-	public static void delete(Like like){
+	public static void del(Like like){
 		UUID owner = like.getOwner();
 		if(Mines.containsKey(owner))
 			Mines.get(owner).remove(like);
@@ -463,9 +472,14 @@ public class Util {
 		LikeConfig.get().set(id, null);
 		Likes.remove(like.getId());
 		NamedHologram hologram = like.getHologram();
-		hologram.despawnEntities();
-		HologramDatabase.deleteHologram(id);
 		hologram.delete();
+		NamedHologramManager.removeHologram(hologram);
+		HologramDatabase.deleteHologram(id);
+	}
+
+	public static void delete(Like like){
+		del(like);
+		HologramDatabase.trySaveToDisk();
 	}
 
 	public static void update(Like like, boolean delete){
@@ -495,6 +509,12 @@ public class Util {
 			}
 
 		});
+	}
+
+	public static void refresh(Like like){
+		like.getHologram().refreshAll();
+		Main.applyTouchHandler(like, true);
+		Main.applyTouchHandler(like, false);
 	}
 
 	public static TextComponent createInviteButton(String message, Like like){

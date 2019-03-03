@@ -129,8 +129,9 @@ public class Like {
 		return Util.castTextLine(hologram.getLine(1));
 	}
 
-	public void save(){
+	public void save(boolean apply){
 		HologramDatabase.saveHologram(hologram);
+		HologramDatabase.trySaveToDisk();
 	}
 
 	@Override
