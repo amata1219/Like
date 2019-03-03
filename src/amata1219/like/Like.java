@@ -84,7 +84,6 @@ public class Like {
 	}
 
 	public void updateCounter(){
-		//getLikeCountDisplayer().setText(Util.Counter.replace(Util.PLACE_HOLDER_OF_LIKE_COUNT, String.valueOf(likeCount)));
 		((CraftHologramLine) hologram.getLinesUnsafe().get(0)).despawn();
 		hologram.getLinesUnsafe().set(0, HologramDatabase.readLineFromString(Util.Counter.replace(Util.PLACE_HOLDER_OF_LIKE_COUNT, String.valueOf(likeCount)), hologram));
 		refresh();

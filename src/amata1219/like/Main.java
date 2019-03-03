@@ -3,9 +3,7 @@ package amata1219.like;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -63,8 +61,6 @@ public class Main extends JavaPlugin implements Listener {
 
 		economy = rsp.getProvider();
 
-		Util.init();
-
 		commands = new HashMap<>();
 		commands.put("like", new LikeCommand());
 		commands.put("likec", new LikeCCommand());
@@ -72,23 +68,21 @@ public class Main extends JavaPlugin implements Listener {
 		commands.put("likes", new LikeSCommand());
 		commands.put("likeop", new LikeOpCommand());
 
-		getServer().getOnlinePlayers().parallelStream()
-		.map(Player::getUniqueId)
-		.forEach(Util::loadPlayerData);
-
 		getServer().getPluginManager().registerEvents(this, this);
+
+		getServer().getScheduler().runTask(this, () -> { Util.init(); });
 	}
 
 	@Override
 	public void onDisable(){
 		HandlerList.unregisterAll((JavaPlugin) this);
 
-		List<UUID> list = getServer().getOnlinePlayers().parallelStream().map(Player::getUniqueId).collect(Collectors.toList());
-		list.forEach(uuid -> Util.savePlayerData(uuid, false));
-
+		for(Player player : getServer().getOnlinePlayers()){
+			UUID uuid = player.getUniqueId();
+			Util.savePlayerData(uuid, false);
+			Util.unloadPlayerData(uuid);
+		}
 		Util.PlayerConfig.update();
-
-		list.forEach(Util::unloadPlayerData);
 
 		Util.unload();
 	}
@@ -141,21 +135,46 @@ public class Main extends JavaPlugin implements Listener {
 		switch(prefix[0]){
 		case "§8Info":
 			e.setCancelled(true);
-			if(slot != 7)
+			if(slot != 6)
 				return;
+
+			if(!Util.MyLikes.get(player.getUniqueId()).isRegisteredLike(Util.Likes.get(Long.parseLong(prefix[1])))){
+				player.closeInventory();
+				Util.tell(player, ChatColor.RED, "このLikeはお気に入りに登録していません。");
+				return;
+			}
 
 			player.closeInventory();
 			Util.tell(player, ChatColor.GREEN, "このLikeのお気に入りを解除しました。");
 			Util.unfavorite(player, Util.Likes.get(Long.parseLong(prefix[1])));
 			break;
 		case "§8Admin":
-		case "§8Edit":
 			e.setCancelled(true);
 			if(slot == 6){
+				if(!Util.MyLikes.get(player.getUniqueId()).isRegisteredLike(Util.Likes.get(Long.parseLong(prefix[1])))){
+					player.closeInventory();
+					Util.tell(player, ChatColor.RED, "このLikeはお気に入りに登録していません。");
+					return;
+				}
+
+				player.closeInventory();
+				Util.tell(player, ChatColor.GREEN, "このLikeのお気に入りを解除しました。");
+				Util.unfavorite(player, Util.Likes.get(Long.parseLong(prefix[1])));
+			}else if(slot == 7){
 				Util.edit.put(player.getUniqueId(), Util.Likes.get(Long.parseLong(prefix[1])));
 				player.closeInventory();
 				Util.tell(player, ChatColor.GREEN, "新しい表示内容をチャット欄に入力して下さい。");
-			}else if(slot == 7){
+			}else if(slot == 8){
+				player.openInventory(Util.createConfirmMenu(Util.Likes.get(Long.parseLong(prefix[1]))));
+			}
+			break;
+		case "§8Edit":
+			e.setCancelled(true);
+			if(slot == 7){
+				Util.edit.put(player.getUniqueId(), Util.Likes.get(Long.parseLong(prefix[1])));
+				player.closeInventory();
+				Util.tell(player, ChatColor.GREEN, "新しい表示内容をチャット欄に入力して下さい。");
+			}else if(slot == 8){
 				player.openInventory(Util.createConfirmMenu(Util.Likes.get(Long.parseLong(prefix[1]))));
 			}
 			break;

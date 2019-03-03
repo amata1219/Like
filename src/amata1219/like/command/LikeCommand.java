@@ -1,5 +1,6 @@
 package amata1219.like.command;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -24,12 +25,16 @@ public class LikeCommand implements CommandExecutor {
 			Util.status(player, true);
 			break;
 		default:
-			if(!args.ref().equals(Util.TOKEN))
+			if(!args.ref().equals(Util.TOKEN)){
+				Util.tell(player, ChatColor.RED, "指定されたLikeは存在しません。");
 				break;
+			}
 
 			long id = args.getNumber();
-			if(!Util.Likes.containsKey(id))
+			if(!Util.Likes.containsKey(id)){
+				Util.tell(player, ChatColor.RED, "指定されたLikeは存在しません。");
 				break;
+			}
 
 			player.teleport(Util.Likes.get(id).getLocation(player.getLocation()));
 			break;

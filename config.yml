@@ -11,17 +11,27 @@ CooldownTime: 10
 UpperLimit: 3
 #1チャンク内にいくつまでLikeを作成できるか
 Items:
+#GUI内での表示
   LikeCount: "DIAMOND"
+#お気に入り数
   Timestamp: "DIAMOND"
+#作成日時
   Id: "DIAMOND"
+#管理ID
   Edit: "DIAMOND"
+#表示内容の編集
   Remove1: "DIAMOND"
+#削除
   Remove2: "DIAMOND"
+#削除(確認画面)
   Unfavorite: "DIAMOND"
+#お気に入りの解除
   OtherLike: "DIAMOND"
-  ChangeOwner: "DIAMOND"
+#作者のその他のLike
   PageButton: "DIAMOND"
+#ページ変更のボタン(自分の作成したLikeリスト・お気に入りに登録したLikeリスト)
   LikeIcon: "DIAMOND"
+#Likeアイコン(自分の作成したLikeリスト・お気に入りに登録したLikeリスト)
 #GUIで表示されるアイテム、参考は→https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
 TPCost: 100.0
 Invite:

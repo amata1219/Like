@@ -58,6 +58,9 @@ public class LikeMap {
 	}
 
 	public void registerLike(Like like){
+		if(like == null)
+			return;
+
 		long hash = toChunkHash(like);
 		List<Like> list = likes.get(hash);
 		if(list == null)

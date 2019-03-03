@@ -72,7 +72,7 @@ public class LikeOpCommand implements CommandExecutor {
 			}
 
 			int count = 0;
-			for(Like like : Util.Likes.values()){
+			for(Like like : new ArrayList<>(Util.Likes.values())){
 				if(!like.getWorld().equals(world))
 					continue;
 
@@ -81,6 +81,50 @@ public class LikeOpCommand implements CommandExecutor {
 			}
 			HologramDatabase.trySaveToDisk();
 			Util.tell(sender, ChatColor.GREEN, world.getName() + "ワールドに存在するLike(" + count +"個)を全て削除しました。");
+			break;
+		case "changeowner":
+			Like change = Util.Likes.get(args.getNumber());
+			if(change == null){
+				Util.tell(sender, ChatColor.RED, "指定されたIDのLikeは存在しません。");
+				return;
+			}
+
+			OfflinePlayer owner = Bukkit.getOfflinePlayer(args.get());
+			if(owner == null || owner.getName() == null || owner.getName().equals("-1")){
+				Util.tell(sender, ChatColor.RED, "指定されたプレイヤーは存在しません。");
+				return;
+			}
+
+			Util.changeOwner(change, owner.getUniqueId());
+			Util.tell(sender, ChatColor.GREEN, change.getStringId() + "のオーナーを" + owner.getName() + "に変更しました。");
+			break;
+		case "changedata":
+			OfflinePlayer old = Bukkit.getOfflinePlayer(args.get());
+			if(old == null || old.getName() == null || old.getName().equals("-1")){
+				Util.tell(sender, ChatColor.RED, "指定されたプレイヤー(第1引数)は存在しません。");
+				return;
+			}
+
+			UUID oldid = old.getUniqueId();
+			if(!Util.Mines.containsKey(oldid)){
+				Util.tell(sender, ChatColor.RED, "指定されたプレイヤー(第1引数)はLikeを作成していません。");
+				return;
+			}
+
+			OfflinePlayer next = Bukkit.getOfflinePlayer(args.get());
+			if(next == null || next.getName() == null || next.getName().equals("-1")){
+				Util.tell(sender, ChatColor.RED, "指定されたプレイヤー(第2引数)は存在しません。");
+				return;
+			}
+
+			int cout = 0;
+			for(Like like : new ArrayList<>(Util.Mines.get(oldid))){
+				Util.changeOwner(like, next.getUniqueId());
+				cout++;
+			}
+
+			Util.tell(sender, ChatColor.GREEN, old.getName() + "のLike(" + cout + "個)のオーナーを" + next.getName() + "に変更しました。");
+			break;
 		case "reload":
 			Util.Config.reload();
 			Util.loadConfigValues();

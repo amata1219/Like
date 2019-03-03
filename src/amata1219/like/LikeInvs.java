@@ -26,10 +26,6 @@ public class LikeInvs {
 		mines.add(newPage(0, true));
 		likes.add(newPage(0, false));
 
-
-		Util.MyLikes.get(uuid).getLikes().parallelStream()
-		.forEach(this::addLike);
-
 		for(Like like : Util.MyLikes.get(uuid).getLikes())
 			addLike(like);
 
@@ -181,22 +177,22 @@ public class LikeInvs {
 	}
 
 	private ItemStack newIcon(Like like, boolean isMine){
-		ItemStack item = Util.newItem(Util.LikeIcon, like.getStringId());
+		ItemStack item = Util.newItem(Util.LikeIcon, ChatColor.WHITE + like.getStringId());
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = new ArrayList<>();
 		lore.add(ChatColor.WHITE + like.getLore());
-		lore.add("");
+		lore.add("§7----------------------------------------");//x40
 		if(!isMine)
-			lore.add("§b作成者§f:§b " + Util.getName(like.getOwner()));
-		lore.add("§bお気に入り数§f:§b " + like.getLikeCount());
-		lore.add("§b作成日§f:§b " + like.getCreationTimestamp());
-		lore.add("§bワールド§f:§b " + Util.Worlds.get(like.getWorld().getName()));
-		lore.add("§b座標§f:§b X: " + like.getX() + " Y: " + like.getY() + " Z: " + like.getZ());
+			lore.add("§a作成者:§f " + Util.getName(like.getOwner()));
+		lore.add("§aお気に入り数:§f " + like.getLikeCount());
+		lore.add("§a作成日:§f " + like.getCreationTimestamp());
+		lore.add("§aワールド:§f " + Util.Worlds.get(like.getWorld().getName()));
+		lore.add("§a座標:§f X: " + like.getX() + " Y: " + like.getY() + " Z: " + like.getZ());
 		lore.add("");
 		Economy economy = Main.getEconomy();
-		lore.add("左クリック§f:§b LikeにTP(コスト: " + economy.format(Util.Tp) + ")");
-		lore.add("右クリック§f:§b 半径" + Util.Range + "マス以内にいるプレイヤーに");
-		lore.add("               招待ボタンを送信(コスト: " + economy.format(Util.Invite) + ")");
+		lore.add("§a左クリック:§f LikeにTP(コスト: " + economy.format(Util.Tp) + ")");
+		lore.add("§a右クリック:§f 半径" + Util.Range + "マス以内にいるプレイヤーに");
+		lore.add("             §f招待ボタンを送信(コスト: " + economy.format(Util.Invite) + ")");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;

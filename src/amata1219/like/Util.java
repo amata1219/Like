@@ -24,9 +24,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.gmail.filoghost.holographicdisplays.api.line.HologramLine;
 import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
 import com.gmail.filoghost.holographicdisplays.disk.HologramDatabase;
-import com.gmail.filoghost.holographicdisplays.exception.HologramNotFoundException;
-import com.gmail.filoghost.holographicdisplays.exception.InvalidFormatException;
-import com.gmail.filoghost.holographicdisplays.exception.WorldNotFoundException;
 import com.gmail.filoghost.holographicdisplays.object.NamedHologram;
 import com.gmail.filoghost.holographicdisplays.object.NamedHologramManager;
 
@@ -60,7 +57,6 @@ public class Util {
 	public static Material Remove2;
 	public static Material Unfavorite;
 	public static Material OtherLike;
-	public static Material ChangeOwner;
 	public static Material PageButton;
 	public static Material LikeIcon;
 	public static double Tp;
@@ -88,16 +84,9 @@ public class Util {
 		PlayerConfig = new Config("player_data");
 
 		loadConfigValues();
-
-		//NamedHologramManager.getHologram(key) = null
 		FileConfiguration config = LikeConfig.get();
 		for(String name: config.getKeys(false)){
-			NamedHologram hologram = null;
-			try {
-				hologram = HologramDatabase.loadHologram(name);
-			} catch (HologramNotFoundException | InvalidFormatException | WorldNotFoundException e) {
-				e.printStackTrace();
-			}
+			NamedHologram hologram = NamedHologramManager.getHologram(name);
 			if(hologram == null){
 				System.out.println("Hologram is not found -> " + name);
 				continue;
@@ -110,12 +99,14 @@ public class Util {
 			LikeMap.registerLike(like);
 			addMine(like);
 		}
+
+		for(Player player : Main.getPlugin().getServer().getOnlinePlayers())
+			loadPlayerData(player.getUniqueId());
 	}
 
 	public static void unload(){
 		for(Like like : Likes.values()){
 			LikeConfig.get().set(like.getStringId(), like.toString());
-			like.getHologram().despawnEntities();
 			like.save(false);
 		}
 		LikeConfig.update();
@@ -147,7 +138,6 @@ public class Util {
 		Remove2 = type(items.getString("Remove2"));
 		Unfavorite = type(items.getString("Unfavorite"));
 		OtherLike = type(items.getString("OtherLike"));
-		ChangeOwner = type(items.getString("ChangeOwner"));
 		PageButton = type(items.getString("PageButton"));
 		LikeIcon = type(items.getString("LikeIcon"));
 
@@ -165,16 +155,7 @@ public class Util {
 	}
 
 	public static void savePlayerData(UUID uuid, boolean update){
-		String data = null;
-		StringBuilder builder = new StringBuilder();
-		if(Mines.containsKey(uuid)){
-			for(Like like : Mines.get(uuid)){
-				builder.append(like.getStringId());
-				builder.append(",");
-			}
-			data = builder.length() > 0 ? builder.substring(0, builder.length() - 1).toString() : builder.toString();
-		}
-		PlayerConfig.get().set(uuid.toString(), data);
+		PlayerConfig.get().set(uuid.toString(), MyLikes.get(uuid).toString());
 		if(update)
 			PlayerConfig.update();
 	}
@@ -252,16 +233,15 @@ public class Util {
 		ItemStack owner = new ItemStack(Material.PLAYER_HEAD);
 		SkullMeta meta = (SkullMeta) owner.getItemMeta();
 		OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
-		meta.setDisplayName(ChatColor.WHITE + getName(uuid));
+		meta.setDisplayName(ChatColor.GREEN + getName(uuid));
 		meta.setOwningPlayer(player);
 		owner.setItemMeta(meta);
-		inventory.setItem(1, owner);
-
-		inventory.setItem(4, newItem(LikeCount, "お気に入りの数:" + like.getLikeCount()));
-		inventory.setItem(5, newItem(Timestamp, "作成日時: " + like.getCreationTimestamp()));
-		inventory.setItem(6, newItem(Id, "管理ID: " + like.getId()));
-		inventory.setItem(7, newItem(Unfavorite, "お気に入りの解除"));
-		inventory.setItem(9, newItem(OtherLike, "この作者の他のLike情報"));
+		inventory.setItem(0, owner);
+		inventory.setItem(3, newItem(LikeCount, "§aお気に入りの数:§f " + like.getLikeCount()));
+		inventory.setItem(4, newItem(Timestamp, "§a作成日時:§f " + like.getCreationTimestamp()));
+		inventory.setItem(5, newItem(Id, "§a管理ID:§f " + like.getId()));
+		inventory.setItem(6, newItem(Unfavorite, "§aお気に入りの解除"));
+		inventory.setItem(9, newItem(OtherLike, "§aこの作者の他のLike情報"));
 
 		setOtherLike(inventory, like);
 		return inventory;
@@ -274,16 +254,15 @@ public class Util {
 		ItemStack owner = new ItemStack(Material.PLAYER_HEAD);
 		SkullMeta meta = (SkullMeta) owner.getItemMeta();
 		OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
-		meta.setDisplayName(ChatColor.WHITE + getName(uuid));
+		meta.setDisplayName(ChatColor.GREEN + getName(uuid));
 		meta.setOwningPlayer(player);
 		owner.setItemMeta(meta);
-		inventory.setItem(1, owner);
-
-		inventory.setItem(3, newItem(LikeCount, "お気に入りの数:" + like.getLikeCount()));
-		inventory.setItem(4, newItem(Timestamp, "作成日時: " + like.getCreationTimestamp()));
-		inventory.setItem(5, newItem(Id, "管理ID: " + like.getId()));
-		inventory.setItem(6, newItem(Edit, "表示内容の編集"));
-		inventory.setItem(7, newItem(Remove1, "Likeの削除"));
+		inventory.setItem(0, owner);
+		inventory.setItem(3, newItem(LikeCount, "§aお気に入りの数:§f " + like.getLikeCount()));
+		inventory.setItem(4, newItem(Timestamp, "§a作成日時:§f " + like.getCreationTimestamp()));
+		inventory.setItem(5, newItem(Id, "§a管理ID:§f " + like.getId()));
+		inventory.setItem(7, newItem(Edit, "§a表示内容の編集"));
+		inventory.setItem(8, newItem(Remove1, "§aLikeの削除"));
 		return inventory;
 	}
 
@@ -300,46 +279,53 @@ public class Util {
 		ItemStack owner = new ItemStack(Material.PLAYER_HEAD);
 		SkullMeta meta = (SkullMeta) owner.getItemMeta();
 		OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
-		meta.setDisplayName(ChatColor.WHITE + getName(uuid));
+		meta.setDisplayName(ChatColor.GREEN + getName(uuid));
 		meta.setOwningPlayer(player);
 		owner.setItemMeta(meta);
-		inventory.setItem(1, owner);
-
-		inventory.setItem(3, newItem(LikeCount, "お気に入りの数:" + like.getLikeCount()));
-		inventory.setItem(4, newItem(Timestamp, "作成日時: " + like.getCreationTimestamp()));
-		inventory.setItem(5, newItem(Id, "管理ID: " + like.getId()));
-		inventory.setItem(6, newItem(Edit, "表示内容の編集"));
-		inventory.setItem(7, newItem(Remove1, "Likeの削除"));
-		inventory.setItem(9, newItem(OtherLike, "この作者の他のLike情報"));
+		inventory.setItem(0, owner);
+		inventory.setItem(3, newItem(LikeCount, "§aお気に入りの数:§f " + like.getLikeCount()));
+		inventory.setItem(4, newItem(Timestamp, "§a作成日時:§f " + like.getCreationTimestamp()));
+		inventory.setItem(5, newItem(Id, "§a管理ID:§f " + like.getId()));
+		inventory.setItem(6, newItem(Unfavorite, "§aお気に入りの解除"));
+		inventory.setItem(7, newItem(Edit, "§a表示内容の編集"));
+		inventory.setItem(8, newItem(Remove1, "§aLikeの削除"));
+		inventory.setItem(9, newItem(OtherLike, "§aこの作者の他のLike情報"));
 
 		setOtherLike(inventory, like);
 		return inventory;
 	}
 
 	public static void setOtherLike(Inventory inventory, Like like){
-		List<Like> list = Mines.get(like.getOwner());
-		if(list == null)
+		UUID owner = like.getOwner();
+		if(!Mines.containsKey(owner))
+			return;
+
+		List<Like> list = new ArrayList<>(Mines.get(like.getOwner()));
+		list.remove(like);
+		if(list.isEmpty())
 			return;
 
 		sort(list, 0, list.size() - 1);
 
 		for(int i = 0; i < (list.size() > 8 ? 8 : list.size()); i++){
-			ItemStack item = newItem(OtherLike, like.getLore());
+			Like get = list.get(i);
+			ItemStack item = newItem(OtherLike, get.getLore());
 			ItemMeta meta = item.getItemMeta();
 			List<String> lore = new ArrayList<>();
-			String world = like.getWorld().getName();
-			lore.add(ChatColor.GRAY + "ワールド: " + (Worlds.containsKey(world) ? Worlds.get(world) : "Unknown"));
-			lore.add(ChatColor.GRAY + "座標: (X: " + like.getX() + ", Y: " + like.getY() + ", Z: " + like.getZ() + ")");
-			lore.add(ChatColor.GRAY + "お気に入り数: " + like.getLikeCount());
+			String world = get.getWorld().getName();
+			lore.add("§aワールド:§f " + (Worlds.containsKey(world) ? Worlds.get(world) : "Unknown"));
+			lore.add("§a座標:§f X: " + get.getX() + ", Y: " + get.getY() + ", Z: " + get.getZ() + "");
+			lore.add("§aお気に入り数:§f " + get.getLikeCount());
 			meta.setLore(lore);
 			item.setItemMeta(meta);
+			inventory.setItem(10 + i, item);
 		}
 	}
 
 	public static ItemStack newItem(Material material, String displayName){
 		ItemStack item = new ItemStack(material);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(ChatColor.WHITE + displayName);
+		meta.setDisplayName(displayName);
 		item.setItemMeta(meta);
 		return item;
 	}
@@ -393,17 +379,21 @@ public class Util {
 
 	public static void changeLore(Like like, String lore){
 		like.editLore(lore);
+		refreshHandler(like);
 		update(like, false);
 	}
 
 	public static void changeOwner(Like like, UUID newOwner){
 		removeMine(like);
-		LikeInvs.get(like.getOwner()).removeMine(like);
+		UUID oldOwner = like.getOwner();
+		if(LikeInvs.containsKey(oldOwner))
+			LikeInvs.get(oldOwner).removeMine(like);
 
 		like.setOwner(newOwner);
 
 		addMine(like);
-		LikeInvs.get(like.getOwner()).addMine(like);
+		if(LikeInvs.containsKey(newOwner))
+			LikeInvs.get(newOwner).addMine(like);
 
 		update(like, false);
 	}
@@ -416,6 +406,7 @@ public class Util {
 		hologram.teleport(loc.clone().add(0, 2, 0));
 		hologram.despawnEntities();
 		like.refresh();
+		refreshHandler(like);
 
 		LikeMap.registerLike(like);
 
@@ -436,6 +427,7 @@ public class Util {
 		MyLikes.get(uuid).registerLike(like);
 
 		like.incrementLikeCount();
+		refreshHandler(like);
 	}
 
 	public static void unfavorite(Player player, Like like){
@@ -445,6 +437,7 @@ public class Util {
 		MyLikes.get(uuid).unregisterLike(like);
 
 		like.decrementLikeCount();
+		refreshHandler(like);
 	}
 
 	public static void nonSaveDelete(Like like){
@@ -475,10 +468,12 @@ public class Util {
 			@Override
 			public void run() {
 				UUID owner = like.getOwner();
-				LikeInvs invs = LikeInvs.get(owner);
-				invs.removeMine(like);
-				if(!delete)
-					invs.addMine(like);
+				if(LikeInvs.containsKey(owner)){
+					LikeInvs invs = LikeInvs.get(owner);
+					invs.removeMine(like);
+					if(!delete)
+						invs.addMine(like);
+				}
 
 				for(Entry<UUID, LikeInvs> entry : LikeInvs.entrySet()){
 					if(entry.getKey().equals(owner))
@@ -498,11 +493,11 @@ public class Util {
 		});
 	}
 
-	/*public static void refresh(Like like){
+	public static void refreshHandler(Like like){
 		like.getHologram().refreshAll();
 		Main.applyTouchHandler(like, true);
 		Main.applyTouchHandler(like, false);
-	}*/
+	}
 
 	public static TextComponent createInviteButton(String message, Like like){
 		TextComponent component = new TextComponent(message);
@@ -522,13 +517,15 @@ public class Util {
 			while(list.get(l).getLikeCount() > p)
 				l++;
 			while(list.get(r).getLikeCount() < p)
-				r++;
+				r--;
 			if(l > r)
 				continue;
 
 			tmp = list.get(l);
 			list.set(l, list.get(r));
 			list.set(r, tmp);
+			l++;
+			r--;
 		}
 
 		sort(list, left, r);
