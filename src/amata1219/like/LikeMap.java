@@ -69,11 +69,6 @@ public class LikeMap {
 		getLikes(like.getX(), like.getZ()).remove(like);
 	}
 
-	public void moveLike(Like like){
-		registerLike(like);
-		unregisterLike(like);
-	}
-
 	public void clear(){
 		likes.clear();
 	}

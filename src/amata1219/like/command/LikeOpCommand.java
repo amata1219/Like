@@ -58,7 +58,7 @@ public class LikeOpCommand implements CommandExecutor {
 
 			int counter = 0;
 			for(Like like : new ArrayList<>(Util.Mines.get(uuid))){
-				Util.del(like);
+				Util.nonSaveDelete(like);
 				counter++;
 			}
 			HologramDatabase.trySaveToDisk();
@@ -76,7 +76,7 @@ public class LikeOpCommand implements CommandExecutor {
 				if(!like.getWorld().equals(world))
 					continue;
 
-				Util.del(like);
+				Util.nonSaveDelete(like);
 				count++;
 			}
 			HologramDatabase.trySaveToDisk();

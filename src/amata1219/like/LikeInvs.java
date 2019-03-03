@@ -184,30 +184,30 @@ public class LikeInvs {
 		ItemStack item = Util.newItem(Util.LikeIcon, like.getStringId());
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = new ArrayList<>();
-		lore.add(ChatColor.GRAY + like.getLore().getText());
-		if(!isMine)
-			lore.add(ChatColor.WHITE + "作成者 §b-§f " + Util.getName(like.getOwner()));
-		lore.add(ChatColor.WHITE + "お気に入り数 §b-§f " + like.getLikeCount());
-		lore.add(ChatColor.WHITE + "作成日 §b-§f " + like.getCreationTimestamp());
-		lore.add(ChatColor.WHITE + "ワールド §b-§f " + Util.Worlds.get(like.getWorld().getName()));
-		lore.add(ChatColor.WHITE + "座標 §b-§f X: " + like.getX() + " Y: " + like.getY() + " Z: " + like.getZ());
+		lore.add(ChatColor.WHITE + like.getLore());
 		lore.add("");
-		lore.add(ChatColor.GRAY + "操作説明");
+		if(!isMine)
+			lore.add("§b作成者§f:§b " + Util.getName(like.getOwner()));
+		lore.add("§bお気に入り数§f:§b " + like.getLikeCount());
+		lore.add("§b作成日§f:§b " + like.getCreationTimestamp());
+		lore.add("§bワールド§f:§b " + Util.Worlds.get(like.getWorld().getName()));
+		lore.add("§b座標§f:§b X: " + like.getX() + " Y: " + like.getY() + " Z: " + like.getZ());
+		lore.add("");
 		Economy economy = Main.getEconomy();
-		lore.add(ChatColor.GRAY + "左クリック - LikeにTP(コスト: " + economy.format(Util.Tp) + ")");
-		lore.add(ChatColor.GRAY + "右クリック - 半径" + Util.Range + "マス以内にいるプレイヤーに");
-		lore.add(ChatColor.GRAY + "               招待ボタンを送信(コスト: " + economy.format(Util.Invite) + ")");
+		lore.add("左クリック§f:§b LikeにTP(コスト: " + economy.format(Util.Tp) + ")");
+		lore.add("右クリック§f:§b 半径" + Util.Range + "マス以内にいるプレイヤーに");
+		lore.add("               招待ボタンを送信(コスト: " + economy.format(Util.Invite) + ")");
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
 	}
 
-	public static Like toLike(ItemStack icon){
-		if(icon == null || icon.getType() == Material.AIR)
+	public static Like toLike(ItemStack item){
+		if(item == null || item.getType() == Material.AIR || !item.hasItemMeta())
 			return null;
 
-		ItemMeta meta = icon.getItemMeta();
-		if(meta == null || !meta.hasDisplayName())
+		ItemMeta meta = item.getItemMeta();
+		if(!meta.hasDisplayName() || !meta.hasLore())
 			return null;
 
 		return Util.Likes.get(Long.parseLong(meta.getDisplayName()));

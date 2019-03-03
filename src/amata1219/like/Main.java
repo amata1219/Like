@@ -13,6 +13,8 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -234,12 +236,15 @@ public class Main extends JavaPlugin implements Listener {
 			player.closeInventory();
 			economy.withdrawPlayer(player, Util.Invite);
 			String message = Util.InviteMessage.replace(Util.PLACE_HOLDER_OF_PLAYER_NAME, player.getName())
-			.replace(Util.PLACE_HOLDER_OF_LIKE_TEXT, like.getLore().getText());
+			.replace(Util.PLACE_HOLDER_OF_LIKE_TEXT, like.getLore());
 			player.spigot().sendMessage(Util.createInviteButton(message.replace(Util.PLACE_HOLDER_OF_INVITE_USER, player.getName()), like));
-			player.getNearbyEntities(Util.Range, Util.Range, Util.Range).parallelStream()
-			.filter(Player.class::isInstance)
-			.map(Player.class::cast)
-			.forEach(user -> user.spigot().sendMessage(Util.createInviteButton(message.replace(Util.PLACE_HOLDER_OF_INVITE_USER, user.getName()), like)));
+			for(Entity entity : player.getNearbyEntities(Util.Range, Util.Range, Util.Range)){
+				if(entity.getType() != EntityType.PLAYER)
+					continue;
+
+				Player receiver = (Player) entity;
+				receiver.spigot().sendMessage(Util.createInviteButton(message.replace(Util.PLACE_HOLDER_OF_INVITE_USER, receiver.getName()), like));
+			}
 		}
 	}
 
@@ -309,9 +314,7 @@ public class Main extends JavaPlugin implements Listener {
 						return;
 					}
 
-					Util.register(like, false);
-					like.incrementLikeCount();
-					Util.refresh(like);
+					Util.favorite(player, like);
 					Util.tell(player, ChatColor.GREEN, "このLikeをお気に入りに登録しました。");
 					player.sendMessage(Util.Tip);
 				}

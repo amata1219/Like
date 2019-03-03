@@ -7,9 +7,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 
-import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
 import com.gmail.filoghost.holographicdisplays.disk.HologramDatabase;
 import com.gmail.filoghost.holographicdisplays.object.NamedHologram;
+import com.gmail.filoghost.holographicdisplays.object.line.CraftHologramLine;
 
 public class Like {
 
@@ -71,7 +71,7 @@ public class Like {
 
 	public int incrementLikeCount(){
 		likeCount++;
-		updateLikeCountDisplayer();
+		updateCounter();
 		return likeCount;
 	}
 
@@ -79,17 +79,23 @@ public class Like {
 		if(likeCount > 0)
 			likeCount--;
 
-		updateLikeCountDisplayer();
+		updateCounter();
 		return likeCount;
 	}
 
-	public void updateLikeCountDisplayer(){
-		getLikeCountDisplayer().setText(Util.Counter.replace(Util.PLACE_HOLDER_OF_LIKE_COUNT, String.valueOf(likeCount)));
+	public void updateCounter(){
+		//getLikeCountDisplayer().setText(Util.Counter.replace(Util.PLACE_HOLDER_OF_LIKE_COUNT, String.valueOf(likeCount)));
+		((CraftHologramLine) hologram.getLinesUnsafe().get(0)).despawn();
+		hologram.getLinesUnsafe().set(0, HologramDatabase.readLineFromString(Util.Counter.replace(Util.PLACE_HOLDER_OF_LIKE_COUNT, String.valueOf(likeCount)), hologram));
+		refresh();
+		save(true);
 	}
 
 	public void editLore(String lore){
-		getLore().setText(lore.replace(Util.PLACE_HOLDER_OF_PLAYER_NAME, Bukkit.getOfflinePlayer(owner).getName()));
-		hologram.refreshAll();
+		((CraftHologramLine) hologram.getLinesUnsafe().get(1)).despawn();
+		hologram.getLinesUnsafe().set(1, HologramDatabase.readLineFromString(lore.replace(Util.PLACE_HOLDER_OF_PLAYER_NAME, Bukkit.getOfflinePlayer(owner).getName()), hologram));
+		refresh();
+		save(true);
 	}
 
 	public World getWorld(){
@@ -121,17 +127,19 @@ public class Like {
 		hologram.teleport(location);
 	}
 
-	public TextLine getLikeCountDisplayer(){
-		return Util.castTextLine(hologram.getLine(0));
+	public String getLore(){
+		return Util.castTextLine(hologram.getLine(1)).getText();
 	}
 
-	public TextLine getLore(){
-		return Util.castTextLine(hologram.getLine(1));
+	public void refresh(){
+		hologram.refreshAll();
 	}
 
 	public void save(boolean apply){
 		HologramDatabase.saveHologram(hologram);
-		HologramDatabase.trySaveToDisk();
+
+		if(apply)
+			HologramDatabase.trySaveToDisk();
 	}
 
 	@Override
