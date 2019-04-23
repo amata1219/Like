@@ -30,8 +30,8 @@ import com.gmail.filoghost.holographicdisplays.api.handler.TouchHandler;
 import com.gmail.filoghost.holographicdisplays.object.NamedHologram;
 import com.gmail.filoghost.holographicdisplays.object.line.CraftTouchableLine;
 
+import amata1219.like.command.Args;
 import amata1219.like.command.CommandExecutor;
-import amata1219.like.command.CommandExecutor.Args;
 import amata1219.like.command.LikeCCommand;
 import amata1219.like.command.LikeCommand;
 import amata1219.like.command.LikeLCommand;
@@ -204,7 +204,16 @@ public class Main extends JavaPlugin implements Listener {
 
 				player.openInventory(invs.getNextMine(page));
 			}else{
-				touchIcon(player, e);
+				if(e.isRightClick())
+					touchIcon(player, e);
+				else{
+					Like lk = LikeInvs.toLike(e.getCurrentItem());
+					if(lk == null)
+						return;
+
+					player.closeInventory();
+					Util.tell(player, ChatColor.GREEN, "ID > " + lk.getStringId());
+				}
 			}
 			break;
 		case "§8MyLike":
@@ -244,19 +253,25 @@ public class Main extends JavaPlugin implements Listener {
 			}
 
 			player.closeInventory();
+			if(player.getUniqueId().equals(like.getOwner())){
+				Util.tell(player, ChatColor.RED, "自分のLikeにはテレポート出来ません。");
+				return;
+			}
+
 			economy.withdrawPlayer(player, Util.Tp);
+			economy.depositPlayer(getServer().getOfflinePlayer(like.getOwner()), Util.Tp);
 			player.teleport(like.getLocation(player.getLocation()));
 		}else if(e.isRightClick()){
 			if(!economy.has(player, Util.Invite)){
 				Util.tell(player, ChatColor.RED, "所持金が足りません。");
 				return;
 			}
-
 			player.closeInventory();
 			economy.withdrawPlayer(player, Util.Invite);
 			String message = Util.InviteMessage.replace(Util.PLACE_HOLDER_OF_PLAYER_NAME, player.getName())
 			.replace(Util.PLACE_HOLDER_OF_LIKE_TEXT, like.getLore());
-			player.spigot().sendMessage(Util.createInviteButton(message.replace(Util.PLACE_HOLDER_OF_INVITE_USER, player.getName()), like));
+			Util.tell(player, ChatColor.GREEN, "招待ボタンを送信しました。");
+			//player.spigot().sendMessage(Util.createInviteButton(message.replace(Util.PLACE_HOLDER_OF_INVITE_USER, player.getName()), like));
 			for(Entity entity : player.getNearbyEntities(Util.Range, Util.Range, Util.Range)){
 				if(entity.getType() != EntityType.PLAYER)
 					continue;
@@ -287,6 +302,7 @@ public class Main extends JavaPlugin implements Listener {
 	}
 
 	public static final Method setTouchHandler;
+
 	static{
 		Method arg1 = null;
 		try {

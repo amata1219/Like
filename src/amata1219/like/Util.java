@@ -36,6 +36,7 @@ public class Util {
 	public static Config Config;
 	public static Config LikeConfig;
 	public static Config PlayerConfig;
+	public static Config LimitConfig;
 
 	public static final String PLACE_HOLDER_OF_LIKE_COUNT = "%like_count%";
 	public static final String PLACE_HOLDER_OF_PLAYER_NAME = "%player%";
@@ -82,6 +83,7 @@ public class Util {
 		Config = new Config("config");
 		LikeConfig = new Config("like_data");
 		PlayerConfig = new Config("player_data");
+		LimitConfig = new Config("like_limit");
 
 		loadConfigValues();
 		FileConfiguration config = LikeConfig.get();
@@ -116,6 +118,7 @@ public class Util {
 	public static void loadConfigValues(){
 		FileConfiguration config = Config.get();
 
+		Worlds.clear();
 		config.getStringList("Worlds").parallelStream()
 		.map(s -> s.split(":"))
 		.forEach(s -> Worlds.put(s[0], color(s[1])));
@@ -152,6 +155,12 @@ public class Util {
 	public static void loadPlayerData(UUID uuid){
 		MyLikes.put(uuid, new LikeMap(uuid));
 		LikeInvs.put(uuid, new LikeInvs(uuid));
+		String s = uuid.toString();
+		FileConfiguration c = LimitConfig.get();
+		if(!c.contains(s)){
+			c.set(s, c.getInt("Default"));
+			LimitConfig.update();
+		}
 	}
 
 	public static void savePlayerData(UUID uuid, boolean update){
@@ -352,6 +361,11 @@ public class Util {
 
 		if(LikeMap.getChunkSize(player.getLocation()) >= UpperLimit){
 			tell(player, ChatColor.RED, "このチャンクではこれ以上Likeを作成出来ません。");
+			return;
+		}
+
+		if(Mines.containsKey(uuid) && Mines.get(uuid).size() >= LimitConfig.get().getInt(uuid.toString())){
+			tell(player, ChatColor.RED, "作成上限に達しているためこれ以上Likeを作成出来ません。");
 			return;
 		}
 

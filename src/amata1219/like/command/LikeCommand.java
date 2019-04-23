@@ -14,23 +14,28 @@ public class LikeCommand implements CommandExecutor {
 			return;
 
 		Player player = Util.castPlayer(sender);
-		switch(args.get()){
+		switch(args.next()){
 		case "create":
 			Util.create(player);
 			break;
 		case "list":
-			Util.status(player, args.get().equals("me"));
+			Util.status(player, args.next().equals("me"));
 			break;
 		case "status":
 			Util.status(player, true);
 			break;
 		default:
-			if(!args.ref().equals(Util.TOKEN)){
+			if(!args.get(0).equals(Util.TOKEN)){
 				Util.tell(player, ChatColor.RED, "指定されたLikeは存在しません。");
 				break;
 			}
 
-			long id = args.getNumber();
+			if(!args.hasNextLong()){
+				Util.tell(player, ChatColor.RED, "指定されたLikeは存在しません。");
+				break;
+			}
+
+			long id = args.nextLong();
 			if(!Util.Likes.containsKey(id)){
 				Util.tell(player, ChatColor.RED, "指定されたLikeは存在しません。");
 				break;
