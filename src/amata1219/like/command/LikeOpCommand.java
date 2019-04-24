@@ -195,10 +195,12 @@ public class LikeOpCommand implements CommandExecutor {
 				break;
 			case ADD:
 				limit += fc.getInt(su);
+				break;
 			case SUB:
 				limit = Math.max(fc.getInt(su) - limit, 0);
 				break;
 			}
+			System.out.println("test: " + limit);
 			fc.set(su, limit);
 			c.update();
 			Util.tell(sender, ChatColor.GREEN, offp.getName() + "さんのLike作成上限数を" + limit + "に設定しました。");
