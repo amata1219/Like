@@ -1,7 +1,9 @@
 package amata1219.like.command;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -17,7 +19,9 @@ import amata1219.like.Like;
 import amata1219.like.Util;
 
 public class LikeOpCommand implements CommandExecutor {
-
+	
+	private static final Pattern UUID_PATTERN = Pattern.compile("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}");
+	
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onCommand(CommandSender sender, Args args){
@@ -55,19 +59,20 @@ public class LikeOpCommand implements CommandExecutor {
 			Util.delete(delete);
 			Util.tell(sender, ChatColor.GREEN, "Like(" + delete.getId() + ")を削除しました。");
 			break;
-		case "deleteplayer":
+		case "deleteplayer":{
 			if(!args.hasNext()){
 				Util.tell(sender, ChatColor.RED, "プレイヤーを指定して下さい。");
 				return;
 			}
 
-			OfflinePlayer target = Bukkit.getOfflinePlayer(args.next());
-			if(target == null || !target.hasPlayedBefore() || target.getName() == null || target.getName().equals("-1")){
+			Optional<OfflinePlayer> offline = getPlayer(args.next());
+			if(!offline.isPresent()){
 				Util.tell(sender, ChatColor.RED, "指定されたプレイヤーは存在しません。");
 				return;
 			}
-
-			UUID uuid = target.getUniqueId();
+			
+			OfflinePlayer player = offline.get();
+			UUID uuid = player.getUniqueId();
 			if(!Util.Mines.containsKey(uuid)){
 				Util.tell(sender, ChatColor.RED, "指定されたプレイヤーはLikeを作成していません。");
 				return;
@@ -79,9 +84,9 @@ public class LikeOpCommand implements CommandExecutor {
 				counter++;
 			}
 			HologramDatabase.trySaveToDisk();
-			Util.tell(sender, ChatColor.GREEN, target.getName() + "が作成したLike(" + counter + "個)を全て削除しました。");
+			Util.tell(sender, ChatColor.GREEN, player.getName() + "が作成したLike(" + counter + "個)を全て削除しました。");
 			break;
-		case "deleteworld":
+		}case "deleteworld":
 			World world = Bukkit.getWorld(args.next());
 			if(world == null){
 				Util.tell(sender, ChatColor.RED, "指定されたワールドは存在しません。");
@@ -99,7 +104,7 @@ public class LikeOpCommand implements CommandExecutor {
 			HologramDatabase.trySaveToDisk();
 			Util.tell(sender, ChatColor.GREEN, world.getName() + "ワールドに存在するLike(" + count +"個)を全て削除しました。");
 			break;
-		case "changeowner":
+		case "changeowner":{
 			if(!args.hasNextLong()){
 				Util.tell(sender, ChatColor.RED, "編集するLikeのIDを指定して下さい。。");
 				return;
@@ -116,16 +121,17 @@ public class LikeOpCommand implements CommandExecutor {
 				return;
 			}
 
-			OfflinePlayer owner = Bukkit.getOfflinePlayer(args.next());
-			if(owner == null || !owner.hasPlayedBefore() || owner.getName() == null || owner.getName().equals("-1")){
+			Optional<OfflinePlayer> offline = getPlayer(args.next());
+			if(!offline.isPresent()){
 				Util.tell(sender, ChatColor.RED, "指定されたプレイヤーは存在しません。");
 				return;
 			}
-
-			Util.changeOwner(change, owner.getUniqueId());
-			Util.tell(sender, ChatColor.GREEN, change.getStringId() + "のオーナーを" + owner.getName() + "に変更しました。");
+			
+			OfflinePlayer player = offline.get();
+			Util.changeOwner(change, player.getUniqueId());
+			Util.tell(sender, ChatColor.GREEN, change.getStringId() + "のオーナーを" + player.getName() + "に変更しました。");
 			break;
-		case "changedata":
+		}case "changedata":{
 			if(!args.hasNext()){
 				Util.tell(sender, ChatColor.RED, "プレイヤーを指定して下さい。");
 				return;
@@ -148,45 +154,48 @@ public class LikeOpCommand implements CommandExecutor {
 				return;
 			}
 
-			OfflinePlayer next = Bukkit.getOfflinePlayer(args.next());
-			if(next == null || !next.hasPlayedBefore() || next.getName() == null || next.getName().equals("-1")){
-				Util.tell(sender, ChatColor.RED, "指定されたプレイヤー(第2引数)は存在しません。");
+			Optional<OfflinePlayer> offline = getPlayer(args.next());
+			if(!offline.isPresent()){
+				Util.tell(sender, ChatColor.RED, "指定されたプレイヤーは存在しません。");
 				return;
 			}
-
+			
+			OfflinePlayer player = offline.get();
 			int cout = 0;
 			for(Like like : new ArrayList<>(Util.Mines.get(oldid))){
-				Util.changeOwner(like, next.getUniqueId());
+				Util.changeOwner(like, player.getUniqueId());
 				cout++;
 			}
 
-			Util.tell(sender, ChatColor.GREEN, old.getName() + "のLike(" + cout + "個)のオーナーを" + next.getName() + "に変更しました。");
+			Util.tell(sender, ChatColor.GREEN, old.getName() + "のLike(" + cout + "個)のオーナーを" + player.getName() + "に変更しました。");
 			break;
-		case "reload":
+		}case "reload":
 			Util.Config.reload();
 			Util.loadConfigValues();
 			Util.tell(sender, ChatColor.GREEN, "コンフィグを再読み込みしました。");
 			break;
-		case "limit":
+		case "limit":{
 			String s = args.next();
+			
 			Flag flag = s.equals("add") ? Flag.ADD : (s.equals("sub") ? Flag.SUB : Flag.SET);
 			if(!args.hasNext()){
 				Util.tell(sender, ChatColor.RED, "プレイヤーを指定して下さい。");
 				return;
 			}
-
-			OfflinePlayer offp = Bukkit.getOfflinePlayer(args.next());
-			if(offp == null || !offp.hasPlayedBefore() || offp.getName() == null || offp.getName().equals("-1")){
-				Util.tell(sender, ChatColor.RED, "指定されたプレイヤー(第1引数)は存在しません。");
+			
+			Optional<OfflinePlayer> offline = getPlayer(args.next());
+			if(!offline.isPresent()){
+				Util.tell(sender, ChatColor.RED, "指定されたプレイヤーは存在しません。");
 				return;
 			}
-
+			
+			OfflinePlayer player = offline.get();
 			if(!args.hasNextInt()){
 				Util.tell(sender, ChatColor.RED, "上限数を指定して下さい。");
 				return;
 			}
 
-			String su = offp.getUniqueId().toString();
+			String su = player.getUniqueId().toString();
 			Config c = Util.LimitConfig;
 			FileConfiguration fc = c.get();
 			int limit = args.nextInt();
@@ -200,14 +209,22 @@ public class LikeOpCommand implements CommandExecutor {
 				limit = Math.max(fc.getInt(su) - limit, 0);
 				break;
 			}
-			System.out.println("test: " + limit);
 			fc.set(su, limit);
 			c.update();
-			Util.tell(sender, ChatColor.GREEN, offp.getName() + "さんのLike作成上限数を" + limit + "に設定しました。");
+			Util.tell(sender, ChatColor.GREEN, player.getName() + "さんのLike作成上限数を" + limit + "に設定しました。");
 			break;
-		default:
+		}default:
 			break;
 		}
+	}
+	
+	@SuppressWarnings("deprecation")
+	private Optional<OfflinePlayer> getPlayer(String nameOrText){
+		OfflinePlayer player = null;
+		if(UUID_PATTERN.matcher(nameOrText).find()) player = Bukkit.getOfflinePlayer(UUID.fromString(nameOrText));
+		else player = Bukkit.getOfflinePlayer(nameOrText);
+		if(player != null && (!player.hasPlayedBefore() || player.getName().equals("-1"))) player = null;
+		return Optional.ofNullable(player);
 	}
 
 	public enum Flag {
