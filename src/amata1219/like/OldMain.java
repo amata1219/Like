@@ -138,7 +138,7 @@ public class OldMain extends JavaPlugin implements Listener {
 			if(slot != 6)
 				return;
 
-			if(!Util.MyLikes.get(player.getUniqueId()).isRegisteredLike(Util.Likes.get(Long.parseLong(prefix[1])))){
+			if(!Util.MyLikes.get(player.getUniqueId()).contains(Util.Likes.get(Long.parseLong(prefix[1])))){
 				player.closeInventory();
 				Util.tell(player, ChatColor.RED, "このLikeはお気に入りに登録していません。");
 				return;
@@ -151,7 +151,7 @@ public class OldMain extends JavaPlugin implements Listener {
 		case "§8Admin":
 			e.setCancelled(true);
 			if(slot == 6){
-				if(!Util.MyLikes.get(player.getUniqueId()).isRegisteredLike(Util.Likes.get(Long.parseLong(prefix[1])))){
+				if(!Util.MyLikes.get(player.getUniqueId()).contains(Util.Likes.get(Long.parseLong(prefix[1])))){
 					player.closeInventory();
 					Util.tell(player, ChatColor.RED, "このLikeはお気に入りに登録していません。");
 					return;
@@ -344,7 +344,7 @@ public class OldMain extends JavaPlugin implements Listener {
 						return;
 					}
 
-					if(Util.MyLikes.get(uuid).isRegisteredLike(like)){
+					if(Util.MyLikes.get(uuid).contains(like)){
 						Util.tell(player, ChatColor.RED, "このLikeは既にお気に入りに登録しています。");
 						return;
 					}

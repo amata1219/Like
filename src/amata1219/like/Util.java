@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.UUID;
 
+import amata1219.like.chunk.LikeMap;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -98,7 +100,7 @@ public class Util {
 			Like like = new Like(hologram, UUID.fromString(data[0]), Integer.parseInt(data[1]));
 			OldMain.applyTouchHandler(like, false);
 			Likes.put(id, like);
-			LikeMap.registerLike(like);
+			LikeMap.put(like);
 			addMine(like);
 		}
 
@@ -359,7 +361,7 @@ public class Util {
 			return;
 		}
 
-		if(LikeMap.getChunkSize(player.getLocation()) >= UpperLimit){
+		if(LikeMap.get(player.getLocation()).size() >= UpperLimit){
 			tell(player, ChatColor.RED, "このチャンクではこれ以上Likeを作成出来ません。");
 			return;
 		}
@@ -376,7 +378,7 @@ public class Util {
 		like.save(true);
 
 		Likes.put(like.getId(), like);
-		LikeMap.registerLike(like);
+		LikeMap.remove(like);
 		addMine(like);
 		LikeInvs.get(uuid).addMine(like);
 
@@ -415,14 +417,14 @@ public class Util {
 	public static void move(Like like, Location loc){
 		NamedHologram hologram = like.getHologram();
 
-		LikeMap.unregisterLike(like);
+		LikeMap.remove(like);
 
 		hologram.teleport(loc.clone().add(0, 2, 0));
 		hologram.despawnEntities();
 		like.refresh();
 		refreshHandler(like);
 
-		LikeMap.registerLike(like);
+		LikeMap.put(like);
 
 		update(like, false);
 
@@ -438,7 +440,7 @@ public class Util {
 		UUID uuid = player.getUniqueId();
 
 		LikeInvs.get(uuid).addLike(like);
-		MyLikes.get(uuid).registerLike(like);
+		MyLikes.get(uuid).remove(like);
 
 		like.incrementLikeCount();
 		refreshHandler(like);
@@ -448,7 +450,7 @@ public class Util {
 		UUID uuid = player.getUniqueId();
 
 		LikeInvs.get(uuid).removeLike(like);
-		MyLikes.get(uuid).unregisterLike(like);
+		MyLikes.get(uuid).remove(like);
 
 		like.decrementLikeCount();
 		refreshHandler(like);
@@ -462,7 +464,7 @@ public class Util {
 		update(like, true);
 
 		LikeConfig.get().set(like.getStringId(), null);
-		LikeMap.unregisterLike(like);
+		LikeMap.remove(like);
 		Likes.remove(like.getId());
 
 		NamedHologram hologram = like.getHologram();
@@ -500,7 +502,7 @@ public class Util {
 				}
 
 				if(delete) for(LikeMap map : MyLikes.values()){
-					map.unregisterLike(like);
+					map.remove(like);
 				}
 			}
 

@@ -26,7 +26,7 @@ public class LikeInvs {
 		mines.add(newPage(0, true));
 		likes.add(newPage(0, false));
 
-		for(Like like : Util.MyLikes.get(uuid).getLikes())
+		for(Like like : Util.MyLikes.get(uuid).values())
 			addLike(like);
 
 		if(!Util.Mines.containsKey(uuid))
