@@ -189,7 +189,7 @@ public class LikeInvs {
 		lore.add("§aワールド:§f " + Util.Worlds.get(like.getWorld().getName()));
 		lore.add("§a座標:§f X: " + like.getX() + " Y: " + like.getY() + " Z: " + like.getZ());
 		lore.add("");
-		Economy economy = Main.getEconomy();
+		Economy economy = OldMain.getEconomy();
 		lore.add("§a左クリック:§f LikeにTP(コスト: " + economy.format(Util.Tp) + ")");
 		lore.add("§a右クリック:§f 半径" + Util.Range + "マス以内にいるプレイヤーに");
 		lore.add("             §f招待ボタンを送信(コスト: " + economy.format(Util.Invite) + ")");

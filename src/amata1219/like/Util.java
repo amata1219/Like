@@ -96,13 +96,13 @@ public class Util {
 			long id = Long.parseLong(name);
 			String[] data = config.getString(name).split(",");
 			Like like = new Like(hologram, UUID.fromString(data[0]), Integer.parseInt(data[1]));
-			Main.applyTouchHandler(like, false);
+			OldMain.applyTouchHandler(like, false);
 			Likes.put(id, like);
 			LikeMap.registerLike(like);
 			addMine(like);
 		}
 
-		for(Player player : Main.getPlugin().getServer().getOnlinePlayers())
+		for(Player player : OldMain.getPlugin().getServer().getOnlinePlayers())
 			loadPlayerData(player.getUniqueId());
 	}
 
@@ -388,7 +388,7 @@ public class Util {
 			public void run(){
 				cooldown.remove(uuid);
 			}
-		}.runTaskLater(Main.getPlugin(), CooldownTime);
+		}.runTaskLater(OldMain.getPlugin(), CooldownTime);
 	}
 
 	public static void changeLore(Like like, String lore){
@@ -477,7 +477,7 @@ public class Util {
 	}
 
 	public static void update(Like like, boolean delete){
-		Bukkit.getScheduler().runTaskAsynchronously(Main.getPlugin(), new Runnable(){
+		Bukkit.getScheduler().runTaskAsynchronously(OldMain.getPlugin(), new Runnable(){
 
 			@Override
 			public void run() {
@@ -509,8 +509,8 @@ public class Util {
 
 	public static void refreshHandler(Like like){
 		like.getHologram().refreshAll();
-		Main.applyTouchHandler(like, true);
-		Main.applyTouchHandler(like, false);
+		OldMain.applyTouchHandler(like, true);
+		OldMain.applyTouchHandler(like, false);
 	}
 
 	public static TextComponent createInviteButton(String message, Like like){

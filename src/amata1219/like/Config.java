@@ -11,7 +11,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 public class Config {
 
-	private final Main plugin = Main.getPlugin();
+	private final OldMain plugin = OldMain.getPlugin();
 
 	private String name;
 	private File file;
