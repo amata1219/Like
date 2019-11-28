@@ -6,13 +6,8 @@ import org.bukkit.util.Consumer;
 
 public interface Monad<T> {
 	
-	<U> Monad<U> map(Function<T, U> mapper);
+	<S> Monad<S> map(Function<T, S> mapper);
 	
-	void consume(Consumer<T> action);
+	Monad<T> then(Consumer<T> action);
 	
-	default Monad<T> then(Consumer<T> action){
-		consume(action);
-		return this;
-	}
-
 }

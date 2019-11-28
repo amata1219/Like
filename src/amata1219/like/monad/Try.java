@@ -20,7 +20,13 @@ public abstract class Try<T> implements Monad<T> {
 		return value != null ? Success(value) : Failure();
 	}
 	
+	@Override
+	public abstract <S> Try<S> map(Function<T, S> mapper);
+	
 	public abstract <S> Try<S> flatMap(Function<T, Try<S>> mapper);
+	
+	@Override
+	public abstract Try<T> then(Consumer<T> action);
 	
 	public static class Success<T> extends Try<T> {
 		
@@ -48,15 +54,11 @@ public abstract class Try<T> implements Monad<T> {
 			}
 		}
 		
-		@Override
-		public void consume(Consumer<T> action) {
-			action.accept(value);
-		}
 		
 		@Override
 		public Try<T> then(Consumer<T> action){
 			try{
-				consume(action);
+				action.accept(value);
 				return this;
 			}catch(Throwable t){
 				return Failure();
@@ -74,7 +76,7 @@ public abstract class Try<T> implements Monad<T> {
 		}
 
 		@Override
-		public <U> Monad<U> map(Function<T, U> mapper) {
+		public <U> Try<U> map(Function<T, U> mapper) {
 			return Failure();
 		}
 
@@ -84,8 +86,8 @@ public abstract class Try<T> implements Monad<T> {
 		}
 		
 		@Override
-		public void consume(Consumer<T> action) {
-			
+		public Try<T> then(Consumer<T> action) {
+			return Failure();
 		}
 		
 	}

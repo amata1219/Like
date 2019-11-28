@@ -20,7 +20,13 @@ public abstract class Option<T> implements Monad<T> {
 		return value != null ? Some(value) : None();
 	}
 	
-	public abstract <U> Option<U> flatMap(Function<T, Option<U>> mapper);
+	@Override
+	public abstract <S> Option<S> map(Function<T, S> mapper);
+	
+	public abstract <S> Option<S> flatMap(Function<T, Option<S>> mapper);
+	
+	@Override
+	public abstract Option<T> then(Consumer<T> action);
 	
 	public static class Some<T> extends Option<T> {
 		
@@ -31,17 +37,18 @@ public abstract class Option<T> implements Monad<T> {
 		}
 		
 		@Override
-		public <U> Option<U> map(Function<T, U> mapper) {
+		public <S> Option<S> map(Function<T, S> mapper) {
 			return Some(mapper.apply(value));
 		}
 
-		public <U> Option<U> flatMap(Function<T, Option<U>> mapper) {
+		public <S> Option<S> flatMap(Function<T, Option<S>> mapper) {
 			return mapper.apply(value);
 		}
 
 		@Override
-		public void consume(Consumer<T> action) {
+		public Option<T> then(Consumer<T> action) {
 			action.accept(value);
+			return this;
 		}
 		
 	}
@@ -55,18 +62,18 @@ public abstract class Option<T> implements Monad<T> {
 		}
 
 		@Override
-		public <U> Option<U> map(Function<T, U> mapper) {
+		public <S> Option<S> map(Function<T, S> mapper) {
 			return None();
 		}
 
 		@Override
-		public <U> Option<U> flatMap(Function<T, Option<U>> mapper) {
+		public <S> Option<S> flatMap(Function<T, Option<S>> mapper) {
 			return None();
 		}
 
 		@Override
-		public void consume(Consumer<T> action) {
-			
+		public Option<T> then(Consumer<T> action) {
+			return None();
 		}
 		
 	}
