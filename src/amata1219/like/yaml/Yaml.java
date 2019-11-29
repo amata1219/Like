@@ -13,6 +13,8 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import amata1219.like.monad.Option;
+
 public class Yaml extends YamlConfiguration {
 
 	protected final JavaPlugin plugin;
@@ -57,10 +59,11 @@ public class Yaml extends YamlConfiguration {
 		} catch (IOException | InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
-
-		InputStream input = plugin.getResource(resourceFileName);
-		if(input != null)
-			setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(input, StandardCharsets.UTF_8)));
+		
+		Option.of(plugin.getResource(resourceFileName))
+		.map(input -> new InputStreamReader(input, StandardCharsets.UTF_8))
+		.map(YamlConfiguration::loadConfiguration)
+		.then(this::setDefaults);
 	}
 
 	public void update(){
