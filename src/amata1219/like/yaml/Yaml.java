@@ -73,24 +73,22 @@ public class Yaml extends YamlConfiguration {
 
 	private void saveResource(String resourceFileName){
 		if(file.exists()) return;
-
+		
 		InputStream in = plugin.getResource(resourceFileName);
-		if(in == null)
-			throw new IllegalArgumentException("The embedded resource '" + resourceFileName + "' cannot be found in " + file);
+		if(in == null) throw new IllegalArgumentException("The embedded resource '" + resourceFileName + "' cannot be found in " + file);
 
 		String path = file.getPath();
 		int lastIndex = path.lastIndexOf(47);
-		File outDir = new File(file.getParent(), path.substring(0, (lastIndex >= 0) ? lastIndex : 0));
+		File outDir = new File(file.getParent(), path.substring(0, Math.max(lastIndex, 0)));
 
 		if (outDir.exists()) outDir.mkdirs();
 
 		OutputStream output = null;
-
 		try{
 			output = new FileOutputStream(file);
 			byte[] buf = new byte[1024];
 			int length = 0;
-			while ((length = in.read(buf)) > 0) output.write(buf, 0, length);
+			while((length = in.read(buf)) > 0) output.write(buf, 0, length);
 			output.close();
 			in.close();
 		}catch(IOException ex){

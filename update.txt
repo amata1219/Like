@@ -18,8 +18,7 @@ https://github.com/GeorgH93/PCGF_PluginLib/blob/master/src/at/pcgamingfreaks/UUI
 https://github.com/desht/dhutils/blob/master/Lib/src/main/java/me/desht/dhutils/UUIDFetcher.java
 出来る
 
-・1.14でも動くかの確認と修正があればその対応
-出来る
+//1.14でも動くかの確認と修正があればその対応 - OK
 
 ・リロード対応する
 
