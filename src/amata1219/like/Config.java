@@ -10,6 +10,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 public class Config {
+	
+	//will be changed to Yaml
 
 	private final OldMain plugin = OldMain.getPlugin();
 

@@ -15,7 +15,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import com.gmail.filoghost.holographicdisplays.disk.HologramDatabase;
 
 import amata1219.like.Config;
-import amata1219.like.Like;
+import amata1219.like.OldLike;
 import amata1219.like.Util;
 
 public class LikeOpCommand implements CommandExecutor {
@@ -35,7 +35,7 @@ public class LikeOpCommand implements CommandExecutor {
 				return;
 			}
 
-			Like move = Util.Likes.get(args.nextLong());
+			OldLike move = Util.Likes.get(args.nextLong());
 			if(move == null){
 				Util.tell(sender, ChatColor.RED, "指定されたIDのLikeは存在しません。");
 				return;
@@ -50,7 +50,7 @@ public class LikeOpCommand implements CommandExecutor {
 				return;
 			}
 
-			Like delete = Util.Likes.get(args.nextLong());
+			OldLike delete = Util.Likes.get(args.nextLong());
 			if(delete == null){
 				Util.tell(sender, ChatColor.RED, "指定されたIDのLikeは存在しません。");
 				return;
@@ -79,7 +79,7 @@ public class LikeOpCommand implements CommandExecutor {
 			}
 
 			int counter = 0;
-			for(Like like : new ArrayList<>(Util.Mines.get(uuid))){
+			for(OldLike like : new ArrayList<>(Util.Mines.get(uuid))){
 				Util.nonSaveDelete(like);
 				counter++;
 			}
@@ -94,7 +94,7 @@ public class LikeOpCommand implements CommandExecutor {
 			}
 
 			int count = 0;
-			for(Like like : new ArrayList<>(Util.Likes.values())){
+			for(OldLike like : new ArrayList<>(Util.Likes.values())){
 				if(!like.getWorld().equals(world))
 					continue;
 
@@ -110,7 +110,7 @@ public class LikeOpCommand implements CommandExecutor {
 				return;
 			}
 
-			Like change = Util.Likes.get(args.nextLong());
+			OldLike change = Util.Likes.get(args.nextLong());
 			if(change == null){
 				Util.tell(sender, ChatColor.RED, "指定されたIDのLikeは存在しません。");
 				return;
@@ -162,7 +162,7 @@ public class LikeOpCommand implements CommandExecutor {
 			
 			OfflinePlayer player = offline.get();
 			int cout = 0;
-			for(Like like : new ArrayList<>(Util.Mines.get(oldid))){
+			for(OldLike like : new ArrayList<>(Util.Mines.get(oldid))){
 				Util.changeOwner(like, player.getUniqueId());
 				cout++;
 			}

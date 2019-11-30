@@ -4,7 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import amata1219.like.Like;
+import amata1219.like.OldLike;
 import amata1219.like.Util;
 
 public class LikeSCommand  implements CommandExecutor {
@@ -24,7 +24,7 @@ public class LikeSCommand  implements CommandExecutor {
 				return;
 			}
 
-			Like move = Util.Likes.get(args.nextLong());
+			OldLike move = Util.Likes.get(args.nextLong());
 			if(move == null){
 				Util.tell(sender, ChatColor.RED, "指定されたIDのLikeは存在しません。");
 				return;
@@ -43,7 +43,7 @@ public class LikeSCommand  implements CommandExecutor {
 				return;
 			}
 
-			Like lore = Util.Likes.get(args.nextLong());
+			OldLike lore = Util.Likes.get(args.nextLong());
 			if(lore == null){
 				Util.tell(sender, ChatColor.RED, "指定されたIDのLikeは存在しません。");
 				return;

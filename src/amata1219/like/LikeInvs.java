@@ -26,21 +26,21 @@ public class LikeInvs {
 		mines.add(newPage(0, true));
 		likes.add(newPage(0, false));
 
-		for(Like like : Util.MyLikes.get(uuid).values())
+		for(OldLike like : Util.MyLikes.get(uuid).values())
 			addLike(like);
 
 		if(!Util.Mines.containsKey(uuid))
 			return;
 
-		for(Like like : Util.Mines.get(uuid))
+		for(OldLike like : Util.Mines.get(uuid))
 			addMine(like);
 	}
 
-	public boolean hasMine(Like like){
+	public boolean hasMine(OldLike like){
 		return mineList.contains(like.getId());
 	}
 
-	public void addMine(Like like){
+	public void addMine(OldLike like){
 		if(isFull(mineLen))
 			mines.add(newPage(mines.size() - 1, true));
 		mines.get(mines.size() - 1).addItem(newIcon(like, true));
@@ -48,7 +48,7 @@ public class LikeInvs {
 		mineLen++;
 	}
 
-	public void removeMine(Like like){
+	public void removeMine(OldLike like){
 		String id = like.getStringId();
 		for(Inventory inventory : mines){
 			for(ItemStack item : inventory.getContents()){
@@ -69,7 +69,7 @@ public class LikeInvs {
 		}
 	}
 
-	public void moveMine(Like like){
+	public void moveMine(OldLike like){
 		removeMine(like);
 		addMine(like);
 	}
@@ -100,11 +100,11 @@ public class LikeInvs {
 		return mines.get(page + 1);
 	}
 
-	public boolean hasLike(Like like){
+	public boolean hasLike(OldLike like){
 		return likeList.contains(like.getId());
 	}
 
-	public void addLike(Like like){
+	public void addLike(OldLike like){
 		if(isFull(likeLen))
 			likes.add(newPage(likes.size() - 1, false));
 
@@ -113,7 +113,7 @@ public class LikeInvs {
 		likeLen++;
 	}
 
-	public void removeLike(Like like){
+	public void removeLike(OldLike like){
 		String id = like.getStringId();
 		for(Inventory inventory : likes){
 			for(ItemStack item : inventory.getContents()){
@@ -134,7 +134,7 @@ public class LikeInvs {
 		}
 	}
 
-	public void moveLike(Like like){
+	public void moveLike(OldLike like){
 		removeLike(like);
 		addLike(like);
 	}
@@ -176,7 +176,7 @@ public class LikeInvs {
 		return inventory;
 	}
 
-	private ItemStack newIcon(Like like, boolean isMine){
+	private ItemStack newIcon(OldLike like, boolean isMine){
 		ItemStack item = Util.newItem(Util.LikeIcon, ChatColor.WHITE + like.getStringId());
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = new ArrayList<>();
@@ -198,7 +198,7 @@ public class LikeInvs {
 		return item;
 	}
 
-	public static Like toLike(ItemStack item){
+	public static OldLike toLike(ItemStack item){
 		if(item == null || item.getType() == Material.AIR || !item.hasItemMeta())
 			return null;
 

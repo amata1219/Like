@@ -67,14 +67,14 @@ public class Util {
 	public static int Range;
 	public static String InviteMessage;
 
-	public static HashMap<Long, Like> Likes = new HashMap<>();
+	public static HashMap<Long, OldLike> Likes = new HashMap<>();
 	public static LikeMap LikeMap = new LikeMap();
-	public static HashMap<UUID, List<Like>> Mines = new HashMap<>();
+	public static HashMap<UUID, List<OldLike>> Mines = new HashMap<>();
 
 	public static HashMap<UUID, LikeMap> MyLikes = new HashMap<>();
 	public static HashMap<UUID, LikeInvs> LikeInvs = new HashMap<>();
 
-	public static HashMap<UUID, Like> edit = new HashMap<>();
+	public static HashMap<UUID, OldLike> edit = new HashMap<>();
 	public static List<UUID> cooldown = new ArrayList<>();
 
 	public static final String TOKEN = String.valueOf(System.nanoTime());
@@ -97,7 +97,7 @@ public class Util {
 			}
 			long id = Long.parseLong(name);
 			String[] data = config.getString(name).split(",");
-			Like like = new Like(hologram, UUID.fromString(data[0]), Integer.parseInt(data[1]));
+			OldLike like = new OldLike(hologram, UUID.fromString(data[0]), Integer.parseInt(data[1]));
 			OldMain.applyTouchHandler(like, false);
 			Likes.put(id, like);
 			LikeMap.put(like);
@@ -109,7 +109,7 @@ public class Util {
 	}
 
 	public static void unload(){
-		for(Like like : Likes.values()){
+		for(OldLike like : Likes.values()){
 			LikeConfig.get().set(like.getStringId(), like.toString());
 			like.save(false);
 		}
@@ -176,17 +176,17 @@ public class Util {
 		LikeInvs.remove(uuid);
 	}
 
-	public static void addMine(Like like){
+	public static void addMine(OldLike like){
 		UUID owner = like.getOwner();
-		List<Like> list = Mines.get(owner);
+		List<OldLike> list = Mines.get(owner);
 		if(list == null)
 			Mines.put(owner, list = new ArrayList<>());
 		list.add(like);
 	}
 
-	public static void removeMine(Like like){
+	public static void removeMine(OldLike like){
 		UUID owner = like.getOwner();
-		List<Like> list = Mines.get(owner);
+		List<OldLike> list = Mines.get(owner);
 		if(list == null)
 			return;
 
@@ -237,7 +237,7 @@ public class Util {
 		return Bukkit.createInventory(null, size, ChatColor.DARK_GRAY + title);
 	}
 
-	public static Inventory createInfoMenu(Like like){
+	public static Inventory createInfoMenu(OldLike like){
 		UUID uuid = like.getOwner();
 		Inventory inventory = createInventory(18, "Info@" + like.getStringId());
 
@@ -258,7 +258,7 @@ public class Util {
 		return inventory;
 	}
 
-	public static Inventory createEditMenu(Like like){
+	public static Inventory createEditMenu(OldLike like){
 		UUID uuid = like.getOwner();
 		Inventory inventory = createInventory(9, "Edit@" + like.getStringId());
 
@@ -277,13 +277,13 @@ public class Util {
 		return inventory;
 	}
 
-	public static Inventory createConfirmMenu(Like like){
+	public static Inventory createConfirmMenu(OldLike like){
 		Inventory inventory = createInventory(9, "Remove@" + like.getStringId());
 		inventory.setItem(4, newItem(Remove2, ChatColor.RED + "Likeを削除する(※元に戻せません)"));
 		return inventory;
 	}
 
-	public static Inventory createAdminMenu(Like like){
+	public static Inventory createAdminMenu(OldLike like){
 		UUID uuid = like.getOwner();
 		Inventory inventory = createInventory(18, "Admin@" + like.getStringId());
 
@@ -306,12 +306,12 @@ public class Util {
 		return inventory;
 	}
 
-	public static void setOtherLike(Inventory inventory, Like like){
+	public static void setOtherLike(Inventory inventory, OldLike like){
 		UUID owner = like.getOwner();
 		if(!Mines.containsKey(owner))
 			return;
 
-		List<Like> list = new ArrayList<>(Mines.get(like.getOwner()));
+		List<OldLike> list = new ArrayList<>(Mines.get(like.getOwner()));
 		list.remove(like);
 		if(list.isEmpty())
 			return;
@@ -319,7 +319,7 @@ public class Util {
 		sort(list, 0, list.size() - 1);
 
 		for(int i = 0; i < (list.size() > 8 ? 8 : list.size()); i++){
-			Like get = list.get(i);
+			OldLike get = list.get(i);
 			ItemStack item = newItem(OtherLike, get.getLore());
 			ItemMeta meta = item.getItemMeta();
 			List<String> lore = new ArrayList<>();
@@ -374,7 +374,7 @@ public class Util {
 		NamedHologram hologram = new NamedHologram(player.getLocation().clone().add(0, 2, 0), String.valueOf(System.currentTimeMillis()));
 		NamedHologramManager.addHologram(hologram);
 
-		Like like = new Like(hologram, uuid);
+		OldLike like = new OldLike(hologram, uuid);
 		like.save(true);
 
 		Likes.put(like.getId(), like);
@@ -393,13 +393,13 @@ public class Util {
 		}.runTaskLater(OldMain.getPlugin(), CooldownTime);
 	}
 
-	public static void changeLore(Like like, String lore){
+	public static void changeLore(OldLike like, String lore){
 		like.editLore(lore);
 		refreshHandler(like);
 		update(like, false);
 	}
 
-	public static void changeOwner(Like like, UUID newOwner){
+	public static void changeOwner(OldLike like, UUID newOwner){
 		removeMine(like);
 		UUID oldOwner = like.getOwner();
 		if(LikeInvs.containsKey(oldOwner))
@@ -414,7 +414,7 @@ public class Util {
 		update(like, false);
 	}
 
-	public static void move(Like like, Location loc){
+	public static void move(OldLike like, Location loc){
 		NamedHologram hologram = like.getHologram();
 
 		LikeMap.remove(like);
@@ -436,7 +436,7 @@ public class Util {
 		player.openInventory(me ? invs.firstMine() : invs.firstLike());
 	}
 
-	public static void favorite(Player player, Like like){
+	public static void favorite(Player player, OldLike like){
 		UUID uuid = player.getUniqueId();
 
 		LikeInvs.get(uuid).addLike(like);
@@ -446,7 +446,7 @@ public class Util {
 		refreshHandler(like);
 	}
 
-	public static void unfavorite(Player player, Like like){
+	public static void unfavorite(Player player, OldLike like){
 		UUID uuid = player.getUniqueId();
 
 		LikeInvs.get(uuid).removeLike(like);
@@ -456,7 +456,7 @@ public class Util {
 		refreshHandler(like);
 	}
 
-	public static void nonSaveDelete(Like like){
+	public static void nonSaveDelete(OldLike like){
 		UUID owner = like.getOwner();
 		if(Mines.containsKey(owner))
 			Mines.get(owner).remove(like);
@@ -473,12 +473,12 @@ public class Util {
 		HologramDatabase.deleteHologram(hologram.getName());
 	}
 
-	public static void delete(Like like){
+	public static void delete(OldLike like){
 		nonSaveDelete(like);
 		HologramDatabase.trySaveToDisk();
 	}
 
-	public static void update(Like like, boolean delete){
+	public static void update(OldLike like, boolean delete){
 		Bukkit.getScheduler().runTaskAsynchronously(OldMain.getPlugin(), new Runnable(){
 
 			@Override
@@ -509,26 +509,26 @@ public class Util {
 		});
 	}
 
-	public static void refreshHandler(Like like){
+	public static void refreshHandler(OldLike like){
 		like.getHologram().refreshAll();
 		OldMain.applyTouchHandler(like, true);
 		OldMain.applyTouchHandler(like, false);
 	}
 
-	public static TextComponent createInviteButton(String message, Like like){
+	public static TextComponent createInviteButton(String message, OldLike like){
 		TextComponent component = new TextComponent(message);
 		component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/like " + TOKEN + " " + like.getStringId()));
 		component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponent[]{new TextComponent(ChatColor.GRAY + "クリックでLikeにTP！")}));
 		return component;
 	}
 
-	public static void sort(List<Like> list, int left, int right){
+	public static void sort(List<OldLike> list, int left, int right){
 		if(left >= right)
 			return;
 
 		int p = list.get((left + right) / 2).getLikeCount();
 		int l = left, r = right;
-		Like tmp = null;
+		OldLike tmp = null;
 		while(l <= r){
 			while(list.get(l).getLikeCount() > p)
 				l++;

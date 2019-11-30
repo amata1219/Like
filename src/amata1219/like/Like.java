@@ -1,149 +1,98 @@
 package amata1219.like;
 
-import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
 
+import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
 import com.gmail.filoghost.holographicdisplays.disk.HologramDatabase;
 import com.gmail.filoghost.holographicdisplays.object.NamedHologram;
 import com.gmail.filoghost.holographicdisplays.object.line.CraftHologramLine;
 
+import amata1219.like.monad.Try;
+
 public class Like {
-
-	private static final SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd (E) HH:mm:ss");
-
-	private final NamedHologram hologram;
+	
+	public final long id;
+	public final NamedHologram hologram;
+	
 	private UUID owner;
-	private int likeCount;
-
+	private int likes;
+	
 	public Like(NamedHologram hologram, UUID owner){
+		id = Try.of(() -> Long.parseLong(hologram.getName()))
+				.getOrElseThrow(() -> new IllegalArgumentException("Likeを読み込めませんでした(Hologram@" + hologram.getName() + ", Owner@" + owner + ")"));
 		this.hologram = hologram;
 		this.owner = owner;
-		this.likeCount = 0;
-
-		hologram.appendTextLine(Util.Counter.replace(Util.PLACE_HOLDER_OF_LIKE_COUNT, "0"));
+		
+		
+		/*
+		 * hologram.appendTextLine(Util.Counter.replace(Util.PLACE_HOLDER_OF_LIKE_COUNT, "0"));
 		hologram.appendTextLine(Util.Lore.replace(Util.PLACE_HOLDER_OF_PLAYER_NAME, Util.getName(owner)));
 		hologram.appendTextLine(Util.Message);
 
 		OldMain.applyTouchHandler(this, false);
+		 */
 	}
-
-	public Like(NamedHologram hologram, UUID owner, int likeCount){
-		this.hologram = hologram;
-		this.owner = owner;
-		this.likeCount = likeCount;
-	}
-
-	public NamedHologram getHologram(){
-		return hologram;
-	}
-
-	public long getId(){
-		return Long.parseLong(hologram.getName());
-	}
-
-	public String getStringId(){
-		return String.valueOf(hologram.getName());
-	}
-
-	public String getCreationTimestamp(){
-		return Like.format.format(getId());
-	}
-
-	public UUID getOwner(){
+	
+	public UUID owner(){
 		return owner;
 	}
-
+	
 	public void setOwner(UUID owner){
-		this.owner = owner;
+		this.owner = Objects.requireNonNull(owner);
 	}
-
+	
 	public boolean isOwner(UUID uuid){
 		return owner.equals(uuid);
 	}
-
-	public int getLikeCount(){
-		return likeCount;
+	
+	public String lore(){
+		return ((TextLine) hologram.getLine(1)).getText();
 	}
-
-	public int incrementLikeCount(){
-		likeCount++;
-		updateCounter();
-		return likeCount;
+	
+	public void setLore(String lore){
+		rewriteHologramLine(1, lore);
 	}
-
-	public int decrementLikeCount(){
-		if(likeCount > 0)
-			likeCount--;
-
-		updateCounter();
-		return likeCount;
+	
+	public int likes(){
+		return likes;
 	}
-
-	public void updateCounter(){
-		((CraftHologramLine) hologram.getLinesUnsafe().get(0)).despawn();
-		hologram.getLinesUnsafe().set(0, HologramDatabase.readLineFromString(Util.Counter.replace(Util.PLACE_HOLDER_OF_LIKE_COUNT, String.valueOf(likeCount)), hologram));
-		refresh();
-		save(true);
+	
+	public void incrementLikes(){
+		likes++;
+		rewriteHologramLine(0, t);
 	}
-
-	public void editLore(String lore){
-		((CraftHologramLine) hologram.getLinesUnsafe().get(1)).despawn();
-		hologram.getLinesUnsafe().set(1, HologramDatabase.readLineFromString(lore.replace(Util.PLACE_HOLDER_OF_PLAYER_NAME, Bukkit.getOfflinePlayer(owner).getName()), hologram));
-		refresh();
-		save(true);
+	
+	public void decrementLikes(){
+		likes = Math.min(likes - 1, 0);
+		rewriteHologramLine(0, t);
 	}
-
-	public World getWorld(){
-		return hologram.getWorld();
-	}
-
-	public int getX(){
-		return Util.toInt(hologram.getX());
-	}
-
-	public int getY(){
-		return Util.toInt(hologram.getY());
-	}
-
-	public int getZ(){
-		return Util.toInt(hologram.getZ());
-	}
-
-	public Location getLocation(Location location){
-		Location loc = location.clone();
-		loc.setWorld(getWorld());
-		loc.setX(hologram.getX());
-		loc.setY(hologram.getY());
-		loc.setZ(hologram.getZ());
-		return loc;
-	}
-
-	public void move(Location location){
-		hologram.teleport(location);
-	}
-
-	public String getLore(){
-		return Util.castTextLine(hologram.getLine(1)).getText();
-	}
-
-	public void refresh(){
+	
+	private void rewriteHologramLine(int index, String text){
+		List<CraftHologramLine> lines = hologram.getLinesUnsafe();
+		((CraftHologramLine) lines.get(index)).despawn();
+		lines.set(index, HologramDatabase.readLineFromString(text, hologram));
 		hologram.refreshAll();
+		//save()?
 	}
-
-	public void save(boolean apply){
+	
+	private void save(){
+		/*
+		 * public void save(boolean apply){
 		HologramDatabase.saveHologram(hologram);
 
 		if(apply)
 			HologramDatabase.trySaveToDisk();
+			}
+		 */
 	}
-
+	
 	@Override
 	public String toString(){
-		return owner.toString() + "," + likeCount;
+		return owner.toString() + "," + likes;
 	}
-
+	
 }

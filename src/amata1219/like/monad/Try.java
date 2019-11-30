@@ -5,6 +5,8 @@ import java.util.function.Function;
 
 import org.bukkit.util.Consumer;
 
+import com.google.common.base.Supplier;
+
 public abstract class Try<T> implements Monad<T> {
 	
 	public static <T> Try<T> Success(T value){
@@ -16,8 +18,12 @@ public abstract class Try<T> implements Monad<T> {
 		return (Try<T>) Failure.INSTANCE;
 	}
 	
-	public static <T> Try<T> of(T value){
-		return value != null ? Success(value) : Failure();
+	public static <T> Try<T> of(Supplier<T> value){
+		try{
+			return Success(value.get());
+		}catch(Exception e){
+			return Failure();
+		}
 	}
 	
 	@Override
@@ -27,6 +33,8 @@ public abstract class Try<T> implements Monad<T> {
 	
 	@Override
 	public abstract Try<T> then(Consumer<T> action);
+	
+	public abstract <X extends Throwable> T getOrElseThrow(Supplier<X> t) throws X;
 	
 	public static class Success<T> extends Try<T> {
 		
@@ -54,7 +62,6 @@ public abstract class Try<T> implements Monad<T> {
 			}
 		}
 		
-		
 		@Override
 		public Try<T> then(Consumer<T> action){
 			try{
@@ -64,7 +71,12 @@ public abstract class Try<T> implements Monad<T> {
 				return Failure();
 			}
 		}
-		
+
+		@Override
+		public <X extends Throwable> T getOrElseThrow(Supplier<X> t) throws X {
+			return value;
+		}
+
 	}
 	
 	public static class Failure<T> extends Try<T> {
@@ -89,7 +101,12 @@ public abstract class Try<T> implements Monad<T> {
 		public Try<T> then(Consumer<T> action) {
 			return Failure();
 		}
-		
+
+		@Override
+		public <X extends Throwable> T getOrElseThrow(Supplier<X> t) throws X {
+			throw t.get();
+		}
+
 	}
 	
 }

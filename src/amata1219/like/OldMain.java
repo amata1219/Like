@@ -207,7 +207,7 @@ public class OldMain extends JavaPlugin implements Listener {
 				if(e.isRightClick())
 					touchIcon(player, e);
 				else{
-					Like lk = LikeInvs.toLike(e.getCurrentItem());
+					OldLike lk = LikeInvs.toLike(e.getCurrentItem());
 					if(lk == null)
 						return;
 
@@ -241,7 +241,7 @@ public class OldMain extends JavaPlugin implements Listener {
 	}
 
 	private void touchIcon(Player player, InventoryClickEvent e){
-		Like like = LikeInvs.toLike(e.getCurrentItem());
+		OldLike like = LikeInvs.toLike(e.getCurrentItem());
 		if(like == null)
 			return;
 
@@ -315,7 +315,7 @@ public class OldMain extends JavaPlugin implements Listener {
 		setTouchHandler = arg1;
 	}
 
-	public static void applyTouchHandler(Like like, boolean delete){
+	public static void applyTouchHandler(OldLike like, boolean delete){
 		NamedHologram hologram = like.getHologram();
 		Location loc = hologram.getLocation();
 		loc.setPitch(90.0F);
@@ -327,7 +327,7 @@ public class OldMain extends JavaPlugin implements Listener {
 		}
 	}
 
-	public static TouchHandler createTouchHandler(Like like){
+	public static TouchHandler createTouchHandler(OldLike like){
 		return new TouchHandler(){
 
 			@Override
