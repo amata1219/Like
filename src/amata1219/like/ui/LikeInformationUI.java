@@ -27,7 +27,7 @@ public class LikeInformationUI implements InventoryUI {
 			l.put(s -> {
 				s.icon(i -> {
 					i.material = Material.PLAYER_HEAD;
-					i.displayName = Text.of(like.getOwner())
+					i.displayName = Text.of(like.owner());
 				});
 			}, 0);
 		});

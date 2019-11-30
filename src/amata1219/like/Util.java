@@ -82,6 +82,7 @@ public class Util {
 	public static final String OP_PERMISSION = "like.likeop";
 
 	public static void init(){
+		
 		Config = new Config("config");
 		LikeConfig = new Config("like_data");
 		PlayerConfig = new Config("player_data");
@@ -225,14 +226,6 @@ public class Util {
 		return (player == null || name == null) ? "Unknown" : name;
 	}
 
-	public static int toInt(double d){
-		return Double.valueOf(d).intValue();
-	}
-
-	public static TextLine castTextLine(HologramLine line){
-		return (TextLine) line;
-	}
-
 	public static Inventory createInventory(int size, String title){
 		return Bukkit.createInventory(null, size, ChatColor.DARK_GRAY + title);
 	}
@@ -333,13 +326,6 @@ public class Util {
 		}
 	}
 
-	public static ItemStack newItem(Material material, String displayName){
-		ItemStack item = new ItemStack(material);
-		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(displayName);
-		item.setItemMeta(meta);
-		return item;
-	}
 
 	public static long getNumber(String s){
 		String[] split = s.split("@");
@@ -520,32 +506,6 @@ public class Util {
 		component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/like " + TOKEN + " " + like.getStringId()));
 		component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponent[]{new TextComponent(ChatColor.GRAY + "クリックでLikeにTP！")}));
 		return component;
-	}
-
-	public static void sort(List<OldLike> list, int left, int right){
-		if(left >= right)
-			return;
-
-		int p = list.get((left + right) / 2).getLikeCount();
-		int l = left, r = right;
-		OldLike tmp = null;
-		while(l <= r){
-			while(list.get(l).getLikeCount() > p)
-				l++;
-			while(list.get(r).getLikeCount() < p)
-				r--;
-			if(l > r)
-				continue;
-
-			tmp = list.get(l);
-			list.set(l, list.get(r));
-			list.set(r, tmp);
-			l++;
-			r--;
-		}
-
-		sort(list, left, r);
-		sort(list, l, right);
 	}
 
 }

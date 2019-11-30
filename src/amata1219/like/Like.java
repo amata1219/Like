@@ -1,10 +1,12 @@
 package amata1219.like;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 import org.bukkit.Location;
+import org.bukkit.World;
 
 import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
 import com.gmail.filoghost.holographicdisplays.disk.HologramDatabase;
@@ -15,11 +17,13 @@ import amata1219.like.monad.Try;
 
 public class Like {
 	
+	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy.MM.dd (E) HH:mm:ss");
+	
 	public final long id;
 	public final NamedHologram hologram;
 	
 	private UUID owner;
-	private int likes;
+	private int favorites;
 	
 	public Like(NamedHologram hologram, UUID owner){
 		id = Try.of(() -> Long.parseLong(hologram.getName()))
@@ -35,6 +39,22 @@ public class Like {
 
 		OldMain.applyTouchHandler(this, false);
 		 */
+	}
+	
+	public World world(){
+		return hologram.getWorld();
+	}
+	
+	public int x(){
+		return (int) hologram.getX();
+	}
+	
+	public int y(){
+		return (int) hologram.getY();
+	}
+	
+	public int z(){
+		return (int) hologram.getZ();
 	}
 	
 	public UUID owner(){
@@ -57,17 +77,17 @@ public class Like {
 		rewriteHologramLine(1, lore);
 	}
 	
-	public int likes(){
-		return likes;
+	public int favorites(){
+		return favorites;
 	}
 	
-	public void incrementLikes(){
-		likes++;
+	public void incrementFavorites(){
+		favorites++;
 		rewriteHologramLine(0, t);
 	}
 	
-	public void decrementLikes(){
-		likes = Math.min(likes - 1, 0);
+	public void decrementFavorites(){
+		favorites = Math.min(favorites - 1, 0);
 		rewriteHologramLine(0, t);
 	}
 	
@@ -90,9 +110,13 @@ public class Like {
 		 */
 	}
 	
+	public String creationTimestamp(){
+		return DATE_FORMAT.format(id);
+	}
+	
 	@Override
 	public String toString(){
-		return owner.toString() + "," + likes;
+		return owner.toString() + "," + favorites;
 	}
 	
 }

@@ -2,30 +2,30 @@ package amata1219.like.chunk;
 
 import java.util.stream.Collectors;
 
-import amata1219.like.OldLike;
+import amata1219.like.Like;
 
-public class LikeMap extends ChunkMap<OldLike> {
+public class LikeMap extends ChunkMap<Like> {
 	
 	/*
 	 * constructor LikeMap(UUID)
 	 */
 	
-	public boolean contains(OldLike like){
-		return get(like.getX(), like.getZ()).contains(like);
+	public boolean contains(Like like){
+		return get(like.x(), like.z()).contains(like);
 	}
 	
-	public void put(OldLike like){
-		put(like.getX(), like.getY(), like);
+	public void put(Like like){
+		put(like.x(), like.z(), like);
 	}
 	
-	public void remove(OldLike like){
-		remove(like.getX(), like.getY(), like);
+	public void remove(Like like){
+		remove(like.x(), like.z(), like);
 	}
 	
 	@Override
 	public String toString(){
 		return values().stream()
-				.map(OldLike::getId)
+				.map(l -> l.id)
 				.map(String::valueOf)
 				.collect(Collectors.joining(","));
 	}
