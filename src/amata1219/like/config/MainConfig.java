@@ -5,9 +5,11 @@ import java.util.UUID;
 
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 import com.google.common.collect.Maps;
 
+import amata1219.like.Like;
 import amata1219.like.Main;
 import amata1219.like.monad.Option;
 import at.pcgamingfreaks.UUIDConverter;
@@ -60,7 +62,7 @@ public class MainConfig extends Yaml {
 		return tip;
 	}
 	
-	public String invitation(){
+	public String invitation(Player invitee, Like like){
 		return invitation;
 	}
 	
