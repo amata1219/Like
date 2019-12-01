@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -73,6 +74,10 @@ public abstract class Yaml extends YamlConfiguration {
 		return new Section(this, path);
 	}
 	
+	public Material material(String path){
+		return Material.valueOf(getString(path));
+	}
+	
 	public class Section {
 		
 		private final Yaml yaml;
@@ -97,6 +102,10 @@ public abstract class Yaml extends YamlConfiguration {
 		
 		public double doub1e(String path){
 			return yaml.getDouble(path);
+		}
+		
+		public Material material(String path){
+			return yaml.material(loc + path);
 		}
 
 	}

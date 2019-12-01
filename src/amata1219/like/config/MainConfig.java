@@ -1,12 +1,9 @@
 package amata1219.like.config;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -19,21 +16,13 @@ import amata1219.like.monad.Option;
 import amata1219.like.tuplet.Tuple;
 import at.pcgamingfreaks.UUIDConverter;
 
+import static amata1219.like.config.MainConfig.IconType.*;
+
 public class MainConfig extends Yaml {
 	
 	private final HashMap<World, String> worlds2aliases = Maps.newHashMap();
 	private final HashMap<IconType, Material> icons2materials = Maps.newHashMap();
 	private String favorites, explanation, usage, tip, invitation;
-	
-	/*
-	 * get
-	 * text.replace()~~~
-	 * player.send(text) or holo.setLine(text)
-	 * 
-	 * favorites(64).apply(player::sendMessage)
-	 * 
-	 * 
-	 */
 	
 	public MainConfig(){
 		super(Main.instance(), "config.yml");
@@ -52,6 +41,11 @@ public class MainConfig extends Yaml {
 		favorites = lines.colored("Favorites");
 		explanation = lines.colored("Explanation");
 		usage = lines.colored("Usage");
+		
+		tip = colored("Tip");
+		
+		Section icons = section("List of materials of icon on inventory UI");
+		icons2materials.put(FAVORITES, icons)
 	}
 	
 	public boolean canLikesBeCreatedIn(World world){
@@ -88,17 +82,16 @@ public class MainConfig extends Yaml {
 	
 	public enum IconType {
 		
-		LIKE,
 		FAVORITES,
-		TIMESTAMP,
+		CREATION_TIMESTAMP,
 		ID,
-		EDIT,
-		DELETION,
-		CONFIRM_DELETION,
-		UNFAVORITE,
-		OTHER_LIKES,
+		EDIT_EXPLANATION,
+		PROCEED_TO_CONFIRMATION_PAGE_OF_DELETING_LIKE,
+		LIKE,
+		MAKERS_OTHER_LIKES,
 		BACK_TO_PREVIOUS_PAGE,
-		GO_TO_NEXT_PAGE,
+		GO_TO_NEXT_PAGE;
+		
 	}
-
+	
 }

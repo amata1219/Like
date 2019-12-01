@@ -2,7 +2,7 @@
 - "world:メイン"
 'Sequence of like holograms'' text lines':
   'Favorites': "&d&l %favorites% &e&l★"
-  'Explanation': "&6&l%maker%&r&6's Like"
+  'Explanation': "&6&l%creator%&r&6's Like"
   'Usage': "&6Right click to Like!"
 'Tip': "&a【Like】Open like list >> /like list"
 'List of materials of icon on inventory UI':
@@ -16,3 +16,10 @@
   'Maker''s other likes': "DIAMOND"
   'Back to previous page': "HEART_OF_THE_SEA"
   'Go to next page': "HEART_OF_THE_SEA"
+'Number of seconds of like creation cooldown': 10
+'Like creation limit per chunk': 3
+'Teleport costs': 100.0
+'Invitation':
+  'Costs': 100.0
+  'Radius of scope': 32
+  'Message': "&3&l【Like TP】%explanation% by %creator%\n&3 [Inviter >> %invetee%] Click to Teleport!"
