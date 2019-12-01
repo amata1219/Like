@@ -18,7 +18,7 @@ public class MainConfig extends Yaml {
 	
 	private final HashMap<World, String> aliases = Maps.newHashMap();
 	private final HashMap<IconType, Material> materials = Maps.newHashMap();
-	private String favorites, description, usage, tip, invitation;
+	private String favorites, explanation, usage, tip, invitation;
 	
 	/*
 	 * get
@@ -47,11 +47,11 @@ public class MainConfig extends Yaml {
 	}
 	
 	public String favorites(int favorites){
-		return this.favorites.replace("%like_count%", String.valueOf(favorites));
+		return this.favorites.replace("%favorites%", String.valueOf(favorites));
 	}
 	
-	public String description(UUID owner){
-		return description.replace("%player%", UUIDConverter.getNameFromUUID(owner));
+	public String explanation(UUID maker){
+		return explanation.replace("%maker%", UUIDConverter.getNameFromUUID(maker));
 	}
 	
 	public String usage(){
