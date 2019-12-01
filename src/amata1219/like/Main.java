@@ -4,19 +4,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
 	
-	/*
-	 * UI(Masquerade)
-	 * Listener
-	 * Command(Slash)
-	 * Name→UUID, UUID→Name (MojangAPI)
-	 * 
-	 */
-	
-	private static Main plugin;
+	private static Main instance;
 	
 	@Override
 	public void onEnable(){
-		plugin = this;
+		instance = this;
 	}
 	
 	@Override
@@ -24,8 +16,8 @@ public class Main extends JavaPlugin {
 		
 	}
 	
-	public static Main plugin(){
-		return plugin;
+	public static Main instance(){
+		return instance;
 	}
 
 }

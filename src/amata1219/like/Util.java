@@ -46,12 +46,15 @@ public class Util {
 	public static final String PLACE_HOLDER_OF_INVITE_USER = "%invete_user%";
 
 	public static HashMap<String, String> Worlds = new HashMap<>();
+	
 	public static String Counter;
 	public static String Lore;
 	public static String Message;
 	public static String Tip;
+	
 	public static int CooldownTime;
 	public static int UpperLimit;
+	
 	public static Material LikeCount;
 	public static Material Timestamp;
 	public static Material Id;
@@ -62,6 +65,7 @@ public class Util {
 	public static Material OtherLike;
 	public static Material PageButton;
 	public static Material LikeIcon;
+	
 	public static double Tp;
 	public static double Invite;
 	public static int Range;
