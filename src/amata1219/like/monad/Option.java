@@ -28,6 +28,12 @@ public abstract class Option<T> implements Monad<T> {
 	@Override
 	public abstract Option<T> then(Consumer<T> action);
 	
+	public abstract boolean isSome();
+	
+	public boolean isNone(){
+		return !isSome();
+	}
+	
 	public static class Some<T> extends Option<T> {
 		
 		private final T value;
@@ -49,6 +55,11 @@ public abstract class Option<T> implements Monad<T> {
 		public Option<T> then(Consumer<T> action) {
 			action.accept(value);
 			return this;
+		}
+
+		@Override
+		public boolean isSome() {
+			return true;
 		}
 		
 	}
@@ -74,6 +85,11 @@ public abstract class Option<T> implements Monad<T> {
 		@Override
 		public Option<T> then(Consumer<T> action) {
 			return None();
+		}
+
+		@Override
+		public boolean isSome() {
+			return false;
 		}
 		
 	}
