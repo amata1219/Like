@@ -10,11 +10,12 @@
   'Creation timestamp': "CLOCK"
   'ID': "NAME_TAG"
   'Edit explanation': "DIAMOND"
+  'Unfavorite': "DIAMOND"
   'Proceed to confirmation page of deleting like': "DIAMOND"
   'Delete like': "DIAMOND"
   'Cancel like deletion': "DIAMOND"
   'Like': "SUNFLOWER"
-  'Maker''s other likes': "DIAMOND"
+  'Creator''s other likes': "DIAMOND"
   'Back to previous page': "HEART_OF_THE_SEA"
   'Go to next page': "HEART_OF_THE_SEA"
 'Number of seconds of like creation cooldown': 10

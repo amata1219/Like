@@ -334,12 +334,12 @@ public class OldMain extends JavaPlugin implements Listener {
 			public void onTouch(Player player) {
 				UUID uuid = player.getUniqueId();
 				if(player.isSneaking()){
-					if(like.isOwner(uuid))
+					if(like.isCreator(uuid))
 						player.openInventory(Util.createEditMenu(like));
 					else
 						player.openInventory(player.hasPermission(Util.OP_PERMISSION) ? Util.createAdminMenu(like) : Util.createInfoMenu(like));
 				}else{
-					if(like.isOwner(uuid)){
+					if(like.isCreator(uuid)){
 						Util.tell(player, ChatColor.RED, "自分のLikeはお気に入りに登録出来ません。");
 						return;
 					}

@@ -59,12 +59,13 @@ public class MainConfig extends Yaml {
 			.put(FAVORITES, icons.material("Favorites"))
 			.put(CREATION_TIMESTAMP, icons.material("Creation timestamp"))
 			.put(ID, icons.material("ID"))
+			.put(UNFAVORITE, icons.material("Unfavorite"))
 			.put(EDIT_EXPLANATION, icons.material("Edit explanation"))
 			.put(PROCEED_TO_CONFIRMATION_PAGE_OF_DELETING_LIKE, icons.material("Proceed to confirmation page of deleting like"))
 			.put(DELETE_LIKE, icons.material("Delete like"))
 			.put(CANCEL_LIKE_DELETION, icons.material("Cancel like deletion"))
 			.put(LIKE, icons.material("Like"))
-			.put(MAKERS_OTHER_LIKES, icons.material("Maker''s other likes"))
+			.put(CREATORS_OTHER_LIKES, icons.material("Creator''s other likes"))
 			.put(BACK_TO_PREVIOUS_PAGE, icons.material("Back to previous page"))
 			.put(GO_TO_NEXT_PAGE, icons.material("Go to next page"))
 			.build();
@@ -136,12 +137,13 @@ public class MainConfig extends Yaml {
 		FAVORITES,
 		CREATION_TIMESTAMP,
 		ID,
+		UNFAVORITE,
 		EDIT_EXPLANATION,
 		PROCEED_TO_CONFIRMATION_PAGE_OF_DELETING_LIKE,
 		DELETE_LIKE,
 		CANCEL_LIKE_DELETION,
 		LIKE,
-		MAKERS_OTHER_LIKES,
+		CREATORS_OTHER_LIKES,
 		BACK_TO_PREVIOUS_PAGE,
 		GO_TO_NEXT_PAGE;
 		

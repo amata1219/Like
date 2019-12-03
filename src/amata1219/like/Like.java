@@ -24,17 +24,17 @@ public class Like {
 	public final long id;
 	public final NamedHologram hologram;
 	
-	private UUID maker;
+	private UUID creator;
 	private int favorites;
 	
-	public Like(NamedHologram hologram, UUID maker){
+	public Like(NamedHologram hologram, UUID creator){
 		id = Try.of(() -> Long.parseLong(hologram.getName()))
-				.getOrElseThrow(() -> new IllegalArgumentException("Likeを読み込めませんでした(Hologram@" + hologram.getName() + ", Owner@" + maker + ")"));
+				.getOrElseThrow(() -> new IllegalArgumentException("Likeを読み込めませんでした(Hologram@" + hologram.getName() + ", Owner@" + creator + ")"));
 		this.hologram = hologram;
-		this.maker = maker;
+		this.creator = creator;
 		
 		hologram.appendTextLine(config.likeFavoritesText(0));
-		hologram.appendTextLine(config.likeExplanation(maker));
+		hologram.appendTextLine(config.likeExplanation(creator));
 		hologram.appendTextLine(config.likeUsage());
 		
 		//OldMain.applyTouchHandler(this, false);
@@ -56,16 +56,16 @@ public class Like {
 		return (int) hologram.getZ();
 	}
 	
-	public UUID maker(){
-		return maker;
+	public UUID creator(){
+		return creator;
 	}
 	
-	public void setOwner(UUID maker){
-		this.maker = Objects.requireNonNull(maker);
+	public void setCreator(UUID uuid){
+		this.creator = Objects.requireNonNull(uuid);
 	}
 	
-	public boolean isOwner(UUID uuid){
-		return maker.equals(uuid);
+	public boolean isCreator(UUID uuid){
+		return creator.equals(uuid);
 	}
 	
 	public String lore(){
@@ -115,7 +115,7 @@ public class Like {
 	
 	@Override
 	public String toString(){
-		return maker.toString() + "," + favorites;
+		return creator.toString() + "," + favorites;
 	}
 	
 }
