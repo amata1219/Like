@@ -1,17 +1,18 @@
-'List of worlds where like creation is enabled and aliases':
+'Map of worlds where like creation is enabled and aliases':
 - "world:メイン"
-'Sequence of like holograms'' text lines':
+'Like holograms'' text lines':
   'Favorites': "&d&l %favorites% &e&l★"
   'Explanation': "&6&l%creator%&r&6's Like"
   'Usage': "&6Right click to Like!"
 'Tip': "&a【Like】Open like list >> /like list"
-'List of materials of icon on inventory UI':
+'Icon materials on inventory UI':
   'Favorites': "SUNFLOWER"
   'Creation timestamp': "CLOCK"
   'ID': "NAME_TAG"
   'Edit explanation': "DIAMOND"
   'Proceed to confirmation page of deleting like': "DIAMOND"
   'Delete like': "DIAMOND"
+  'Cancel like deletion': "DIAMOND"
   'Like': "SUNFLOWER"
   'Maker''s other likes': "DIAMOND"
   'Back to previous page': "HEART_OF_THE_SEA"

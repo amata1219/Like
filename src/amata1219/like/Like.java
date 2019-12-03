@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import org.bukkit.Location;
 import org.bukkit.World;
 
 import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
@@ -13,32 +12,32 @@ import com.gmail.filoghost.holographicdisplays.disk.HologramDatabase;
 import com.gmail.filoghost.holographicdisplays.object.NamedHologram;
 import com.gmail.filoghost.holographicdisplays.object.line.CraftHologramLine;
 
+import amata1219.like.config.MainConfig;
 import amata1219.like.monad.Try;
 
 public class Like {
 	
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy.MM.dd (E) HH:mm:ss");
 	
+	private final MainConfig config = Main.instance().config();
+	
 	public final long id;
 	public final NamedHologram hologram;
 	
-	private UUID owner;
+	private UUID maker;
 	private int favorites;
 	
-	public Like(NamedHologram hologram, UUID owner){
+	public Like(NamedHologram hologram, UUID maker){
 		id = Try.of(() -> Long.parseLong(hologram.getName()))
-				.getOrElseThrow(() -> new IllegalArgumentException("Likeを読み込めませんでした(Hologram@" + hologram.getName() + ", Owner@" + owner + ")"));
+				.getOrElseThrow(() -> new IllegalArgumentException("Likeを読み込めませんでした(Hologram@" + hologram.getName() + ", Owner@" + maker + ")"));
 		this.hologram = hologram;
-		this.owner = owner;
+		this.maker = maker;
 		
+		hologram.appendTextLine(config.likeFavoritesText(0));
+		hologram.appendTextLine(config.likeExplanation(maker));
+		hologram.appendTextLine(config.likeUsage());
 		
-		/*
-		 * hologram.appendTextLine(Util.Counter.replace(Util.PLACE_HOLDER_OF_LIKE_COUNT, "0"));
-		hologram.appendTextLine(Util.Lore.replace(Util.PLACE_HOLDER_OF_PLAYER_NAME, Util.getName(owner)));
-		hologram.appendTextLine(Util.Message);
-
-		OldMain.applyTouchHandler(this, false);
-		 */
+		//OldMain.applyTouchHandler(this, false);
 	}
 	
 	public World world(){
@@ -57,16 +56,16 @@ public class Like {
 		return (int) hologram.getZ();
 	}
 	
-	public UUID owner(){
-		return owner;
+	public UUID maker(){
+		return maker;
 	}
 	
-	public void setOwner(UUID owner){
-		this.owner = Objects.requireNonNull(owner);
+	public void setOwner(UUID maker){
+		this.maker = Objects.requireNonNull(maker);
 	}
 	
 	public boolean isOwner(UUID uuid){
-		return owner.equals(uuid);
+		return maker.equals(uuid);
 	}
 	
 	public String lore(){
@@ -83,12 +82,12 @@ public class Like {
 	
 	public void incrementFavorites(){
 		favorites++;
-		rewriteHologramLine(0, t);
+		rewriteHologramLine(0, config.likeFavoritesText(favorites));
 	}
 	
 	public void decrementFavorites(){
 		favorites = Math.min(favorites - 1, 0);
-		rewriteHologramLine(0, t);
+		rewriteHologramLine(0, config.likeFavoritesText(favorites));
 	}
 	
 	private void rewriteHologramLine(int index, String text){
@@ -116,7 +115,7 @@ public class Like {
 	
 	@Override
 	public String toString(){
-		return owner.toString() + "," + favorites;
+		return maker.toString() + "," + favorites;
 	}
 	
 }

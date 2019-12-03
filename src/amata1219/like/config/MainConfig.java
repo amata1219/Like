@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 
 import amata1219.like.Like;
@@ -21,8 +22,17 @@ import static amata1219.like.config.MainConfig.IconType.*;
 public class MainConfig extends Yaml {
 	
 	private final HashMap<World, String> worlds2aliases = Maps.newHashMap();
-	private final HashMap<IconType, Material> icons2materials = Maps.newHashMap();
-	private String favorites, explanation, usage, tip, invitation;
+	private ImmutableMap<IconType, Material> icons2materials;
+	private String likeFavoritesText;
+	private String likeExplanation;
+	private String likeUsage;
+	private String tip;
+	private int numberOfSecondsOfLikeCreationCooldown;
+	private int likeCreationLimitPerChunk;
+	private double teleportCosts;
+	private double invitationCosts;
+	private int radiusOfInvitationScope;
+	private String invitationMessage;
 	
 	public MainConfig(){
 		super(Main.instance(), "config.yml");
@@ -32,20 +42,41 @@ public class MainConfig extends Yaml {
 	@Override
 	public void readAll() {
 		worlds2aliases.clear();
-		list("List of worlds where like creation is enabled and aliases").stream()
+		list("Map of worlds where like creation is enabled and aliases").stream()
 		.map(s -> s.split(","))
 		.map(s -> Tuple.of(Option.of(Bukkit.getWorld(s[0])), s[1]))
 		.forEach(t -> t.first.then(w -> worlds2aliases.put(w, t.second)));
 		
-		Section lines = section("Sequence of like holograms'' text lines.");
-		favorites = lines.colored("Favorites");
-		explanation = lines.colored("Explanation");
-		usage = lines.colored("Usage");
+		Section lines = section("Like holograms'' text lines");
+		likeFavoritesText = lines.colored("Favorites");
+		likeExplanation = lines.colored("Explanation");
+		likeUsage = lines.colored("Usage");
 		
 		tip = colored("Tip");
 		
-		Section icons = section("List of materials of icon on inventory UI");
-		icons2materials.put(FAVORITES, icons)
+		Section icons = section("Icon materials on inventory UI");
+		icons2materials = new ImmutableMap.Builder<IconType, Material>()
+			.put(FAVORITES, icons.material("Favorites"))
+			.put(CREATION_TIMESTAMP, icons.material("Creation timestamp"))
+			.put(ID, icons.material("ID"))
+			.put(EDIT_EXPLANATION, icons.material("Edit explanation"))
+			.put(PROCEED_TO_CONFIRMATION_PAGE_OF_DELETING_LIKE, icons.material("Proceed to confirmation page of deleting like"))
+			.put(DELETE_LIKE, icons.material("Delete like"))
+			.put(CANCEL_LIKE_DELETION, icons.material("Cancel like deletion"))
+			.put(LIKE, icons.material("Like"))
+			.put(MAKERS_OTHER_LIKES, icons.material("Maker''s other likes"))
+			.put(BACK_TO_PREVIOUS_PAGE, icons.material("Back to previous page"))
+			.put(GO_TO_NEXT_PAGE, icons.material("Go to next page"))
+			.build();
+		
+		numberOfSecondsOfLikeCreationCooldown = getInt("Number of seconds of like creation cooldown");
+		likeCreationLimitPerChunk = getInt("Like creation limit per chunk");
+		teleportCosts = getDouble("Teleport costs");
+		
+		Section invitation = section("Invitation");
+		invitationCosts = invitation.doub1e("Costs");
+		radiusOfInvitationScope = invitation.integer("Radius of scope");
+		invitationMessage = invitation.colored("Message");
 	}
 	
 	public boolean canLikesBeCreatedIn(World world){
@@ -60,24 +91,44 @@ public class MainConfig extends Yaml {
 		return icons2materials.get(type);
 	}
 	
-	public String favorites(int favorites){
-		return this.favorites.replace("%favorites%", String.valueOf(favorites));
+	public String likeFavoritesText(int favorites){
+		return this.likeFavoritesText.replace("%favorites%", String.valueOf(favorites));
 	}
 	
-	public String explanation(UUID maker){
-		return explanation.replace("%maker%", UUIDConverter.getNameFromUUID(maker));
+	public String likeExplanation(UUID maker){
+		return likeExplanation.replace("%maker%", UUIDConverter.getNameFromUUID(maker));
 	}
 	
-	public String usage(){
-		return usage;
+	public String likeUsage(){
+		return likeUsage;
 	}
 	
 	public String tip(){
 		return tip;
 	}
 	
-	public String invitation(Player invitee, Like like){
-		return invitation;
+	public int numberOfSecondsOfLikeCreationCooldown(){
+		return numberOfSecondsOfLikeCreationCooldown;
+	}
+	
+	public int likeCreationLimitPerChunk(){
+		return likeCreationLimitPerChunk;
+	}
+	
+	public double teleportCosts(){
+		return teleportCosts;
+	}
+	
+	public double invitationCosts(){
+		return invitationCosts;
+	}
+	
+	public int radiusOfInvitationScope(){
+		return radiusOfInvitationScope;
+	}
+	
+	public String invitationMessage(Player invitee, Like like){
+		return invitationMessage;
 	}
 	
 	public enum IconType {
@@ -87,6 +138,8 @@ public class MainConfig extends Yaml {
 		ID,
 		EDIT_EXPLANATION,
 		PROCEED_TO_CONFIRMATION_PAGE_OF_DELETING_LIKE,
+		DELETE_LIKE,
+		CANCEL_LIKE_DELETION,
 		LIKE,
 		MAKERS_OTHER_LIKES,
 		BACK_TO_PREVIOUS_PAGE,
