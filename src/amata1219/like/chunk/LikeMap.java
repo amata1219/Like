@@ -6,20 +6,16 @@ import amata1219.like.Like;
 
 public class LikeMap extends ChunkMap<Like> {
 	
-	/*
-	 * constructor LikeMap(UUID)
-	 */
-	
-	public boolean contains(Like like){
-		return get(like.x(), like.z()).contains(like);
-	}
-	
 	public void put(Like like){
 		put(like.x(), like.z(), like);
 	}
 	
 	public void remove(Like like){
 		remove(like.x(), like.z(), like);
+	}
+	
+	public boolean contains(Like like){
+		return get(like.x(), like.z()).contains(like);
 	}
 	
 	@Override

@@ -16,11 +16,11 @@ public class ChunkMap<V> {
 	private final HashMap<Long, Collection<V>> map = new HashMap<>();
 	
 	public boolean containsHash(Chunk chunk){
-		return containsHash(calculate(chunk));
+		return containsHash(chunk.getX(), chunk.getZ());
 	}
 
 	public boolean containsHash(Location location){
-		return containsHash(calculate(location));
+		return containsHash(location.getBlockX(), location.getBlockZ());
 	}
 
 	public boolean containsHash(int x, int z){
@@ -37,8 +37,12 @@ public class ChunkMap<V> {
 				.collect(Collectors.toList());
 	}
 	
+	public Collection<V> get(Chunk chunk){
+		return get(chunk.getX(), chunk.getZ());
+	}
+	
 	public Collection<V> get(Location location){
-		return get(calculate(location));
+		return get(location.getBlockX(), location.getBlockZ());
 	}
 
 	public Collection<V> get(int x, int z){
