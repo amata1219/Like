@@ -9,6 +9,8 @@ import amata1219.like.exception.NotImplementedException;
 
 public class PlayerFavoriteLikesConfig extends Yaml {
 	
+	//favorite likes only
+	
 	public PlayerFavoriteLikesConfig(){
 		super(Main.instance(), "player_data.yml");
 	}
@@ -22,9 +24,9 @@ public class PlayerFavoriteLikesConfig extends Yaml {
 		LikeMap map = new LikeMap();
 		String data = getString(uuid.toString());
 		Arrays.stream(data.split(","))
-		.mapToLong(Long::parseLong)
-		.mapToObj(Main.instance()::like)
-		.forEach(o -> o.then(map::put));
+		.map(Long::valueOf)
+		.map(Main.instance().likes::get)
+		.forEach(map::put);
 		return map;
 	}
 	
