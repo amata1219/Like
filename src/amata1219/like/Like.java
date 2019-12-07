@@ -95,19 +95,13 @@ public class Like {
 		((CraftHologramLine) lines.get(index)).despawn();
 		lines.set(index, HologramDatabase.readLineFromString(text, hologram));
 		hologram.refreshAll();
-		//save()?
+		HologramDatabase.saveHologram(hologram);
 	}
 	
-	private void save(){
-		/*
-		 * public void save(boolean apply){
+	/*private void save(){
 		HologramDatabase.saveHologram(hologram);
-
-		if(apply)
-			HologramDatabase.trySaveToDisk();
-			}
-		 */
-	}
+		HologramDatabase.trySaveToDisk();
+	}*/
 	
 	public String creationTimestamp(){
 		return DATE_FORMAT.format(id);

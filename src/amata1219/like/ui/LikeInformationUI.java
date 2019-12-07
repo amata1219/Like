@@ -10,8 +10,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import com.gmail.filoghost.holographicdisplays.api.handler.TouchHandler;
-
 import amata1219.like.Like;
 import amata1219.like.Main;
 import amata1219.like.config.MainConfig;
@@ -22,7 +20,7 @@ import amata1219.masquerade.option.Lines;
 import amata1219.masquerade.text.Text;
 import at.pcgamingfreaks.UUIDConverter;
 
-public class LikeInformationUI implements InventoryUI, TouchHandler {
+public class LikeInformationUI implements InventoryUI {
 
 	private final MainConfig config = Main.instance().config();
 	private final Like like;
@@ -34,7 +32,7 @@ public class LikeInformationUI implements InventoryUI, TouchHandler {
 	@Override
 	public Function<Player, Layout> layout() {
 		return build(Lines.x2, (p, l) -> {
-			l.title = Text.of("&a-Like情報").color().toString();
+			l.title = Text.of("&a-Like Information").colored();
 			
 			l.put(s -> {
 				s.icon(i -> {
@@ -101,11 +99,6 @@ public class LikeInformationUI implements InventoryUI, TouchHandler {
 				}, slotIndex.getAndIncrement());
 			});
 		});
-	}
-
-	@Override
-	public void onTouch(Player player) {
-		open(player);
 	}
 
 }
