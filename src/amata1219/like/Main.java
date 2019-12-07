@@ -4,10 +4,14 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
 
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import amata1219.like.config.MainConfig;
 import amata1219.like.config.PlayerFavoriteLikesConfig;
+import amata1219.like.player.PlayerData;
+import amata1219.like.player.PlayerDataLoading;
+import amata1219.like.tuplet.Tuple;
 
 public class Main extends JavaPlugin {
 	
@@ -54,11 +58,16 @@ public class Main extends JavaPlugin {
 		
 		config = new MainConfig();
 		playerFavoriteLikesConfig = new PlayerFavoriteLikesConfig();
+		
+		getServer().getOnlinePlayers().stream()
+		.map(Player::getUniqueId)
+		.map(u -> Tuple.of(u, PlayerDataLoading.loadExistingPlayerData(u)))
+		.forEach(t -> players.put(t.first, t.second));
 	}
 	
 	@Override
 	public void onDisable(){
-		
+		players.entrySet().forEach(e -> playerFavoriteLikesConfig.save(e.getKey(), e.getValue().favoriteLikes));
 	}
 	
 	public static Main instance(){

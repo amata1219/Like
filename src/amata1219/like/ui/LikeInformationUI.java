@@ -1,6 +1,8 @@
 package amata1219.like.ui;
 
+import java.util.Comparator;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
 import org.bukkit.Bukkit;
@@ -80,7 +82,24 @@ public class LikeInformationUI implements InventoryUI, TouchHandler {
 				});
 			}, 9);
 			
-			//todo set other likes
+			AtomicInteger slotIndex = new AtomicInteger(10);
+			Main.instance().playerLikes.get(like.creator()).stream()
+			.filter(like -> like != this.like)
+			.sorted(Comparator.comparing(Like::favorites).reversed())
+			.limit(8)
+			.forEach(like -> {
+				l.put(s -> {
+					s.icon(i -> {
+						i.material = config.icon(IconType.LIKE);
+						i.displayName = " ";
+						i.lore(
+							Text.of("&a-ワールド-&7-: &f-%s").format(config.alias(like.world()).or(() -> "Unknown")).colored(),
+							Text.of("&a-座標-&7-: &f-X-&7-: &f-%s Y-&7-: &f-%s Z-&7-: &f-%s").format(like.x(), like.y(), like.z()).colored(),
+							Text.of("&a-お気に入り数-&7-: &f-%s").format(like.favorites()).colored()
+						);
+					});
+				}, slotIndex.getAndIncrement());
+			});
 		});
 	}
 
@@ -88,27 +107,5 @@ public class LikeInformationUI implements InventoryUI, TouchHandler {
 	public void onTouch(Player player) {
 		open(player);
 	}
-	
-	/*
-	 * 	UUID uuid = like.getOwner();
-		Inventory inventory = createInventory(18, "Info@" + like.getStringId());
-
-		ItemStack owner = new ItemStack(Material.PLAYER_HEAD);
-		SkullMeta meta = (SkullMeta) owner.getItemMeta();
-		OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
-		meta.setDisplayName(ChatColor.GREEN + getName(uuid));
-		meta.setOwningPlayer(player);
-		owner.setItemMeta(meta);
-		inventory.setItem(0, owner);
-		inventory.setItem(3, newItem(LikeCount, "§aお気に入りの数:§f " + like.getLikeCount()));
-		inventory.setItem(4, newItem(Timestamp, "§a作成日時:§f " + like.getCreationTimestamp()));
-		inventory.setItem(5, newItem(Id, "§a管理ID:§f " + like.getId()));
-		inventory.setItem(6, newItem(Unfavorite, "§aお気に入りの解除"));
-		inventory.setItem(9, newItem(OtherLike, "§aこの作者の他のLike情報"));
-
-		setOtherLike(inventory, like);
-		return inventory;
-	}
-	 */
 
 }

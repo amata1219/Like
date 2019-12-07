@@ -2,6 +2,7 @@ package amata1219.like.monad;
 
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import org.bukkit.util.Consumer;
 
@@ -27,6 +28,8 @@ public abstract class Option<T> implements Monad<T> {
 	
 	@Override
 	public abstract Option<T> then(Consumer<T> action);
+	
+	public abstract T or(Supplier<T> other);
 	
 	public abstract boolean isSome();
 	
@@ -58,10 +61,15 @@ public abstract class Option<T> implements Monad<T> {
 		}
 
 		@Override
+		public T or(Supplier<T> other) {
+			return value;
+		}
+
+		@Override
 		public boolean isSome() {
 			return true;
 		}
-		
+
 	}
 	
 	public static class None<T> extends Option<T> {
@@ -85,6 +93,11 @@ public abstract class Option<T> implements Monad<T> {
 		@Override
 		public Option<T> then(Consumer<T> action) {
 			return None();
+		}
+
+		@Override
+		public T or(Supplier<T> other) {
+			return other.get();
 		}
 
 		@Override
