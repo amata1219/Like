@@ -4,60 +4,60 @@ import java.util.function.Function;
 
 import org.bukkit.util.Consumer;
 
-public abstract class Either<L, R> implements Monad<R> {
+public abstract class Either<R> implements Monad<R> {
 	
-	public static <L, R> Either<L, R> Right(R result){
+	public static <R> Either<R> Right(R result){
 		return new Right<>(result);
 	}
 	
-	public static <L, R> Either<L, R> Left(L error){
+	public static <R> Either<R> Left(String error){
 		return new Left<>(error);
 	}
 	
 	@Override
-	public abstract <U> Either<L, U> map(Function<R, U> mapper);
+	public abstract <U> Either<U> map(Function<R, U> mapper);
 	
-	public abstract <U> Either<L, U> flatMap(Function<R, Either<L, U>> mapper);
+	public abstract <U> Either<U> flatMap(Function<R, Either<U>> mapper);
 	
 	@Override
-	public abstract Either<L, R> then(Consumer<R> action);
+	public abstract Either<R> then(Consumer<R> action);
 	
-	public abstract Either<L, R> onFailure(Consumer<L> action);
+	public abstract Either<R> onFailure(Consumer<String> action);
 	
-	public static class Left<L, R> extends Either<L, R> {
+	public static class Left<R> extends Either<R> {
 		
-		private final L error;
+		private final String error;
 		
-		private Left(L error){
+		private Left(String error){
 			this.error = error;
 		}
 
 		@SuppressWarnings("unchecked")
 		@Override
-		public <U> Either<L, U> map(Function<R, U> mapper) {
-			return (Either<L, U>) this;
+		public <U> Either<U> map(Function<R, U> mapper) {
+			return (Either<U>) this;
 		}
 
 		@SuppressWarnings("unchecked")
 		@Override
-		public <U> Either<L, U> flatMap(Function<R, Either<L, U>> mapper) {
-			return (Either<L, U>) this;
+		public <U> Either<U> flatMap(Function<R, Either<U>> mapper) {
+			return (Either<U>) this;
 		}
 
 		@Override
-		public Either<L, R> then(Consumer<R> action) {
+		public Either<R> then(Consumer<R> action) {
 			return this;
 		}
 
 		@Override
-		public Either<L, R> onFailure(Consumer<L> action) {
+		public Either<R> onFailure(Consumer<String> action) {
 			action.accept(error);
 			return this;
 		}
 		
 	}
 	
-	public static class Right<L, R> extends Either<L, R> {
+	public static class Right<R> extends Either<R> {
 		
 		private final R result;
 		
@@ -66,23 +66,23 @@ public abstract class Either<L, R> implements Monad<R> {
 		}
 
 		@Override
-		public <U> Either<L, U> map(Function<R, U> mapper) {
+		public <U> Either<U> map(Function<R, U> mapper) {
 			return Right(mapper.apply(result));
 		}
 
 		@Override
-		public <U> Either<L, U> flatMap(Function<R, Either<L, U>> mapper) {
+		public <U> Either<U> flatMap(Function<R, Either<U>> mapper) {
 			return mapper.apply(result);
 		}
 
 		@Override
-		public Either<L, R> then(Consumer<R> action) {
+		public Either<R> then(Consumer<R> action) {
 			action.accept(result);
 			return this;
 		}
 
 		@Override
-		public Either<L, R> onFailure(Consumer<L> action) {
+		public Either<R> onFailure(Consumer<String> action) {
 			return this;
 		}
 		

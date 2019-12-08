@@ -57,9 +57,6 @@ public class DeletingLikeConfirmationUI implements InventoryUI {
 				});
 				
 				s.onClick(e -> {
-					Main plugin = Main.instance();
-					if(like.equals(plugin.descriptionEditors.get(p))) plugin.descriptionEditors.remove(p);
-					plugin.players.get(p).myLikes.remove(like);
 					Main.instance().deleteLike(like);
 					Text.of("&c-Like(%s)を完全に削除しました。").format(like.id).sendTo(p);
 				});
@@ -75,10 +72,5 @@ public class DeletingLikeConfirmationUI implements InventoryUI {
 			}, 6);
 		});
 	}
-	
-	
-	/* 012345678
-	 *   @ d c
-	 */
 
 }

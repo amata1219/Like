@@ -51,7 +51,7 @@ public class Main extends JavaPlugin {
 	public final HashMap<Long, Like> likes = new HashMap<>();
 	public final HashMap<UUID, Collection<Like>> playerLikes = new HashMap<>();
 	public final HashMap<Player, PlayerData> players = new HashMap<>();
-	public final HashMap<Player, Like> descriptionEditors = new HashMap<>();
+	public final HashMap<UUID, Long> descriptionEditors = new HashMap<>();
 	
 	@Override
 	public void onEnable(){
@@ -83,13 +83,20 @@ public class Main extends JavaPlugin {
 	}
 	
 	public void deleteLike(Like like){
-		Collection<Like> likes = playerLikes.get(like.creator());
+		UUID uuid = like.creator();
+		
+		Collection<Like> likes = playerLikes.get(uuid);
 		likes.remove(like);
-		if(likes.isEmpty()) playerLikes.remove(like.creator());
+		if(likes.isEmpty()) playerLikes.remove(uuid);
+		
+		Player player = getServer().getPlayer(uuid);
+		if(player != null && player.isOnline()) players.get(player).myLikes.remove(like);
 		
 		players.values().stream()
 		.map(d -> d.favoriteLikes)
 		.forEach(m -> m.remove(like));
+		
+		this.likes.remove(like);
 	}
 
 }
