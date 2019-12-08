@@ -47,10 +47,10 @@ public class Main extends JavaPlugin {
 	 */
 	
 	private MainConfig config;
-	private PlayerFavoriteLikesConfig playerFavoriteLikesConfig;
+	private PlayerFavoriteLikesConfig playerDataConfig;
 	public final HashMap<Long, Like> likes = new HashMap<>();
 	public final HashMap<UUID, Collection<Like>> playerLikes = new HashMap<>();
-	public final HashMap<UUID, PlayerData> players = new HashMap<>();
+	public final HashMap<Player, PlayerData> players = new HashMap<>();
 	public final HashMap<Player, Like> descriptionEditors = new HashMap<>();
 	
 	@Override
@@ -58,17 +58,16 @@ public class Main extends JavaPlugin {
 		instance = this;
 		
 		config = new MainConfig();
-		playerFavoriteLikesConfig = new PlayerFavoriteLikesConfig();
+		playerDataConfig = new PlayerFavoriteLikesConfig();
 		
 		getServer().getOnlinePlayers().stream()
-		.map(Player::getUniqueId)
-		.map(u -> Tuple.of(u, PlayerDataLoading.loadExistingPlayerData(u)))
+		.map(p -> Tuple.of(p, PlayerDataLoading.loadExistingPlayerData(p.getUniqueId())))
 		.forEach(t -> players.put(t.first, t.second));
 	}
 	
 	@Override
 	public void onDisable(){
-		players.entrySet().forEach(e -> playerFavoriteLikesConfig.save(e.getKey(), e.getValue().favoriteLikes));
+		players.entrySet().forEach(e -> playerDataConfig.save(e.getKey().getUniqueId(), e.getValue().favoriteLikes));
 	}
 	
 	public static Main instance(){
@@ -79,8 +78,18 @@ public class Main extends JavaPlugin {
 		return config;
 	}
 	
-	public PlayerFavoriteLikesConfig playerFavoriteLikesConfig(){
-		return playerFavoriteLikesConfig;
+	public PlayerFavoriteLikesConfig playerDataConfig(){
+		return playerDataConfig;
+	}
+	
+	public void deleteLike(Like like){
+		Collection<Like> likes = playerLikes.get(like.creator());
+		likes.remove(like);
+		if(likes.isEmpty()) playerLikes.remove(like.creator());
+		
+		players.values().stream()
+		.map(d -> d.favoriteLikes)
+		.forEach(m -> m.remove(like));
 	}
 
 }

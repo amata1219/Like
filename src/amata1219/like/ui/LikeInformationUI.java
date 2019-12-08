@@ -69,7 +69,7 @@ public class LikeInformationUI implements InventoryUI {
 			l.put(s -> {
 				s.icon(i -> {
 					i.material = config.icon(IconType.ID);
-					i.displayName = Text.of("&a-管理ID-&7-:-&f %s").format(like.id).colored();
+					i.displayName = Text.of("&a-ID-&7-:-&f %s").format(like.id).colored();
 				});
 			}, 5);
 			
