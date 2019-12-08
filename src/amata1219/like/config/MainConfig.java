@@ -29,7 +29,7 @@ public class MainConfig extends Yaml {
 	private String tip;
 	private int numberOfSecondsOfLikeCreationCooldown;
 	private int likeCreationLimitPerChunk;
-	private double teleportCosts;
+	private double teleportationCosts;
 	private double invitationCosts;
 	private int radiusOfInvitationScope;
 	private String invitationMessage;
@@ -49,7 +49,7 @@ public class MainConfig extends Yaml {
 		
 		Section lines = section("Like holograms'' text lines");
 		likeFavoritesText = lines.colored("Favorites");
-		likeExplanation = lines.colored("Explanation");
+		likeExplanation = lines.colored("Description");
 		likeUsage = lines.colored("Usage");
 		
 		tip = colored("Tip");
@@ -60,7 +60,7 @@ public class MainConfig extends Yaml {
 			.put(CREATION_TIMESTAMP, icons.material("Creation timestamp"))
 			.put(ID, icons.material("ID"))
 			.put(UNFAVORITE, icons.material("Unfavorite"))
-			.put(EDIT_EXPLANATION, icons.material("Edit explanation"))
+			.put(EDIT_DESCRIPTION, icons.material("Edit description"))
 			.put(PROCEED_TO_CONFIRMATION_PAGE_OF_DELETING_LIKE, icons.material("Proceed to confirmation page of deleting like"))
 			.put(DELETE_LIKE, icons.material("Delete like"))
 			.put(CANCEL_LIKE_DELETION, icons.material("Cancel like deletion"))
@@ -72,7 +72,7 @@ public class MainConfig extends Yaml {
 		
 		numberOfSecondsOfLikeCreationCooldown = getInt("Number of seconds of like creation cooldown");
 		likeCreationLimitPerChunk = getInt("Like creation limit per chunk");
-		teleportCosts = getDouble("Teleport costs");
+		teleportationCosts = getDouble("Teleportation costs");
 		
 		Section invitation = section("Invitation");
 		invitationCosts = invitation.doub1e("Costs");
@@ -116,8 +116,8 @@ public class MainConfig extends Yaml {
 		return likeCreationLimitPerChunk;
 	}
 	
-	public double teleportCosts(){
-		return teleportCosts;
+	public double teleportationCosts(){
+		return teleportationCosts;
 	}
 	
 	public double invitationCosts(){
@@ -128,8 +128,10 @@ public class MainConfig extends Yaml {
 		return radiusOfInvitationScope;
 	}
 	
-	public String invitationMessage(Player invitee, Like like){
-		return invitationMessage;
+	public String invitationMessage(Player inviter,  Like like){
+		return invitationMessage.replace("%description%", like.lore())
+				.replace("%creator%", UUIDConverter.getNameFromUUID(like.creator()))
+				.replace("%inviter%", inviter.getName());
 	}
 	
 	public enum IconType {
@@ -138,7 +140,7 @@ public class MainConfig extends Yaml {
 		CREATION_TIMESTAMP,
 		ID,
 		UNFAVORITE,
-		EDIT_EXPLANATION,
+		EDIT_DESCRIPTION,
 		PROCEED_TO_CONFIRMATION_PAGE_OF_DELETING_LIKE,
 		DELETE_LIKE,
 		CANCEL_LIKE_DELETION,

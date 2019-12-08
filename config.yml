@@ -2,14 +2,14 @@
 - "world:メイン"
 'Like holograms'' text lines':
   'Favorites': "&d&l %favorites% &e&l★"
-  'Explanation': "&6&l%creator%&r&6's Like"
+  'Description': "&6&l%creator%&r&6's Like"
   'Usage': "&6Right click to Like!"
 'Tip': "&a【Like】Open like list >> /like list"
 'Icon materials on inventory UI':
   'Favorites': "SUNFLOWER"
   'Creation timestamp': "CLOCK"
   'ID': "NAME_TAG"
-  'Edit explanation': "DIAMOND"
+  'Edit description': "DIAMOND"
   'Unfavorite': "DIAMOND"
   'Proceed to confirmation page of deleting like': "DIAMOND"
   'Delete like': "DIAMOND"
@@ -20,8 +20,8 @@
   'Go to next page': "HEART_OF_THE_SEA"
 'Number of seconds of like creation cooldown': 10
 'Like creation limit per chunk': 3
-'Teleport costs': 100.0
+'Teleportation costs': 100.0
 'Invitation':
   'Costs': 100.0
   'Radius of scope': 32
-  'Message': "&3&l【Like TP】%explanation% by %creator%\n&3 [Inviter >> %invetee%] Click to Teleport!"
+  'Message': "&3&l【Like TP】%description% by %creator%\n&3 [%inviter% >> %invitee%] Click to Teleport!"

@@ -32,6 +32,13 @@ public class LikeEditingUI implements InventoryUI {
 		return build(Lines.x1, (p, l) -> {
 			l.title = Text.of("&a-Like Editing").colored();
 			
+			l.defaultSlot(s -> {
+				s.icon(i -> {
+					i.material = Material.LIGHT_GRAY_STAINED_GLASS_PANE;
+					i.displayName = " ";
+				});
+			});
+			
 			l.put(s -> {
 				s.icon(i -> {
 					i.material = Material.PLAYER_HEAD;
@@ -66,17 +73,25 @@ public class LikeEditingUI implements InventoryUI {
 			
 			l.put(s -> {
 				s.icon(i -> {
-					i.material = config.icon(IconType.EDIT_EXPLANATION);
+					i.material = config.icon(IconType.EDIT_DESCRIPTION);
+					i.displayName = Text.of("&a-表示内容の編集").colored();
 				});
 			}, 6);
 			
 			l.put(s -> {
 				s.icon(i -> {
 					i.material = config.icon(IconType.PROCEED_TO_CONFIRMATION_PAGE_OF_DELETING_LIKE);
+					i.displayName = Text.of("&c-Likeの削除").colored();
 				});
 			}, 7);
 		});
 	}
+	
+	
+	/*
+	 * click explanation editing
+	 * 
+	 */
 	
 	/*
 	 * public static Inventory createEditMenu(OldLike like){

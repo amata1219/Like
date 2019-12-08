@@ -34,6 +34,13 @@ public class LikeInformationUI implements InventoryUI {
 		return build(Lines.x2, (p, l) -> {
 			l.title = Text.of("&a-Like Information").colored();
 			
+			l.defaultSlot(s -> {
+				s.icon(i -> {
+					i.material = Material.LIGHT_GRAY_STAINED_GLASS_PANE;
+					i.displayName = " ";
+				});
+			});
+			
 			l.put(s -> {
 				s.icon(i -> {
 					i.material = Material.PLAYER_HEAD;
@@ -69,7 +76,7 @@ public class LikeInformationUI implements InventoryUI {
 			l.put(s -> {
 				s.icon(i -> {
 					i.material = config.icon(IconType.UNFAVORITE);
-					i.displayName = Text.of("&a-お気に入りの解除").colored();
+					i.displayName = Text.of("&c-お気に入りの解除").colored();
 				});
 			}, 6);
 			
