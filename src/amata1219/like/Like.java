@@ -34,7 +34,7 @@ public class Like {
 		this.creator = creator;
 		
 		hologram.appendTextLine(config.likeFavoritesText(0));
-		hologram.appendTextLine(config.likeExplanation(creator));
+		hologram.appendTextLine(config.likeDescription(creator));
 		hologram.appendTextLine(config.likeUsage());
 		
 		//OldMain.applyTouchHandler(this, false);
@@ -62,18 +62,28 @@ public class Like {
 	
 	public void setCreator(UUID uuid){
 		this.creator = Objects.requireNonNull(uuid);
+		
+		/*
+		 * old creator
+		 * 
+		 * data.myLikes.remove(this)
+		 * 
+		 * new creator
+		 * 
+		 * data.myLikes.add(this)
+		 */
 	}
 	
 	public boolean isCreator(UUID uuid){
 		return creator.equals(uuid);
 	}
 	
-	public String lore(){
+	public String description(){
 		return ((TextLine) hologram.getLine(1)).getText();
 	}
 	
-	public void setLore(String lore){
-		rewriteHologramLine(1, lore);
+	public void setDescription(String description){
+		rewriteHologramLine(1, description);
 	}
 	
 	public int favorites(){

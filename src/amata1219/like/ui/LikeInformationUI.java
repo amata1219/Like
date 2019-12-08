@@ -32,7 +32,7 @@ public class LikeInformationUI implements InventoryUI {
 	@Override
 	public Function<Player, Layout> layout() {
 		return build(Lines.x2, (p, l) -> {
-			l.title = Text.of("&a-Like Information").colored();
+			l.title = "Like Information";
 			
 			l.defaultSlot(s -> {
 				s.icon(i -> {

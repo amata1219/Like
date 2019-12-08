@@ -96,8 +96,8 @@ public class MainConfig extends Yaml {
 		return this.likeFavoritesText.replace("%favorites%", String.valueOf(favorites));
 	}
 	
-	public String likeExplanation(UUID maker){
-		return likeExplanation.replace("%maker%", UUIDConverter.getNameFromUUID(maker));
+	public String likeDescription(UUID maker){
+		return likeExplanation.replace("%creator%", UUIDConverter.getNameFromUUID(maker));
 	}
 	
 	public String likeUsage(){
@@ -129,7 +129,7 @@ public class MainConfig extends Yaml {
 	}
 	
 	public String invitationMessage(Player inviter,  Like like){
-		return invitationMessage.replace("%description%", like.lore())
+		return invitationMessage.replace("%description%", like.description())
 				.replace("%creator%", UUIDConverter.getNameFromUUID(like.creator()))
 				.replace("%inviter%", inviter.getName());
 	}

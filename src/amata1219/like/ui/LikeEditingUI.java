@@ -30,7 +30,7 @@ public class LikeEditingUI implements InventoryUI {
 	@Override
 	public Function<Player, Layout> layout() {
 		return build(Lines.x1, (p, l) -> {
-			l.title = Text.of("&a-Like Editing").colored();
+			l.title = "Like Editing";
 			
 			l.defaultSlot(s -> {
 				s.icon(i -> {
@@ -76,6 +76,12 @@ public class LikeEditingUI implements InventoryUI {
 					i.material = config.icon(IconType.EDIT_DESCRIPTION);
 					i.displayName = Text.of("&a-表示内容の編集").colored();
 				});
+				
+				s.onClick(e -> {
+					Main.instance().descriptionEditors.put(p, like);
+					p.closeInventory();
+					Text.of("&a-新しい表示内容をチャット欄に入力して下さい。").color().sendTo(p);
+				});
 			}, 6);
 			
 			l.put(s -> {
@@ -83,22 +89,10 @@ public class LikeEditingUI implements InventoryUI {
 					i.material = config.icon(IconType.PROCEED_TO_CONFIRMATION_PAGE_OF_DELETING_LIKE);
 					i.displayName = Text.of("&c-Likeの削除").colored();
 				});
+				
+				s.onClick(e -> new DeletingLikeConfirmationUI(like).open(p));
 			}, 7);
 		});
 	}
 	
-	
-	/*
-	 * click explanation editing
-	 * 
-	 */
-	
-	/*
-	 * public static Inventory createEditMenu(OldLike like){
-		inventory.setItem(7, newItem(Edit, "§a表示内容の編集"));
-		inventory.setItem(8, newItem(Remove1, "§aLikeの削除"));
-		return inventory;
-	}
-	 */
-
 }

@@ -51,6 +51,7 @@ public class Main extends JavaPlugin {
 	public final HashMap<Long, Like> likes = new HashMap<>();
 	public final HashMap<UUID, Collection<Like>> playerLikes = new HashMap<>();
 	public final HashMap<UUID, PlayerData> players = new HashMap<>();
+	public final HashMap<Player, Like> descriptionEditors = new HashMap<>();
 	
 	@Override
 	public void onEnable(){
