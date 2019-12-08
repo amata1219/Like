@@ -78,7 +78,7 @@ public class LikeEditingUI implements InventoryUI {
 				});
 				
 				s.onClick(e -> {
-					Main.instance().descriptionEditors.put(p, like);
+					Main.instance().descriptionEditors.put(p.getUniqueId(), like.id);
 					p.closeInventory();
 					Text.of("&a-新しい表示内容をチャット欄に入力して下さい。").color().sendTo(p);
 				});
