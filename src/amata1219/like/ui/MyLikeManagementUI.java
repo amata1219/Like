@@ -73,27 +73,23 @@ public class MyLikeManagementUI implements InventoryUI {
 							Text.of("&7-ワールド: &a-%s").format(config.alias(like.world()).or(() -> "Unknown")).colored(),
 							Text.of("&a-座標-&7-: &f-X-&7-: &f-%s Y-&7-: &f-%s Z-&7-: &f-%s").format(like.x(), like.y(), like.z()).colored(),
 							"",
-							Text.of("&7-左クリック: &a-このLikeにテレポートする！(&n-%sMP-&r&a)").format(config.teleportationCosts()).colored(),
-							Text.of("&7-右クリック: &a-半径%sm以内にいるプレイヤーをこのLikeに招待する！(&n-%sMP-&r&a)").format(config.radiusOfInvitationScope(), config.invitationCosts()).colored()
+							Text.of("&7-クリック: &a-下記の機能の選択画面に移行します！").colored(),
+							Text.of("&7-: &a-このLikeにテレポートする！(&n-%sMP-&r&a)").format(config.teleportationCosts()).colored(),
+							Text.of("&7-: &a-半径%sm以内にいるプレイヤーをこのLikeに招待する！(&n-%sMP-&r&a)").format(config.radiusOfInvitationScope(), config.invitationCosts()).colored()
 						);
 					});
+					
+					s.onClick(e -> new LikeFunctionSelectionUI(like).open(p));
 				}, slotIndex);
 			});
+			
+			l.put(s -> {
+				s.icon(i -> {
+					
+				});
+			}, 45);
 		});
 	}
-	
-	/*
-	 * ここは鯖内最多の蔵書数を誇る知識の樹海！
-	 * 
-	 * 作成者: amata1219
-	 * お気に入り数: 64
-	 * 作成日時: 2019/12/08 17:58:06
-	 * ワールド: メイン
-	 * 座標: X: 10 Y: 12 Z: 100
-	 * 
-	 * 左クリック: このLikeにテレポートする！(50.0MP)
-	 * 右クリック: 半径32m以内にいるプレイヤーをこのLikeに招待する！(120.0MP)
-	 */
 	
 	private enum Order {
 		

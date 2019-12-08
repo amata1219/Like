@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import amata1219.masquerade.dsl.InventoryUI;
 import amata1219.masquerade.dsl.component.Layout;
 
-public class TeleportConfirmationUI implements InventoryUI {
+public class TeleportationConfirmationUI implements InventoryUI {
 
 	@Override
 	public Function<Player, Layout> layout() {
