@@ -32,7 +32,7 @@ public class AdministratorUI implements InventoryUI {
 	@Override
 	public Function<Player, Layout> layout() {
 		return build(Lines.x2, (p, l) -> {
-			l.title = "Like Information";
+			l.title = "Like Information (Admin)";
 			
 			l.defaultSlot(s -> {
 				s.icon(i -> {
@@ -79,6 +79,28 @@ public class AdministratorUI implements InventoryUI {
 					i.displayName = Text.of("&c-お気に入りの解除").colored();
 				});
 			}, 6);
+			
+			l.put(s -> {
+				s.icon(i -> {
+					i.material = config.icon(IconType.EDIT_DESCRIPTION);
+					i.displayName = Text.of("&a-表示内容の編集").colored();
+				});
+				
+				s.onClick(e -> {
+					Main.instance().descriptionEditors.put(p.getUniqueId(), like.id);
+					p.closeInventory();
+					Text.of("&a-新しい表示内容をチャット欄に入力して下さい。").color().sendTo(p);
+				});
+			}, 7);
+			
+			l.put(s -> {
+				s.icon(i -> {
+					i.material = config.icon(IconType.PROCEED_TO_CONFIRMATION_PAGE_OF_DELETING_LIKE);
+					i.displayName = Text.of("&c-Likeの削除").colored();
+				});
+				
+				s.onClick(e -> new DeletingLikeConfirmationUI(like).open(p));
+			}, 8);
 			
 			l.put(s -> {
 				s.icon(i -> {

@@ -2,6 +2,7 @@ package amata1219.like;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.entity.Player;
@@ -49,7 +50,7 @@ public class Main extends JavaPlugin {
 	private MainConfig config;
 	private PlayerFavoriteLikesConfig playerDataConfig;
 	public final HashMap<Long, Like> likes = new HashMap<>();
-	public final HashMap<UUID, Collection<Like>> playerLikes = new HashMap<>();
+	public final HashMap<UUID, List<Like>> playerLikes = new HashMap<>();
 	public final HashMap<Player, PlayerData> players = new HashMap<>();
 	public final HashMap<UUID, Long> descriptionEditors = new HashMap<>();
 	
