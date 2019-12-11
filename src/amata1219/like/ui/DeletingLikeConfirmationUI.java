@@ -38,11 +38,11 @@ public class DeletingLikeConfirmationUI implements InventoryUI {
 			l.put(s -> {
 				s.icon(i -> {
 					i.material = config.icon(IconType.LIKE);
-					i.displayName = Text.of("%a-Like").colored();
+					i.displayName = Text.color("%a-Like");
 					i.lore(
-						Text.of("&7-: &f-ID &7-@ &a-%s").format(like.id).colored(),
-						Text.of("&7-: &f-お気に入り数 &7-@ &a-%s").format(like.favorites()).colored(),
-						Text.of("&7-: &f-作成日時 &7-@ &a-%s").format(like.creationTimestamp()).colored()
+						Text.of("&7-: &f-ID &7-@ &a-%s").apply(like.id),
+						Text.of("&7-: &f-お気に入り数 &7-@ &a-%s").apply(like.favorites()),
+						Text.of("&7-: &f-作成日時 &7-@ &a-%s").apply(like.creationTimestamp())
 					);
 				});
 			}, 2);
@@ -50,22 +50,22 @@ public class DeletingLikeConfirmationUI implements InventoryUI {
 			l.put(s -> {
 				s.icon(i -> {
 					i.material = config.icon(IconType.DELETE_LIKE);
-					i.displayName = Text.of("&c-このLikeを削除する！").colored();
+					i.displayName = Text.color("&c-このLikeを削除する！");
 					i.lore(
-						Text.of("&7-※削除すると二度と復元出来なくなります。").colored()
+						Text.of("&7-※削除すると二度と復元出来なくなります。")
 					);
 				});
 				
 				s.onClick(e -> {
 					Main.instance().deleteLike(like);
-					Text.of("&c-Like(%s)を完全に削除しました。").format(like.id).sendTo(p);
+					p.sendMessage(Text.of("&c-Like(%s)を完全に削除しました。").apply(like.id));
 				});
 			}, 4);
 			
 			l.put(s -> {
 				s.icon(i -> {
 					i.material = config.icon(IconType.CANCEL_LIKE_DELETION);
-					i.displayName = Text.of("&a-削除しないで元の画面に戻る！").colored();
+					i.displayName = Text.color("&a-削除しないで元の画面に戻る！");
 				});
 				
 				s.onClick(e -> new LikeEditingUI(like).open(p));

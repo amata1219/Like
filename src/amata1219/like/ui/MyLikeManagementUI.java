@@ -56,7 +56,7 @@ public class MyLikeManagementUI implements InventoryUI {
 		final Type where = Type.where(index, likes);
 		likes.sort(order.comparator);
 		return build(Math.min(likes.size() - (index * 45), 45), (p, l) -> {
-			l.title = Text.of("My Likes @ %s").apply(index + 1).get();
+			l.title = Text.of("My Likes @ %s").apply(index + 1);
 			
 			l.defaultSlot(s -> {
 				s.icon(i -> {
@@ -75,14 +75,14 @@ public class MyLikeManagementUI implements InventoryUI {
 						i.displayName = " ";
 						i.lore(
 							Text.of("&7-%s").apply(like.description()),
-							Text.empty(),
+							"",
 							Text.of("&7-作成者: &a-%s").apply(UUIDConverter.getNameFromUUID(like.owner())),
 							Text.of("&7-お気に入り数: &a-%s").apply(like.favorites()),
 							Text.of("&7-作成日時: &a-%s").apply(like.creationTimestamp()),
 							Text.of("&7-ワールド: &a-%s").apply(config.alias(like.world()).or(() -> "Unknown")),
 							Text.of("&a-座標-&7-: &f-X-&7-: &f-%s Y-&7-: &f-%s Z-&7-: &f-%s").apply(like.x(), like.y(), like.z()),
-							Text.empty(),
-							Text.of("&7-クリック: &a-下記の機能の選択画面に移行します！"),
+							"",
+							Text.color("&7-クリック: &a-下記の機能の選択画面に移行します！"),
 							Text.of("&7-: &a-このLikeにテレポートする！(&n-%sMP-&r&a)").apply(config.teleportationCosts()),
 							Text.of("&7-: &a-半径%sm以内にいるプレイヤーをこのLikeに招待する！(&n-%sMP-&r&a)").apply(config.radiusOfInvitationScope(), config.invitationCosts())
 						);
@@ -96,7 +96,7 @@ public class MyLikeManagementUI implements InventoryUI {
 				l.put(s -> {
 					s.icon(i -> {
 						i.basedItemStack = Skull.createFrom("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmQ2OWUwNmU1ZGFkZmQ4NGU1ZjNkMWMyMTA2M2YyNTUzYjJmYTk0NWVlMWQ0ZDcxNTJmZGM1NDI1YmMxMmE5In19fQ==");
-						i.displayName = Text.of("&a-前のページに戻る").get();
+						i.displayName = Text.color("&a-前のページに戻る");
 					});
 					
 					s.onClick(e -> {
@@ -116,7 +116,7 @@ public class MyLikeManagementUI implements InventoryUI {
 				l.put(s -> {
 					s.icon(i -> {
 						i.basedItemStack = Skull.createFrom("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTliZjMyOTJlMTI2YTEwNWI1NGViYTcxM2FhMWIxNTJkNTQxYTFkODkzODgyOWM1NjM2NGQxNzhlZDIyYmYifX19");
-						i.displayName = Text.of("&a-次のページに進む").get();
+						i.displayName = Text.color("&a-次のページに進む");
 					});
 					
 					s.onClick(e -> {

@@ -32,7 +32,7 @@ public class AdministratorUI implements InventoryUI {
 	@Override
 	public Function<Player, Layout> layout() {
 		return build(Lines.x2, (p, l) -> {
-			l.title = "Like Information (Admin)";
+			l.title = "Like Inapplyion (Admin)";
 			
 			l.defaultSlot(s -> {
 				s.icon(i -> {
@@ -46,7 +46,7 @@ public class AdministratorUI implements InventoryUI {
 					i.material = Material.PLAYER_HEAD;
 					UUID owner = like.owner();
 					String playerName = UUIDConverter.getNameFromUUID(owner);
-					i.displayName = Text.of("&a-%s").format(playerName).colored();
+					i.displayName = Text.of("&a-%s").apply(playerName);
 					i.raw = item -> ((SkullMeta) item.getItemMeta()).setOwningPlayer(Bukkit.getOfflinePlayer(owner));
 				});
 			}, 0);
@@ -54,7 +54,7 @@ public class AdministratorUI implements InventoryUI {
 			l.put(s -> {
 				s.icon(i -> {
 					i.material = config.icon(IconType.FAVORITES);
-					i.displayName = Text.of("&a-お気に入りの数-&7-:-&f %s").format(like.favorites()).colored();
+					i.displayName = Text.of("&a-お気に入りの数-&7-:-&f %s").apply(like.favorites());
 					i.amount = Math.min(like.favorites(), 64);
 				});
 			}, 3);
@@ -62,41 +62,41 @@ public class AdministratorUI implements InventoryUI {
 			l.put(s -> {
 				s.icon(i -> {
 					i.material = config.icon(IconType.CREATION_TIMESTAMP);
-					i.displayName = Text.of("&a-作成日時-&7-:-&f %s").format(like.creationTimestamp()).colored();
+					i.displayName = Text.of("&a-作成日時-&7-:-&f %s").apply(like.creationTimestamp());
 				});
 			}, 4);
 			
 			l.put(s -> {
 				s.icon(i -> {
 					i.material = config.icon(IconType.ID);
-					i.displayName = Text.of("&a-ID-&7-:-&f %s").format(like.id).colored();
+					i.displayName = Text.of("&a-ID-&7-:-&f %s").apply(like.id);
 				});
 			}, 5);
 			
 			l.put(s -> {
 				s.icon(i -> {
 					i.material = config.icon(IconType.UNFAVORITE);
-					i.displayName = Text.of("&c-お気に入りの解除").colored();
+					i.displayName = Text.color("&c-お気に入りの解除");
 				});
 			}, 6);
 			
 			l.put(s -> {
 				s.icon(i -> {
 					i.material = config.icon(IconType.EDIT_DESCRIPTION);
-					i.displayName = Text.of("&a-表示内容の編集").colored();
+					i.displayName = Text.color("&a-表示内容の編集");
 				});
 				
 				s.onClick(e -> {
 					Main.instance().descriptionEditors.put(p.getUniqueId(), like.id);
 					p.closeInventory();
-					Text.of("&a-新しい表示内容をチャット欄に入力して下さい。").color().sendTo(p);
+					p.sendMessage(Text.color("&a-新しい表示内容をチャット欄に入力して下さい。"));
 				});
 			}, 7);
 			
 			l.put(s -> {
 				s.icon(i -> {
 					i.material = config.icon(IconType.PROCEED_TO_CONFIRMATION_PAGE_OF_DELETING_LIKE);
-					i.displayName = Text.of("&c-Likeの削除").colored();
+					i.displayName = Text.color("&c-Likeの削除");
 				});
 				
 				s.onClick(e -> new DeletingLikeConfirmationUI(like).open(p));
@@ -105,7 +105,7 @@ public class AdministratorUI implements InventoryUI {
 			l.put(s -> {
 				s.icon(i -> {
 					i.material = config.icon(IconType.OWNERS_OTHER_LIKES);
-					i.displayName = Text.of("&a-この作者の他のLike情報").colored();
+					i.displayName = Text.color("&a-この作者の他のLike情報");
 				});
 			}, 9);
 			
@@ -120,9 +120,9 @@ public class AdministratorUI implements InventoryUI {
 						i.material = config.icon(IconType.LIKE);
 						i.displayName = " ";
 						i.lore(
-							Text.of("&a-ワールド-&7-: &f-%s").format(config.alias(like.world()).or(() -> "Unknown")).colored(),
-							Text.of("&a-座標-&7-: &f-X-&7-: &f-%s Y-&7-: &f-%s Z-&7-: &f-%s").format(like.x(), like.y(), like.z()).colored(),
-							Text.of("&a-お気に入り数-&7-: &f-%s").format(like.favorites()).colored()
+							Text.of("&a-ワールド-&7-: &f-%s").apply(config.alias(like.world()).or(() -> "Unknown")),
+							Text.of("&a-座標-&7-: &f-X-&7-: &f-%s Y-&7-: &f-%s Z-&7-: &f-%s").apply(like.x(), like.y(), like.z()),
+							Text.of("&a-お気に入り数-&7-: &f-%s").apply(like.favorites())
 						);
 					});
 				}, slotIndex.getAndIncrement());
