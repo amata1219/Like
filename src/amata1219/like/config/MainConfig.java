@@ -65,7 +65,7 @@ public class MainConfig extends Yaml {
 			.put(DELETE_LIKE, icons.material("Delete like"))
 			.put(CANCEL_LIKE_DELETION, icons.material("Cancel like deletion"))
 			.put(LIKE, icons.material("Like"))
-			.put(CREATORS_OTHER_LIKES, icons.material("Creator''s other likes"))
+			.put(OWNERS_OTHER_LIKES, icons.material("Owner''s other likes"))
 			.put(BACK_TO_PREVIOUS_PAGE, icons.material("Back to previous page"))
 			.put(GO_TO_NEXT_PAGE, icons.material("Go to next page"))
 			.build();
@@ -96,8 +96,8 @@ public class MainConfig extends Yaml {
 		return this.likeFavoritesText.replace("%favorites%", String.valueOf(favorites));
 	}
 	
-	public String likeDescription(UUID maker){
-		return likeExplanation.replace("%creator%", UUIDConverter.getNameFromUUID(maker));
+	public String likeDescription(UUID owner){
+		return likeExplanation.replace("%owner%", UUIDConverter.getNameFromUUID(owner));
 	}
 	
 	public String likeUsage(){
@@ -130,7 +130,7 @@ public class MainConfig extends Yaml {
 	
 	public String invitationMessage(Player inviter,  Like like){
 		return invitationMessage.replace("%description%", like.description())
-				.replace("%creator%", UUIDConverter.getNameFromUUID(like.creator()))
+				.replace("%owner%", UUIDConverter.getNameFromUUID(like.owner()))
 				.replace("%inviter%", inviter.getName());
 	}
 	
@@ -145,7 +145,7 @@ public class MainConfig extends Yaml {
 		DELETE_LIKE,
 		CANCEL_LIKE_DELETION,
 		LIKE,
-		CREATORS_OTHER_LIKES,
+		OWNERS_OTHER_LIKES,
 		BACK_TO_PREVIOUS_PAGE,
 		GO_TO_NEXT_PAGE;
 		

@@ -44,7 +44,7 @@ public class LikeInformationUI implements InventoryUI {
 			l.put(s -> {
 				s.icon(i -> {
 					i.material = Material.PLAYER_HEAD;
-					UUID owner = like.creator();
+					UUID owner = like.owner();
 					String playerName = UUIDConverter.getNameFromUUID(owner);
 					i.displayName = Text.of("&a-%s").format(playerName).colored();
 					i.raw = item -> ((SkullMeta) item.getItemMeta()).setOwningPlayer(Bukkit.getOfflinePlayer(owner));
@@ -82,13 +82,13 @@ public class LikeInformationUI implements InventoryUI {
 			
 			l.put(s -> {
 				s.icon(i -> {
-					i.material = config.icon(IconType.CREATORS_OTHER_LIKES);
+					i.material = config.icon(IconType.OWNERS_OTHER_LIKES);
 					i.displayName = Text.of("&a-この作者の他のLike情報").colored();
 				});
 			}, 9);
 			
 			AtomicInteger slotIndex = new AtomicInteger(10);
-			Main.instance().playerLikes.get(like.creator()).stream()
+			Main.instance().playerLikes.get(like.owner()).stream()
 			.filter(like -> like != this.like)
 			.sorted(Comparator.comparing(Like::favorites).reversed())
 			.limit(8)

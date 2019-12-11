@@ -1,6 +1,7 @@
 package amata1219.like;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -83,8 +84,12 @@ public class Main extends JavaPlugin {
 		return playerDataConfig;
 	}
 	
+	public List<Like> likes(UUID uuid){
+		return playerLikes.getOrDefault(uuid, Collections.emptyList());
+	}
+	
 	public void deleteLike(Like like){
-		UUID uuid = like.creator();
+		UUID uuid = like.owner();
 		
 		Collection<Like> likes = playerLikes.get(uuid);
 		likes.remove(like);
