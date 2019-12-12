@@ -16,8 +16,10 @@
   'Cancel like deletion': "DIAMOND"
   'Like': "SUNFLOWER"
   'Owner''s other likes': "DIAMOND"
-  'Back to previous page': "HEART_OF_THE_SEA"
-  'Go to next page': "HEART_OF_THE_SEA"
+  'Sort by creation date in ascending order': "DIAMOND"
+  'Sort by creation date in descending order': "DIAMOND"
+  'Sort by favorites in ascending order': "DIAMOND"
+  'Sort by favorites in descending order': "DIAMOND"
 'Number of seconds of like creation cooldown': 10
 'Like creation limit per chunk': 3
 'Teleportation costs': 100.0

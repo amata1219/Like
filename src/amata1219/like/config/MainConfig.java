@@ -66,8 +66,10 @@ public class MainConfig extends Yaml {
 			.put(CANCEL_LIKE_DELETION, icons.material("Cancel like deletion"))
 			.put(LIKE, icons.material("Like"))
 			.put(OWNERS_OTHER_LIKES, icons.material("Owner''s other likes"))
-			.put(BACK_TO_PREVIOUS_PAGE, icons.material("Back to previous page"))
-			.put(GO_TO_NEXT_PAGE, icons.material("Go to next page"))
+			.put(SORT_BY_CREATION_DATE_IN_ASCENDING_ORDER, icons.material("Sort by creation date in ascending order"))
+			.put(SORT_BY_CREATION_DATE_IN_DESCENDING_ORDER, icons.material("Sort by creation date in descending order"))
+			.put(SORT_BY_FAVORITES_IN_ASCENDING_ORDER, icons.material("Sort by favorites in ascending order"))
+			.put(SORT_BY_FAVORITES_IN_DESCENDING_ORDER, icons.material("Sort by favorites in descending order"))
 			.build();
 		
 		numberOfSecondsOfLikeCreationCooldown = getInt("Number of seconds of like creation cooldown");
@@ -146,8 +148,10 @@ public class MainConfig extends Yaml {
 		CANCEL_LIKE_DELETION,
 		LIKE,
 		OWNERS_OTHER_LIKES,
-		BACK_TO_PREVIOUS_PAGE,
-		GO_TO_NEXT_PAGE;
+		SORT_BY_CREATION_DATE_IN_ASCENDING_ORDER,
+		SORT_BY_CREATION_DATE_IN_DESCENDING_ORDER,
+		SORT_BY_FAVORITES_IN_ASCENDING_ORDER,
+		SORT_BY_FAVORITES_IN_DESCENDING_ORDER;
 		
 	}
 	

@@ -34,8 +34,8 @@ public class MyLikeManagementUI implements InventoryUI {
 	 * ---------
 	 * @-@@-@@-@
 	 * 45,
-	 * 47,48
-	 * 50,51
+	 * 47,48 - creation date a/d
+	 * 50,51 - favorites a/d
 	 * 53
 	 * 
 	 */
@@ -104,13 +104,14 @@ public class MyLikeManagementUI implements InventoryUI {
 						open(p);
 					});
 				}, 45);
+			}else{
+				l.put(s -> {
+					s.icon(i -> {
+						i.basedItemStack = Skull.createFrom("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWVkNzg4MjI1NzYzMTdiMDQ4ZWVhOTIyMjdjZDg1ZjdhZmNjNDQxNDhkY2I4MzI3MzNiYWNjYjhlYjU2ZmExIn19fQ==");
+						i.displayName = Text.color("&c-これ以上前には戻れません");
+					});
+				}, 45);
 			}
-			
-			l.put(s -> {
-				s.icon(i -> {
-					
-				});
-			}, 49);
 			
 			if(where != Type.LAST){
 				l.put(s -> {
@@ -124,7 +125,20 @@ public class MyLikeManagementUI implements InventoryUI {
 						open(p);
 					});
 				}, 53);
+			}else{
+				l.put(s -> {
+					s.icon(i -> {
+						i.basedItemStack = Skull.createFrom("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzE1NDQ1ZGExNmZhYjY3ZmNkODI3ZjcxYmFlOWMxZDJmOTBjNzNlYjJjMWJkMWVmOGQ4Mzk2Y2Q4ZTgifX19");
+						i.displayName = Text.color("&c-これ以上次には進めません");
+					});
+				}, 53);
 			}
+			
+			l.put(s -> {
+				s.icon(i -> {
+					
+				});
+			}, 47);
 			
 		});
 	}
