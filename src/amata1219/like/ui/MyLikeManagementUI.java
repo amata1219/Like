@@ -34,8 +34,8 @@ public class MyLikeManagementUI implements InventoryUI {
 	 * ---------
 	 * @-@@-@@-@
 	 * 45,
-	 * 47,48 - creation date a/d
-	 * 50,51 - favorites a/d
+	 * 47,48 - creation date d/a
+	 * 50,51 - favorites d/a
 	 * 53
 	 * 
 	 */
@@ -44,7 +44,7 @@ public class MyLikeManagementUI implements InventoryUI {
 	private final MainConfig config = plugin.config();
 	private final UUID owner;
 	private int index;
-	private Order order = Order.CREATION_DATE_ASCENDING;
+	private Order order = Order.CREATION_DATE_IN_ASCENDING;
 	
 	public MyLikeManagementUI(UUID owner){
 		this.owner = owner;
@@ -65,11 +65,11 @@ public class MyLikeManagementUI implements InventoryUI {
 				});
 			});
 			
-			int start = index * 45;
-			int remainder = likes.size() % 45;
+			final int start = index * 45;
+			final int remainder = likes.size() % 45;
 			IntStream.range(start, start + (remainder == 0 ? 45 : remainder)).forEach(slotIndex -> {
 				l.put(s -> {
-					Like like = likes.get(slotIndex);
+					final Like like = likes.get(slotIndex);
 					s.icon(i -> {
 						i.material = config.icon(IconType.LIKE);
 						i.displayName = " ";
@@ -92,7 +92,14 @@ public class MyLikeManagementUI implements InventoryUI {
 				}, slotIndex);
 			});
 			
-			if(where != Type.FIRST){
+			if(where == Type.FIRST){
+				l.put(s -> {
+					s.icon(i -> {
+						i.basedItemStack = Skull.createFrom("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWVkNzg4MjI1NzYzMTdiMDQ4ZWVhOTIyMjdjZDg1ZjdhZmNjNDQxNDhkY2I4MzI3MzNiYWNjYjhlYjU2ZmExIn19fQ==");
+						i.displayName = Text.color("&c-これ以上前には戻れません");
+					});
+				}, 45);
+			}else{
 				l.put(s -> {
 					s.icon(i -> {
 						i.basedItemStack = Skull.createFrom("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmQ2OWUwNmU1ZGFkZmQ4NGU1ZjNkMWMyMTA2M2YyNTUzYjJmYTk0NWVlMWQ0ZDcxNTJmZGM1NDI1YmMxMmE5In19fQ==");
@@ -104,16 +111,16 @@ public class MyLikeManagementUI implements InventoryUI {
 						open(p);
 					});
 				}, 45);
-			}else{
-				l.put(s -> {
-					s.icon(i -> {
-						i.basedItemStack = Skull.createFrom("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWVkNzg4MjI1NzYzMTdiMDQ4ZWVhOTIyMjdjZDg1ZjdhZmNjNDQxNDhkY2I4MzI3MzNiYWNjYjhlYjU2ZmExIn19fQ==");
-						i.displayName = Text.color("&c-これ以上前には戻れません");
-					});
-				}, 45);
 			}
 			
-			if(where != Type.LAST){
+			if(where == Type.LAST){
+				l.put(s -> {
+					s.icon(i -> {
+						i.basedItemStack = Skull.createFrom("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzE1NDQ1ZGExNmZhYjY3ZmNkODI3ZjcxYmFlOWMxZDJmOTBjNzNlYjJjMWJkMWVmOGQ4Mzk2Y2Q4ZTgifX19");
+						i.displayName = Text.color("&c-これ以上次には進めません");
+					});
+				}, 53);
+			}else{
 				l.put(s -> {
 					s.icon(i -> {
 						i.basedItemStack = Skull.createFrom("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTliZjMyOTJlMTI2YTEwNWI1NGViYTcxM2FhMWIxNTJkNTQxYTFkODkzODgyOWM1NjM2NGQxNzhlZDIyYmYifX19");
@@ -125,20 +132,95 @@ public class MyLikeManagementUI implements InventoryUI {
 						open(p);
 					});
 				}, 53);
+			}
+			
+			if(order == Order.CREATION_DATE_IN_DESCENDING){
+				l.put(s -> {
+					s.icon(i -> {
+						i.material = config.icon(IconType.SORT_BY_CREATION_DATE_IN_DESCENDING_ORDER);
+						i.displayName = Text.color("&a-作成日が新しい順に表示されています！");
+						i.gleam();
+					});
+				}, 47);
 			}else{
 				l.put(s -> {
 					s.icon(i -> {
-						i.basedItemStack = Skull.createFrom("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzE1NDQ1ZGExNmZhYjY3ZmNkODI3ZjcxYmFlOWMxZDJmOTBjNzNlYjJjMWJkMWVmOGQ4Mzk2Y2Q4ZTgifX19");
-						i.displayName = Text.color("&c-これ以上次には進めません");
+						i.material = config.icon(IconType.SORT_BY_CREATION_DATE_IN_DESCENDING_ORDER);
+						i.displayName = Text.color("&7-作成日が新しい順に並び替える");
 					});
-				}, 53);
+					
+					s.onClick(e -> {
+						order = Order.CREATION_DATE_IN_DESCENDING;
+						open(p);
+					});
+				}, 47);
 			}
 			
-			l.put(s -> {
-				s.icon(i -> {
+			if(order == Order.CREATION_DATE_IN_ASCENDING){
+				l.put(s -> {
+					s.icon(i -> {
+						i.material = config.icon(IconType.SORT_BY_CREATION_DATE_IN_ASCENDING_ORDER);
+						i.displayName = Text.color("&a-作成日が古い順に表示されています！");
+						i.gleam();
+					});
+				}, 48);
+			}else{
+				l.put(s -> {
+					s.icon(i -> {
+						i.material = config.icon(IconType.SORT_BY_CREATION_DATE_IN_ASCENDING_ORDER);
+						i.displayName = Text.color("&7-作成日が古い順に並び替える");
+					});
 					
-				});
-			}, 47);
+					s.onClick(e -> {
+						order = Order.CREATION_DATE_IN_ASCENDING;
+						open(p);
+					});
+				}, 48);
+			}
+			
+			if(order == Order.FAVORITES_IN_DESCENDING){
+				l.put(s -> {
+					s.icon(i -> {
+						i.material = config.icon(IconType.SORT_BY_FAVORITES_IN_DESCENDING_ORDER);
+						i.displayName = Text.color("&a-お気に入り数が多い順に表示されています！");
+						i.gleam();
+					});
+				}, 47);
+			}else{
+				l.put(s -> {
+					s.icon(i -> {
+						i.material = config.icon(IconType.SORT_BY_FAVORITES_IN_DESCENDING_ORDER);
+						i.displayName = Text.color("&7-お気に入り数が多い順に並び替える");
+					});
+					
+					s.onClick(e -> {
+						order = Order.FAVORITES_IN_DESCENDING;
+						open(p);
+					});
+				}, 47);
+			}
+			
+			if(order == Order.FAVORITES_IN_ASCENDING){
+				l.put(s -> {
+					s.icon(i -> {
+						i.material = config.icon(IconType.SORT_BY_FAVORITES_IN_ASCENDING_ORDER);
+						i.displayName = Text.color("&a-お気に入り数が少ない順に表示されています！");
+						i.gleam();
+					});
+				}, 48);
+			}else{
+				l.put(s -> {
+					s.icon(i -> {
+						i.material = config.icon(IconType.SORT_BY_FAVORITES_IN_ASCENDING_ORDER);
+						i.displayName = Text.color("&7-お気に入り数が少ない順に並び替える");
+					});
+					
+					s.onClick(e -> {
+						order = Order.FAVORITES_IN_ASCENDING;
+						open(p);
+					});
+				}, 48);
+			}
 			
 		});
 	}
@@ -159,19 +241,19 @@ public class MyLikeManagementUI implements InventoryUI {
 	
 	private enum Order {
 		
-		FAVORITES_ASCENDING(Like::favorites),
-		FAVORITES_DESCENDING(Like::favorites),
-		CREATION_DATE_ASCENDING((l1, l2) -> Long.compare(l1.id, l2.id)),
-		CREATION_DATE_DESCENDING((l1, l2) -> Long.compare(l1.id, l2.id));
+		CREATION_DATE_IN_ASCENDING((l1, l2) -> Long.compare(l1.id, l2.id)),
+		CREATION_DATE_IN_DESCENDING((l1, l2) -> Long.compare(l1.id, l2.id)),
+		FAVORITES_IN_ASCENDING(Like::favorites),
+		FAVORITES_IN_DESCENDING(Like::favorites);
 		
 		public final Comparator<Like> comparator;
 		
-		private Order(Function<Like, Integer> function){
-			this(Comparator.comparing(function));
-		}
-		
 		private Order(Comparator<Like> comparator){
 			this.comparator = ordinal() % 2 == 0 ? comparator.reversed() : comparator;
+		}
+		
+		private Order(Function<Like, Integer> function){
+			this(Comparator.comparing(function));
 		}
 		
 	}
