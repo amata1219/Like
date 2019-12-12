@@ -15,6 +15,15 @@ public class TeleportationTypeSelectionUI implements InventoryUI {
 	private final MainConfig config = Main.instance().config();
 	private final Like like;
 	
+	/*
+	 * 
+	 * ---------
+	 * -@--@@-@-
+	 * 
+	 * 
+	 * 
+	 */
+	
 	public TeleportationTypeSelectionUI(Like like){
 		this.like = like;
 	}

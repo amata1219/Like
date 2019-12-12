@@ -73,6 +73,7 @@ public class MyLikeManagementUI implements InventoryUI {
 					s.icon(i -> {
 						i.material = config.icon(IconType.LIKE);
 						i.displayName = " ";
+						i.amount = Math.min(like.favorites(), 64);
 						i.lore(
 							Text.of("&7-%s").apply(like.description()),
 							"",
