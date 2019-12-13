@@ -89,7 +89,7 @@ public class MyLikeManagementUI implements InventoryUI {
 						);
 					});
 					
-					s.onClick(e -> new TeleportationTypeSelectionUI(like).open(p));
+					s.onClick(e -> new TeleportationOrInvitationSelectionUI(like).open(p));
 				}, slotIndex);
 			});
 			
