@@ -37,7 +37,7 @@ public class MyLikeManagementUI implements InventoryUI {
 		final Type where = Type.where(index, likes);
 		likes.sort(order.comparator);
 		return build(Math.min(likes.size() - (index * 45), 45), (p, l) -> {
-			l.title = Text.of("My Likes @ %s").apply(index + 1);
+			l.title = Text.of("自分のLike @ %s").apply(index + 1);
 			
 			l.defaultSlot(s -> {
 				s.icon(i -> {

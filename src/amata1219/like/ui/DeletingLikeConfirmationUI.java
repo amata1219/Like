@@ -26,7 +26,7 @@ public class DeletingLikeConfirmationUI implements InventoryUI {
 	@Override
 	public Function<Player, Layout> layout() {
 		return build(Lines.x1, (p, l) -> {
-			l.title = "Deleting Like Confirmation";
+			l.title = "Likeの削除";
 			
 			l.defaultSlot(s -> {
 				s.icon(i -> {

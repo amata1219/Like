@@ -32,7 +32,7 @@ public class AdministratorUI implements InventoryUI {
 	@Override
 	public Function<Player, Layout> layout() {
 		return build(Lines.x2, (p, l) -> {
-			l.title = "Like Information (Admin)";
+			l.title = "Likeの情報(アドミン用)";
 			
 			l.defaultSlot(s -> {
 				s.icon(i -> {

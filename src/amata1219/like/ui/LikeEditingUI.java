@@ -30,7 +30,7 @@ public class LikeEditingUI implements InventoryUI {
 	@Override
 	public Function<Player, Layout> layout() {
 		return build(Lines.x1, (p, l) -> {
-			l.title = "Like Editing";
+			l.title = "Likeの編集";
 			
 			l.defaultSlot(s -> {
 				s.icon(i -> {

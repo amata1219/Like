@@ -17,7 +17,9 @@ public class TeleportationOrInvitationSelectionUI implements InventoryUI {
 	
 	/*
 	 * 
-	 * -@--@@-@-
+	 * t -@---@-@-
+	 * 
+	 * t or i -@--@@-@-
 	 * 
 	 * 
 	 * 
