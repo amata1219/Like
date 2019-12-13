@@ -26,14 +26,14 @@ public class EditLikeDescriptionListener implements Listener {
 		
 		Bukkit.getScheduler().runTask(plugin, () -> {
 			Right(plugin.descriptionEditors.get(player.getUniqueId()))
-			.flatMap(id -> plugin.likes.containsKey(id) ? Right(plugin.likes.get(id)) : Left(Text.of("&c-編集対象のLikeは削除されています。").colored()))
+			.flatMap(id -> plugin.likes.containsKey(id) ? Right(plugin.likes.get(id)) : Left(Text.color("&c-編集対象のLikeは削除されています。")))
 			.then(like -> {
 				String message = e.getMessage();
 				if(message.equals("cancel")){
-					Text.of("&c-Like(%s)の表示内容の編集をキャンセルしました。").sendTo(player);
+					player.sendMessage(Text.color("&c-Like(%s)の表示内容の編集をキャンセルしました。"));
 				}else{
 					like.setDescription(ChatColor.translateAlternateColorCodes('&', message));
-					Text.of("&a-Like(%s)の表示内容を編集しました。").format(like.id).color().sendTo(player);
+					player.sendMessage(Text.of("&a-Like(%s)の表示内容を編集しました。").apply(like.id));
 				}
 				plugin.descriptionEditors.remove(player);
 			})
