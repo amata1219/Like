@@ -15,6 +15,7 @@ import amata1219.like.Like;
 import amata1219.like.Main;
 import amata1219.like.monad.Option;
 import amata1219.like.tuplet.Tuple;
+import amata1219.masquerade.text.Text;
 import at.pcgamingfreaks.UUIDConverter;
 
 import static amata1219.like.config.MainConfig.IconType.*;
@@ -24,7 +25,7 @@ public class MainConfig extends Yaml {
 	private final HashMap<World, String> worlds2aliases = Maps.newHashMap();
 	private ImmutableMap<IconType, Material> icons2materials;
 	private String likeFavoritesText;
-	private String likeExplanation;
+	private String likeDescription;
 	private String likeUsage;
 	private String tip;
 	private int numberOfSecondsOfLikeCreationCooldown;
@@ -50,7 +51,7 @@ public class MainConfig extends Yaml {
 		
 		Section lines = section("Like holograms'' text lines");
 		likeFavoritesText = lines.colored("Favorites");
-		likeExplanation = lines.colored("Description");
+		likeDescription = lines.colored("Description");
 		likeUsage = lines.colored("Usage");
 		
 		tip = colored("Tip");
@@ -99,16 +100,16 @@ public class MainConfig extends Yaml {
 		return Option.of(worlds2aliases.get(world));
 	}
 	
-	public Material icon(IconType type){
+	public Material material(IconType type){
 		return icons2materials.get(type);
 	}
 	
-	public String likeFavoritesText(int favorites){
-		return this.likeFavoritesText.replace("%favorites%", String.valueOf(favorites));
+	public LikeFavoritesText likeFavoritesText(){
+		return new LikeFavoritesText(likeFavoritesText);
 	}
 	
-	public String likeDescription(UUID owner){
-		return likeExplanation.replace("%owner%", UUIDConverter.getNameFromUUID(owner));
+	public LikeDescriptionText likeDescription(){
+		return new LikeDescriptionText(likeDescription);
 	}
 	
 	public String likeUsage(){
@@ -131,9 +132,8 @@ public class MainConfig extends Yaml {
 		return teleportationCosts;
 	}
 	
-	public String teleportationMessage(Like like){
-		return teleportationMessage.replace("%description%", like.description())
-				.replace("%owner%", UUIDConverter.getNameFromUUID(like.owner()));
+	public TeleportationText teleportationText(){
+		return new TeleportationText(teleportationMessage);
 	}
 	
 	public double invitationCosts(){
@@ -144,10 +144,8 @@ public class MainConfig extends Yaml {
 		return radiusOfInvitationScope;
 	}
 	
-	public String invitationMessage(Player inviter,  Like like){
-		return invitationMessage.replace("%description%", like.description())
-				.replace("%owner%", UUIDConverter.getNameFromUUID(like.owner()))
-				.replace("%inviter%", inviter.getName());
+	public InvitationText invitationText(){
+		return new InvitationText(invitationMessage);
 	}
 	
 	public enum IconType {
@@ -171,6 +169,60 @@ public class MainConfig extends Yaml {
 		SORT_BY_CREATION_DATE_IN_DESCENDING_ORDER,
 		SORT_BY_FAVORITES_IN_ASCENDING_ORDER,
 		SORT_BY_FAVORITES_IN_DESCENDING_ORDER;
+		
+	}
+	
+	public class LikeFavoritesText extends Text {
+		
+		private LikeFavoritesText(String text){
+			super(text);
+		}
+		
+		public Text apply(int favorites){
+			text = text.replace("%favorites%", String.valueOf(favorites));
+			return this;
+		}
+	}
+	
+	public class LikeDescriptionText extends Text {
+		
+		private LikeDescriptionText(String text){
+			super(text);
+		}
+		
+		public Text apply(UUID owner){
+			text = text.replace("%owner%", UUIDConverter.getNameFromUUID(owner));
+			return this;
+		}
+		
+	}
+	
+	public class TeleportationText extends Text {
+		
+		private TeleportationText(String text){
+			super(text);
+		}
+		
+		public Text apply(Like to){
+			text = text.replace("%description%", to.description())
+					.replace("%owner%", UUIDConverter.getNameFromUUID(to.owner()));
+			return this;
+		}
+		
+	}
+	
+	public class InvitationText extends Text {
+		
+		private InvitationText(String text){
+			super(text);
+		}
+		
+		public Text apply(Player inviter, Like to){
+			text = text.replace("%description%", to.description())
+					.replace("%owner%", UUIDConverter.getNameFromUUID(to.owner()))
+					.replace("%inviter%", inviter.getName());
+			return this;
+		}
 		
 	}
 	

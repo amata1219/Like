@@ -51,7 +51,7 @@ public class LikeEditingUI implements InventoryUI {
 			
 			l.put(s -> {
 				s.icon(i -> {
-					i.material = config.icon(IconType.FAVORITES);
+					i.material = config.material(IconType.FAVORITES);
 					i.displayName = Text.of("&a-お気に入りの数-&7-:-&f %s").format(like.favorites());
 					i.amount = Math.min(like.favorites(), 64);
 				});
@@ -59,21 +59,21 @@ public class LikeEditingUI implements InventoryUI {
 			
 			l.put(s -> {
 				s.icon(i -> {
-					i.material = config.icon(IconType.CREATION_TIMESTAMP);
+					i.material = config.material(IconType.CREATION_TIMESTAMP);
 					i.displayName = Text.of("&a-作成日時-&7-:-&f %s").format(like.creationTimestamp());
 				});
 			}, 4);
 			
 			l.put(s -> {
 				s.icon(i -> {
-					i.material = config.icon(IconType.ID);
+					i.material = config.material(IconType.ID);
 					i.displayName = Text.of("&a-管理ID-&7-:-&f %s").format(like.id);
 				});
 			}, 5);
 			
 			l.put(s -> {
 				s.icon(i -> {
-					i.material = config.icon(IconType.EDIT_DESCRIPTION);
+					i.material = config.material(IconType.EDIT_DESCRIPTION);
 					i.displayName = Text.color("&a-表示内容の編集");
 				});
 				
@@ -86,7 +86,7 @@ public class LikeEditingUI implements InventoryUI {
 			
 			l.put(s -> {
 				s.icon(i -> {
-					i.material = config.icon(IconType.PROCEED_TO_CONFIRMATION_PAGE_OF_DELETING_LIKE);
+					i.material = config.material(IconType.PROCEED_TO_CONFIRMATION_PAGE_OF_DELETING_LIKE);
 					i.displayName = Text.color("&c-Likeの削除");
 				});
 				

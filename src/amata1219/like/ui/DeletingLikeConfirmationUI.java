@@ -37,7 +37,7 @@ public class DeletingLikeConfirmationUI implements InventoryUI {
 			
 			l.put(s -> {
 				s.icon(i -> {
-					i.material = config.icon(IconType.LIKE);
+					i.material = config.material(IconType.LIKE);
 					i.displayName = Text.color("%a-Like");
 					i.lore(
 						Text.of("&7-: &f-ID &7-@ &a-%s").format(like.id),
@@ -49,7 +49,7 @@ public class DeletingLikeConfirmationUI implements InventoryUI {
 			
 			l.put(s -> {
 				s.icon(i -> {
-					i.material = config.icon(IconType.DELETE_LIKE);
+					i.material = config.material(IconType.DELETE_LIKE);
 					i.displayName = Text.color("&c-このLikeを削除する！");
 					i.lore(
 						Text.of("&7-※削除すると二度と復元出来なくなります。")
@@ -64,7 +64,7 @@ public class DeletingLikeConfirmationUI implements InventoryUI {
 			
 			l.put(s -> {
 				s.icon(i -> {
-					i.material = config.icon(IconType.CANCEL_LIKE_DELETION);
+					i.material = config.material(IconType.CANCEL_LIKE_DELETION);
 					i.displayName = Text.color("&a-削除しないで元の画面に戻る！");
 				});
 				

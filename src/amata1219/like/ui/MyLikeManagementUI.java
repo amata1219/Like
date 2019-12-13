@@ -52,7 +52,7 @@ public class MyLikeManagementUI implements InventoryUI {
 				l.put(s -> {
 					final Like like = likes.get(slotIndex);
 					s.icon(i -> {
-						i.material = config.icon(IconType.LIKE);
+						i.material = config.material(IconType.LIKE);
 						i.displayName = " ";
 						i.amount = Math.min(like.favorites(), 64);
 						i.lore(
@@ -119,7 +119,7 @@ public class MyLikeManagementUI implements InventoryUI {
 			if(order == Order.CREATION_DATE_IN_DESCENDING){
 				l.put(s -> {
 					s.icon(i -> {
-						i.material = config.icon(IconType.SORT_BY_CREATION_DATE_IN_DESCENDING_ORDER);
+						i.material = config.material(IconType.SORT_BY_CREATION_DATE_IN_DESCENDING_ORDER);
 						i.displayName = Text.color("&a-作成日が新しい順に表示されています！");
 						i.gleam();
 					});
@@ -127,7 +127,7 @@ public class MyLikeManagementUI implements InventoryUI {
 			}else{
 				l.put(s -> {
 					s.icon(i -> {
-						i.material = config.icon(IconType.SORT_BY_CREATION_DATE_IN_DESCENDING_ORDER);
+						i.material = config.material(IconType.SORT_BY_CREATION_DATE_IN_DESCENDING_ORDER);
 						i.displayName = Text.color("&7-作成日が新しい順に並び替える");
 					});
 					
@@ -141,7 +141,7 @@ public class MyLikeManagementUI implements InventoryUI {
 			if(order == Order.CREATION_DATE_IN_ASCENDING){
 				l.put(s -> {
 					s.icon(i -> {
-						i.material = config.icon(IconType.SORT_BY_CREATION_DATE_IN_ASCENDING_ORDER);
+						i.material = config.material(IconType.SORT_BY_CREATION_DATE_IN_ASCENDING_ORDER);
 						i.displayName = Text.color("&a-作成日が古い順に表示されています！");
 						i.gleam();
 					});
@@ -149,7 +149,7 @@ public class MyLikeManagementUI implements InventoryUI {
 			}else{
 				l.put(s -> {
 					s.icon(i -> {
-						i.material = config.icon(IconType.SORT_BY_CREATION_DATE_IN_ASCENDING_ORDER);
+						i.material = config.material(IconType.SORT_BY_CREATION_DATE_IN_ASCENDING_ORDER);
 						i.displayName = Text.color("&7-作成日が古い順に並び替える");
 					});
 					
@@ -163,7 +163,7 @@ public class MyLikeManagementUI implements InventoryUI {
 			if(order == Order.FAVORITES_IN_DESCENDING){
 				l.put(s -> {
 					s.icon(i -> {
-						i.material = config.icon(IconType.SORT_BY_FAVORITES_IN_DESCENDING_ORDER);
+						i.material = config.material(IconType.SORT_BY_FAVORITES_IN_DESCENDING_ORDER);
 						i.displayName = Text.color("&a-お気に入り数が多い順に表示されています！");
 						i.gleam();
 					});
@@ -171,7 +171,7 @@ public class MyLikeManagementUI implements InventoryUI {
 			}else{
 				l.put(s -> {
 					s.icon(i -> {
-						i.material = config.icon(IconType.SORT_BY_FAVORITES_IN_DESCENDING_ORDER);
+						i.material = config.material(IconType.SORT_BY_FAVORITES_IN_DESCENDING_ORDER);
 						i.displayName = Text.color("&7-お気に入り数が多い順に並び替える");
 					});
 					
@@ -185,7 +185,7 @@ public class MyLikeManagementUI implements InventoryUI {
 			if(order == Order.FAVORITES_IN_ASCENDING){
 				l.put(s -> {
 					s.icon(i -> {
-						i.material = config.icon(IconType.SORT_BY_FAVORITES_IN_ASCENDING_ORDER);
+						i.material = config.material(IconType.SORT_BY_FAVORITES_IN_ASCENDING_ORDER);
 						i.displayName = Text.color("&a-お気に入り数が少ない順に表示されています！");
 						i.gleam();
 					});
@@ -193,7 +193,7 @@ public class MyLikeManagementUI implements InventoryUI {
 			}else{
 				l.put(s -> {
 					s.icon(i -> {
-						i.material = config.icon(IconType.SORT_BY_FAVORITES_IN_ASCENDING_ORDER);
+						i.material = config.material(IconType.SORT_BY_FAVORITES_IN_ASCENDING_ORDER);
 						i.displayName = Text.color("&7-お気に入り数が少ない順に並び替える");
 					});
 					

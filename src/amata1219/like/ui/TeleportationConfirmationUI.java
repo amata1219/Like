@@ -24,16 +24,6 @@ public class TeleportationConfirmationUI implements InventoryUI {
 		this.like = like;
 		this.previous = previous;
 	}
-
-	/*
-	 *   012345678
-	 * t -@---@-@-
-	 * 
-	 * t or i -@--@@-@-
-	 * 
-	 * 
-	 * 
-	 */
 	
 	@Override
 	public Function<Player, Layout> layout() {
@@ -49,10 +39,10 @@ public class TeleportationConfirmationUI implements InventoryUI {
 			
 			l.put(s -> {
 				s.icon(i -> {
-					i.material = config.icon(IconType.LIKE);
+					i.material = config.material(IconType.LIKE);
 					i.displayName = " ";
 					i.lore(
-						Text.of("&a-ワールド-&7-: &f-%s").format(config.alias(like.world()).or(() -> "Unknown")),
+						Text.of("&a-ワールド-&7-: &f-%s").format(config.worldAlias(like.world()).or(() -> "Unknown")),
 						Text.of("&a-座標-&7-: &f-X-&7-: &f-%s Y-&7-: &f-%s Z-&7-: &f-%s").format(like.x(), like.y(), like.z()),
 						Text.of("&a-お気に入り数-&7-: &f-%s").format(like.favorites())
 					);
@@ -61,15 +51,24 @@ public class TeleportationConfirmationUI implements InventoryUI {
 			
 			l.put(s -> {
 				s.icon(i -> {
-					i.material = config.icon(IconType.TELEPORT_TO_LIKE);
+					i.material = config.material(IconType.TELEPORT_TO_LIKE);
 					i.displayName = Text.of("&a-このLikeにテレポートする！ (%sMP)").format(config.teleportationCosts());
 				});
 				
 				s.onClick(e -> {
 					p.teleport(like.hologram.getLocation());
-					Text.of("&a-Like[123821839128932198]")
+					config.teleportationText().apply(like).accept(p::sendMessage);
 				});
 			}, 5);
+			
+			l.put(s -> {
+				s.icon(i -> {
+					i.material = config.material(IconType.CANCEL_LIKE_TELEPORTATION);
+					i.displayName = Text.color("&c-前のページに戻る！");
+				});
+				
+				s.onClick(e -> previous.open(p));
+			}, 7);
 		});
 	}
 
