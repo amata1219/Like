@@ -86,7 +86,7 @@ public class LikeEditingUI implements InventoryUI {
 			
 			l.put(s -> {
 				s.icon(i -> {
-					i.material = config.material(IconType.PROCEED_TO_CONFIRMATION_PAGE_OF_DELETING_LIKE);
+					i.material = config.material(IconType.GO_TO_LIKE_DELETION_PAGE);
 					i.displayName = Text.color("&c-Likeの削除");
 				});
 				

@@ -70,7 +70,7 @@ public class MyLikeManagementUI implements InventoryUI {
 						);
 					});
 					
-					s.onClick(e -> new InvitationConfirmationUI(like).open(p));
+					s.onClick(e -> new InvitationConfirmationUI(like, this).open(p));
 				}, slotIndex);
 			});
 			
