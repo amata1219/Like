@@ -37,7 +37,7 @@ public class MyLikeManagementUI implements InventoryUI {
 		final Type where = Type.where(index, likes);
 		likes.sort(order.comparator);
 		return build(Math.min(likes.size() - (index * 45), 45), (p, l) -> {
-			l.title = Text.of("自分のLike @ %s").apply(index + 1);
+			l.title = Text.of("自分のLike @ %s").format(index + 1);
 			
 			l.defaultSlot(s -> {
 				s.icon(i -> {
@@ -56,21 +56,21 @@ public class MyLikeManagementUI implements InventoryUI {
 						i.displayName = " ";
 						i.amount = Math.min(like.favorites(), 64);
 						i.lore(
-							Text.of("&7-%s").apply(like.description()),
+							Text.of("&7-%s").format(like.description()),
 							"",
-							Text.of("&7-作成者: &a-%s").apply(UUIDConverter.getNameFromUUID(like.owner())),
-							Text.of("&7-お気に入り数: &a-%s").apply(like.favorites()),
-							Text.of("&7-作成日時: &a-%s").apply(like.creationTimestamp()),
-							Text.of("&7-ワールド: &a-%s").apply(config.alias(like.world()).or(() -> "Unknown")),
-							Text.of("&a-座標-&7-: &f-X-&7-: &f-%s Y-&7-: &f-%s Z-&7-: &f-%s").apply(like.x(), like.y(), like.z()),
+							Text.of("&7-作成者: &a-%s").format(UUIDConverter.getNameFromUUID(like.owner())),
+							Text.of("&7-お気に入り数: &a-%s").format(like.favorites()),
+							Text.of("&7-作成日時: &a-%s").format(like.creationTimestamp()),
+							Text.of("&7-ワールド: &a-%s").format(config.worldAlias(like.world()).or(() -> "Unknown")),
+							Text.of("&a-座標-&7-: &f-X-&7-: &f-%s Y-&7-: &f-%s Z-&7-: &f-%s").format(like.x(), like.y(), like.z()),
 							"",
 							Text.color("&7-クリック: &a-下記の機能の選択画面に移行します！"),
-							Text.of("&7-: &a-このLikeにテレポートする！(&n-%sMP-&r&a)").apply(config.teleportationCosts()),
-							Text.of("&7-: &a-半径%sm以内にいるプレイヤーをこのLikeに招待する！(&n-%sMP-&r&a)").apply(config.radiusOfInvitationScope(), config.invitationCosts())
+							Text.of("&7-: &a-このLikeにテレポートする！(&n-%sMP-&r&a)").format(config.teleportationCosts()),
+							Text.of("&7-: &a-半径%sm以内にいるプレイヤーをこのLikeに招待する！(&n-%sMP-&r&a)").format(config.radiusOfInvitationScope(), config.invitationCosts())
 						);
 					});
 					
-					s.onClick(e -> new TeleportationOrInvitationSelectionUI(like).open(p));
+					s.onClick(e -> new InvitationConfirmationUI(like).open(p));
 				}, slotIndex);
 			});
 			

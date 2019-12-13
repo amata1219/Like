@@ -30,6 +30,7 @@ public class MainConfig extends Yaml {
 	private int numberOfSecondsOfLikeCreationCooldown;
 	private int likeCreationLimitPerChunk;
 	private double teleportationCosts;
+	private String teleportationMessage;
 	private double invitationCosts;
 	private int radiusOfInvitationScope;
 	private String invitationMessage;
@@ -61,7 +62,12 @@ public class MainConfig extends Yaml {
 			.put(ID, icons.material("ID"))
 			.put(UNFAVORITE, icons.material("Unfavorite"))
 			.put(EDIT_DESCRIPTION, icons.material("Edit description"))
-			.put(PROCEED_TO_CONFIRMATION_PAGE_OF_DELETING_LIKE, icons.material("Proceed to confirmation page of deleting like"))
+			.put(GO_TO_LIKE_TELEPORTATION_OR_LIKE_INVITATION_CONFIRMATION_PAGE, icons.material("Go to like teleportation or like invitation confirmation page"))
+			.put(TELEPORT_TO_LIKE, icons.material("Teleport to like"))
+			.put(CANCEL_LIKE_TELEPORTATION, icons.material("Cancel like teleportation"))
+			.put(INVITE_TO_LIKE, icons.material("Invite to like"))
+			.put(CANCEL_LIKE_INVITATION, icons.material("Cancel like invitation"))
+			.put(GO_TO_LIKE_DELETION_PAGE, icons.material("Go to like deletion page"))
 			.put(DELETE_LIKE, icons.material("Delete like"))
 			.put(CANCEL_LIKE_DELETION, icons.material("Cancel like deletion"))
 			.put(LIKE, icons.material("Like"))
@@ -74,7 +80,10 @@ public class MainConfig extends Yaml {
 		
 		numberOfSecondsOfLikeCreationCooldown = getInt("Number of seconds of like creation cooldown");
 		likeCreationLimitPerChunk = getInt("Like creation limit per chunk");
-		teleportationCosts = getDouble("Teleportation costs");
+		
+		Section teleportation = section("Teleportation");
+		teleportationCosts = teleportation.doub1e("Costs");
+		teleportationMessage = teleportation.colored("Message");
 		
 		Section invitation = section("Invitation");
 		invitationCosts = invitation.doub1e("Costs");
@@ -86,7 +95,7 @@ public class MainConfig extends Yaml {
 		return worlds2aliases.containsKey(world);
 	}
 	
-	public Option<String> alias(World world){
+	public Option<String> worldAlias(World world){
 		return Option.of(worlds2aliases.get(world));
 	}
 	
@@ -122,6 +131,11 @@ public class MainConfig extends Yaml {
 		return teleportationCosts;
 	}
 	
+	public String teleportationMessage(Like like){
+		return teleportationMessage.replace("%description%", like.description())
+				.replace("%owner%", UUIDConverter.getNameFromUUID(like.owner()));
+	}
+	
 	public double invitationCosts(){
 		return invitationCosts;
 	}
@@ -143,7 +157,12 @@ public class MainConfig extends Yaml {
 		ID,
 		UNFAVORITE,
 		EDIT_DESCRIPTION,
-		PROCEED_TO_CONFIRMATION_PAGE_OF_DELETING_LIKE,
+		GO_TO_LIKE_TELEPORTATION_OR_LIKE_INVITATION_CONFIRMATION_PAGE,
+		TELEPORT_TO_LIKE,
+		CANCEL_LIKE_TELEPORTATION,
+		INVITE_TO_LIKE,
+		CANCEL_LIKE_INVITATION,
+		GO_TO_LIKE_DELETION_PAGE,
 		DELETE_LIKE,
 		CANCEL_LIKE_DELETION,
 		LIKE,

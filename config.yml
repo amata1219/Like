@@ -1,5 +1,5 @@
 'Map of worlds where like creation is enabled and aliases':
-- "world:メイン"
+- "world:main"
 'Like holograms'' text lines':
   'Favorites': "&d&l %favorites% &e&l★"
   'Description': "&6&l%owner%&r&6's Like"
@@ -11,7 +11,12 @@
   'ID': "NAME_TAG"
   'Edit description': "DIAMOND"
   'Unfavorite': "DIAMOND"
-  'Proceed to confirmation page of deleting like': "DIAMOND"
+  'Go to like teleportation or like invitation confirmation page': "DIAMOND"
+  'Teleport to like': "DIAMOND"
+  'Cancel like teleportation': "DIAMOND"
+  'Invite to like': "DIAMOND"
+  'Cancel like invitation': "DIAMOND"
+  'Go to like deletion page': "DIAMOND"
   'Delete like': "DIAMOND"
   'Cancel like deletion': "DIAMOND"
   'Like': "SUNFLOWER"
@@ -22,7 +27,9 @@
   'Sort by favorites in descending order': "DIAMOND"
 'Number of seconds of like creation cooldown': 10
 'Like creation limit per chunk': 3
-'Teleportation costs': 100.0
+'Teleportation'
+  'Costs': 100.0
+  'Message': "&3&l【Like TP】Teleported to Like(%description% by %owner%\n&3)"
 'Invitation':
   'Costs': 100.0
   'Radius of scope': 32

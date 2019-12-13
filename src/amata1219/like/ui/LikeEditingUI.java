@@ -44,7 +44,7 @@ public class LikeEditingUI implements InventoryUI {
 					i.material = Material.PLAYER_HEAD;
 					UUID owner = like.owner();
 					String playerName = UUIDConverter.getNameFromUUID(owner);
-					i.displayName = Text.of("&a-%s").apply(playerName);
+					i.displayName = Text.of("&a-%s").format(playerName);
 					i.raw = item -> ((SkullMeta) item.getItemMeta()).setOwningPlayer(Bukkit.getOfflinePlayer(owner));
 				});
 			}, 0);
@@ -52,7 +52,7 @@ public class LikeEditingUI implements InventoryUI {
 			l.put(s -> {
 				s.icon(i -> {
 					i.material = config.icon(IconType.FAVORITES);
-					i.displayName = Text.of("&a-お気に入りの数-&7-:-&f %s").apply(like.favorites());
+					i.displayName = Text.of("&a-お気に入りの数-&7-:-&f %s").format(like.favorites());
 					i.amount = Math.min(like.favorites(), 64);
 				});
 			}, 3);
@@ -60,14 +60,14 @@ public class LikeEditingUI implements InventoryUI {
 			l.put(s -> {
 				s.icon(i -> {
 					i.material = config.icon(IconType.CREATION_TIMESTAMP);
-					i.displayName = Text.of("&a-作成日時-&7-:-&f %s").apply(like.creationTimestamp());
+					i.displayName = Text.of("&a-作成日時-&7-:-&f %s").format(like.creationTimestamp());
 				});
 			}, 4);
 			
 			l.put(s -> {
 				s.icon(i -> {
 					i.material = config.icon(IconType.ID);
-					i.displayName = Text.of("&a-管理ID-&7-:-&f %s").apply(like.id);
+					i.displayName = Text.of("&a-管理ID-&7-:-&f %s").format(like.id);
 				});
 			}, 5);
 			

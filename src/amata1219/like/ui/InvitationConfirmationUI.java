@@ -10,7 +10,7 @@ import amata1219.like.config.MainConfig;
 import amata1219.masquerade.dsl.InventoryUI;
 import amata1219.masquerade.dsl.component.Layout;
 
-public class TeleportationOrInvitationSelectionUI implements InventoryUI {
+public class InvitationConfirmationUI implements InventoryUI {
 	
 	private final MainConfig config = Main.instance().config();
 	private final Like like;
@@ -25,7 +25,7 @@ public class TeleportationOrInvitationSelectionUI implements InventoryUI {
 	 * 
 	 */
 	
-	public TeleportationOrInvitationSelectionUI(Like like){
+	public InvitationConfirmationUI(Like like){
 		this.like = like;
 	}
 
