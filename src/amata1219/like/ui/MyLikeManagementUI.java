@@ -21,25 +21,6 @@ import at.pcgamingfreaks.UUIDConverter;
 
 public class MyLikeManagementUI implements InventoryUI {
 	
-	/*
-	 * 
-	 * 表示数: 1ページ当たり45個
-	 * 
-	 * 昇順ソート/降順ソート
-	 * 
-	 * size - (p x 45)
-	 * 
-	 * Math.min(size - (p x 45), 45) % 9
-	 * 
-	 * ---------
-	 * @-@@-@@-@
-	 * 45,
-	 * 47,48 - creation date d/a
-	 * 50,51 - favorites d/a
-	 * 53
-	 * 
-	 */
-	
 	private final Main plugin = Main.instance();
 	private final MainConfig config = plugin.config();
 	private final UUID owner;
@@ -186,7 +167,7 @@ public class MyLikeManagementUI implements InventoryUI {
 						i.displayName = Text.color("&a-お気に入り数が多い順に表示されています！");
 						i.gleam();
 					});
-				}, 47);
+				}, 50);
 			}else{
 				l.put(s -> {
 					s.icon(i -> {
@@ -198,7 +179,7 @@ public class MyLikeManagementUI implements InventoryUI {
 						order = Order.FAVORITES_IN_DESCENDING;
 						open(p);
 					});
-				}, 47);
+				}, 50);
 			}
 			
 			if(order == Order.FAVORITES_IN_ASCENDING){
@@ -208,7 +189,7 @@ public class MyLikeManagementUI implements InventoryUI {
 						i.displayName = Text.color("&a-お気に入り数が少ない順に表示されています！");
 						i.gleam();
 					});
-				}, 48);
+				}, 51);
 			}else{
 				l.put(s -> {
 					s.icon(i -> {
@@ -220,7 +201,7 @@ public class MyLikeManagementUI implements InventoryUI {
 						order = Order.FAVORITES_IN_ASCENDING;
 						open(p);
 					});
-				}, 48);
+				}, 51);
 			}
 			
 		});
