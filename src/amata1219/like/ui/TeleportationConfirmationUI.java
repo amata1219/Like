@@ -28,7 +28,7 @@ public class TeleportationConfirmationUI implements InventoryUI {
 	@Override
 	public Function<Player, Layout> layout() {
 		return build(Lines.x1, (p, l) -> {
-			l.title = "Likeにテレポート";
+			l.title = "テレポートの確認画面";
 			
 			l.defaultSlot(s -> {
 				s.icon(i -> {

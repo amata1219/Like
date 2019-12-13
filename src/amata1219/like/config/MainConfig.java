@@ -217,11 +217,21 @@ public class MainConfig extends Yaml {
 			super(text);
 		}
 		
-		public Text apply(Player inviter, Like to){
+		public InvitationText apply(Player inviter, Like to){
 			text = text.replace("%description%", to.description())
 					.replace("%owner%", UUIDConverter.getNameFromUUID(to.owner()))
 					.replace("%inviter%", inviter.getName());
 			return this;
+		}
+		
+		public Text apply(Player invitee){
+			text = text.replace("%invitee%", invitee.getName());
+			return this;
+		}
+		
+		@Override
+		public InvitationText clone(){
+			return new InvitationText(text);
 		}
 		
 	}
