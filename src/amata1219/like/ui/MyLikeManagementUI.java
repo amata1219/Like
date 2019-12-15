@@ -1,8 +1,6 @@
 package amata1219.like.ui;
 
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.IntStream;
@@ -10,22 +8,15 @@ import java.util.stream.IntStream;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import amata1219.like.Like;
-import amata1219.like.Main;
-import amata1219.like.config.MainConfig;
 import amata1219.like.config.MainConfig.IconType;
-import amata1219.masquerade.dsl.InventoryUI;
 import amata1219.masquerade.dsl.component.Layout;
 import amata1219.masquerade.item.Skull;
 import amata1219.masquerade.text.Text;
 import at.pcgamingfreaks.UUIDConverter;
 
-public class MyLikeManagementUI implements InventoryUI {
+public class MyLikeManagementUI extends AbstractMultipleUI {
 	
-	private final Main plugin = Main.instance();
-	private final MainConfig config = plugin.config();
 	private final UUID owner;
-	private int index;
-	private Order order = Order.CREATION_DATE_IN_ASCENDING;
 	
 	public MyLikeManagementUI(UUID owner){
 		this.owner = owner;
@@ -205,39 +196,6 @@ public class MyLikeManagementUI implements InventoryUI {
 			}
 			
 		});
-	}
-	
-	private enum Type {
-		
-		FIRST,
-		MIDDLE,
-		LAST;
-		
-		private static Type where(int index, List<Like> likes){
-			if(index == 0 || likes.isEmpty()) return Type.FIRST;
-			else if(index < likes.size() / 45 + (likes.size() % 45 == 0 ? -1 : 0)) return Type.MIDDLE;
-			else return Type.LAST;
-		}
-		
-	}
-	
-	private enum Order {
-		
-		CREATION_DATE_IN_ASCENDING((l1, l2) -> Long.compare(l1.id, l2.id)),
-		CREATION_DATE_IN_DESCENDING((l1, l2) -> Long.compare(l1.id, l2.id)),
-		FAVORITES_IN_ASCENDING(Like::favorites),
-		FAVORITES_IN_DESCENDING(Like::favorites);
-		
-		public final Comparator<Like> comparator;
-		
-		private Order(Comparator<Like> comparator){
-			this.comparator = ordinal() % 2 == 0 ? comparator.reversed() : comparator;
-		}
-		
-		private Order(Function<Like, Integer> function){
-			this(Comparator.comparing(function));
-		}
-		
 	}
 
 }
