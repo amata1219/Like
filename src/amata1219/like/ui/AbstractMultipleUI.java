@@ -22,7 +22,7 @@ public abstract class AbstractMultipleUI implements InventoryUI {
 		MIDDLE,
 		LAST;
 		
-		protected static Type where(int index, List<Like> likes){
+		protected static Type type(int index, List<Like> likes){
 			if(index == 0 || likes.isEmpty()) return Type.FIRST;
 			else if(index < likes.size() / 45 + (likes.size() % 45 == 0 ? -1 : 0)) return Type.MIDDLE;
 			else return Type.LAST;
