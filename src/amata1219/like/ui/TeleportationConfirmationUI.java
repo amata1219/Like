@@ -1,6 +1,8 @@
 package amata1219.like.ui;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -19,20 +21,21 @@ import amata1219.masquerade.option.Lines;
 import amata1219.masquerade.text.Text;
 import at.pcgamingfreaks.UUIDConverter;
 
-public class TPAndInvitationConfirmationUI implements InventoryUI {
+public class TeleportationConfirmationUI implements InventoryUI {
 	
-	private final MainConfig config = Main.instance().config();
+	private final Main plugin = Main.instance();
+	private final MainConfig config = plugin.config();
 	private final Like like;
 	private final InventoryUI previous;
 	
-	public TPAndInvitationConfirmationUI(Like like, InventoryUI previous){
+	public TeleportationConfirmationUI(Like like, InventoryUI previous){
 		this.like = like;
 		this.previous = previous;
 	}
 
 	@Override
 	public Function<Player, Layout> layout() {
-		return build(Lines.x1, (p, l) -> {
+		return build(Lines.x2, (p, l) -> {
 			l.title = "テレポートと招待の実行確認画面";
 			
 			l.defaultSlot(s -> {
@@ -106,6 +109,36 @@ public class TPAndInvitationConfirmationUI implements InventoryUI {
 				
 				s.onClick(e -> previous.open(p));
 			}, 7);
+			
+			l.put(s -> {
+				s.icon(i -> {
+					i.material = config.material(IconType.OWNERS_OTHER_LIKES);
+					i.displayName = Text.color("&a-この作者の他のLike情報");
+				});
+			}, 9);
+			
+			AtomicInteger slotIndex = new AtomicInteger(10);
+			plugin.likes(like.owner()).stream()
+			.filter(like -> like != this.like)
+			.sorted(Comparator.comparing(Like::favorites).reversed())
+			.limit(8)
+			.forEach(like -> {
+				l.put(s -> {
+					s.icon(i -> {
+						i.material = config.material(IconType.LIKE);
+						i.displayName = " ";
+						i.lore(
+							Text.of("&7-%s").format(like.description()),
+							"",
+							Text.of("&7-作成者: &a-%s").format(UUIDConverter.getNameFromUUID(like.owner())),
+							Text.of("&7-お気に入り数: &a-%s").format(like.favorites()),
+							Text.of("&7-作成日時: &a-%s").format(like.creationTimestamp()),
+							Text.of("&7-ワールド: &a-%s").format(config.worldAlias(like.world()).or(() -> "Unknown")),
+							Text.of("&7-座標: &a-X-&7-: &a-%s Y-&7-: &a-%s Z-&7-: &a-%s").format(like.x(), like.y(), like.z())
+						);
+					});
+				}, slotIndex.getAndIncrement());
+			});
 		});
 	}
 

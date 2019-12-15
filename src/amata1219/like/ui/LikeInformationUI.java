@@ -22,7 +22,8 @@ import at.pcgamingfreaks.UUIDConverter;
 
 public class LikeInformationUI implements InventoryUI {
 
-	private final MainConfig config = Main.instance().config();
+	private final Main plugin = Main.instance();
+	private final MainConfig config = plugin.config();
 	private final Like like;
 	
 	public LikeInformationUI(Like like){
@@ -88,7 +89,7 @@ public class LikeInformationUI implements InventoryUI {
 			}, 9);
 			
 			AtomicInteger slotIndex = new AtomicInteger(10);
-			Main.instance().playerLikes.get(like.owner()).stream()
+			plugin.likes(like.owner()).stream()
 			.filter(like -> like != this.like)
 			.sorted(Comparator.comparing(Like::favorites).reversed())
 			.limit(8)
@@ -98,9 +99,13 @@ public class LikeInformationUI implements InventoryUI {
 						i.material = config.material(IconType.LIKE);
 						i.displayName = " ";
 						i.lore(
-							Text.of("&a-ワールド-&7-: &f-%s").format(config.worldAlias(like.world()).or(() -> "Unknown")),
-							Text.of("&a-座標-&7-: &f-X-&7-: &f-%s Y-&7-: &f-%s Z-&7-: &f-%s").format(like.x(), like.y(), like.z()),
-							Text.of("&a-お気に入り数-&7-: &f-%s").format(like.favorites())
+							Text.of("&7-%s").format(like.description()),
+							"",
+							Text.of("&7-作成者: &a-%s").format(UUIDConverter.getNameFromUUID(like.owner())),
+							Text.of("&7-お気に入り数: &a-%s").format(like.favorites()),
+							Text.of("&7-作成日時: &a-%s").format(like.creationTimestamp()),
+							Text.of("&7-ワールド: &a-%s").format(config.worldAlias(like.world()).or(() -> "Unknown")),
+							Text.of("&7-座標: &a-X-&7-: &a-%s Y-&7-: &a-%s Z-&7-: &a-%s").format(like.x(), like.y(), like.z())
 						);
 					});
 				}, slotIndex.getAndIncrement());

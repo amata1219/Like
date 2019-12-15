@@ -59,7 +59,7 @@ public class MyFavoriteLikeUI extends AbstractLikeListUI {
 					);
 				});
 				
-				s.onClick(e -> new TPAndInvitationConfirmationUI(like, this).open(p));
+				s.onClick(e -> new TeleportationConfirmationUI(like, this).open(p));
 			}, slotIndex);
 		});
 	}
