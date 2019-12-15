@@ -17,6 +17,9 @@ import amata1219.masquerade.dsl.InventoryUI;
 import amata1219.masquerade.dsl.component.Layout;
 import amata1219.masquerade.option.Lines;
 import amata1219.masquerade.text.Text;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class InvitationConfirmationUI implements InventoryUI {
 	
@@ -78,7 +81,17 @@ public class InvitationConfirmationUI implements InventoryUI {
 					}
 					
 					InvitationText text = config.invitationText().apply(p, like);
-					playersNearby.forEach(invitee -> text.clone().apply(invitee).accept(invitee::sendMessage));
+					playersNearby.forEach(invitee -> text.clone().apply(invitee).accept(t -> {
+						TextComponent component = new TextComponent(t);
+						
+						String command = Text.of("/like %s %s").format(Main.INVITATION_TOKEN, like.id);
+						component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));
+						
+						TextComponent description = new TextComponent(Text.color("&7-クリックするとこのLikeにテレポートします！"));
+						component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponent[] {description}));
+						
+						invitee.spigot().sendMessage(component);
+					}));
 					
 					Text.of("&a-%s人のプレイヤーを招待しました。").apply(playersNearby.size()).accept(p::sendMessage);
 				});

@@ -18,6 +18,7 @@ import amata1219.like.tuplet.Tuple;
 public class Main extends JavaPlugin {
 	
 	private static Main instance;
+	public static final String INVITATION_TOKEN = UUID.randomUUID().toString();
 	
 	/*
 	 * player data config
