@@ -17,22 +17,23 @@ import amata1219.masquerade.dsl.InventoryUI;
 import amata1219.masquerade.dsl.component.Layout;
 import amata1219.masquerade.option.Lines;
 import amata1219.masquerade.text.Text;
+import at.pcgamingfreaks.UUIDConverter;
 
-public class InvitationConfirmationUI implements InventoryUI {
+public class TPAndInvitationConfirmationUI implements InventoryUI {
 	
 	private final MainConfig config = Main.instance().config();
 	private final Like like;
 	private final InventoryUI previous;
 	
-	public InvitationConfirmationUI(Like like, InventoryUI previous){
+	public TPAndInvitationConfirmationUI(Like like, InventoryUI previous){
 		this.like = like;
 		this.previous = previous;
 	}
-	
+
 	@Override
 	public Function<Player, Layout> layout() {
 		return build(Lines.x1, (p, l) -> {
-			l.title = "招待の実行確認画面";
+			l.title = "テレポートと招待の実行確認画面";
 			
 			l.defaultSlot(s -> {
 				s.icon(i -> {
@@ -48,6 +49,7 @@ public class InvitationConfirmationUI implements InventoryUI {
 					i.lore(
 						Text.of("&7-%s").format(like.description()),
 						"",
+						Text.of("&7-作成者: &a-%s").format(UUIDConverter.getNameFromUUID(like.owner())),
 						Text.of("&7-お気に入り数: &a-%s").format(like.favorites()),
 						Text.of("&7-作成日時: &a-%s").format(like.creationTimestamp()),
 						Text.of("&7-ワールド: &a-%s").format(config.worldAlias(like.world()).or(() -> "Unknown")),
@@ -55,6 +57,18 @@ public class InvitationConfirmationUI implements InventoryUI {
 					);
 				});
 			}, 1);
+			
+			l.put(s -> {
+				s.icon(i -> {
+					i.material = config.material(IconType.TELEPORT_TO_LIKE);
+					i.displayName = Text.of("&a-このLikeにテレポートする！ (%sMP)").format(config.teleportationCosts());
+				});
+				
+				s.onClick(e -> {
+					p.teleport(like.hologram.getLocation());
+					config.teleportationText().apply(like).accept(p::sendMessage);
+				});
+			}, 4);
 			
 			l.put(s -> {
 				s.icon(i -> {

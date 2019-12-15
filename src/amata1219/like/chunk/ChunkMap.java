@@ -2,7 +2,7 @@ package amata1219.like.chunk;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.List;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
@@ -13,7 +13,7 @@ import org.bukkit.Location;
 
 public class ChunkMap<V> {
 	
-	private final HashMap<Long, Collection<V>> map = new HashMap<>();
+	private final HashMap<Long, List<V>> map = new HashMap<>();
 	
 	public boolean containsHash(Chunk chunk){
 		return containsHash(chunk.getX(), chunk.getZ());
@@ -31,25 +31,25 @@ public class ChunkMap<V> {
 		return map.containsKey(chunkHash);
 	}
 	
-	public Collection<V> values(){
+	public List<V> values(){
 		return map.values().stream()
-				.flatMap(Collection::stream)
+				.flatMap(List::stream)
 				.collect(Collectors.toList());
 	}
 	
-	public Collection<V> get(Chunk chunk){
+	public List<V> get(Chunk chunk){
 		return get(chunk.getX(), chunk.getZ());
 	}
 	
-	public Collection<V> get(Location location){
+	public List<V> get(Location location){
 		return get(location.getBlockX(), location.getBlockZ());
 	}
 
-	public Collection<V> get(int x, int z){
+	public List<V> get(int x, int z){
 		return get(calculate(x, z));
 	}
 
-	public Collection<V> get(long hash){
+	public List<V> get(long hash){
 		return map.get(hash);
 	}
 	
@@ -61,7 +61,7 @@ public class ChunkMap<V> {
 
 	public void remove(int x, int z, V value){
 		final long hash = calculate(x, z);
-		Collection<V> list = map.get(hash);
+		List<V> list = map.get(hash);
 		list.remove(value);
 		if(list.isEmpty()) map.remove(hash);
 	}

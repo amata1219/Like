@@ -10,7 +10,6 @@ import amata1219.like.Like;
 import amata1219.like.config.MainConfig.IconType;
 import amata1219.masquerade.dsl.component.Layout;
 import amata1219.masquerade.text.Text;
-import at.pcgamingfreaks.UUIDConverter;
 
 public class MyLikeManagementUI extends AbstractLikeListUI {
 	
@@ -46,14 +45,12 @@ public class MyLikeManagementUI extends AbstractLikeListUI {
 					i.lore(
 						Text.of("&7-%s").format(like.description()),
 						"",
-						Text.of("&7-作成者: &a-%s").format(UUIDConverter.getNameFromUUID(like.owner())),
 						Text.of("&7-お気に入り数: &a-%s").format(like.favorites()),
 						Text.of("&7-作成日時: &a-%s").format(like.creationTimestamp()),
 						Text.of("&7-ワールド: &a-%s").format(config.worldAlias(like.world()).or(() -> "Unknown")),
-						Text.of("&a-座標-&7-: &f-X-&7-: &f-%s Y-&7-: &f-%s Z-&7-: &f-%s").format(like.x(), like.y(), like.z()),
+						Text.of("&7-座標: &a-X-&7-: &a-%s Y-&7-: &a-%s Z-&7-: &a-%s").format(like.x(), like.y(), like.z()),
 						"",
-						Text.color("&7-クリック: &a-下記の機能の選択画面に移行します！"),
-						Text.of("&7-: &a-このLikeにテレポートする！(&n-%sMP-&r&a)").format(config.teleportationCosts()),
+						Text.color("&7-クリック: &a-下記機能の実行確認画面に移行します！"),
 						Text.of("&7-: &a-半径%sm以内にいるプレイヤーをこのLikeに招待する！(&n-%sMP-&r&a)").format(config.radiusOfInvitationScope(), config.invitationCosts())
 					);
 				});
