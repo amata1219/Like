@@ -12,12 +12,12 @@ import amata1219.like.config.MainConfig.IconType;
 import amata1219.masquerade.dsl.component.Layout;
 import amata1219.masquerade.text.Text;
 
-public abstract class AbstractLikeListUI extends AbstractMultipleUI {
+public abstract class AbstractSortableLikeListUI extends AbstractMultipleUI {
 	
 	protected final UUID owner;
 	protected Order order = Order.CREATION_TIME_IN_ASCENDING;
 	
-	protected AbstractLikeListUI(UUID owner){
+	protected AbstractSortableLikeListUI(UUID owner){
 		this.owner = owner;
 	}
 	

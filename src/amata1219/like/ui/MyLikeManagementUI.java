@@ -4,14 +4,13 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import amata1219.like.Like;
 import amata1219.like.config.MainConfig.IconType;
 import amata1219.masquerade.dsl.component.Layout;
 import amata1219.masquerade.text.Text;
 
-public class MyLikeManagementUI extends AbstractLikeListUI {
+public class MyLikeManagementUI extends AbstractSortableLikeListUI {
 	
 	public MyLikeManagementUI(UUID owner){
 		super(owner);
@@ -27,13 +26,6 @@ public class MyLikeManagementUI extends AbstractLikeListUI {
 		super.layout(p, l, likes);
 		
 		l.title = Text.of("自分のLike @ %s").format(index + 1);
-		
-		l.defaultSlot(s -> {
-			s.icon(i -> {
-				i.material = Material.LIGHT_GRAY_STAINED_GLASS_PANE;
-				i.displayName = " ";
-			});
-		});
 		
 		final int start = index * 45;
 		final int remainder = likes.size() % 45;

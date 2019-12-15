@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import amata1219.like.Like;
@@ -13,7 +12,7 @@ import amata1219.masquerade.dsl.component.Layout;
 import amata1219.masquerade.text.Text;
 import at.pcgamingfreaks.UUIDConverter;
 
-public class MyFavoriteLikeUI extends AbstractLikeListUI {
+public class MyFavoriteLikeUI extends AbstractSortableLikeListUI {
 
 	public MyFavoriteLikeUI(UUID owner) {
 		super(owner);
@@ -29,13 +28,6 @@ public class MyFavoriteLikeUI extends AbstractLikeListUI {
 		super.layout(p, l, likes);
 		
 		l.title = Text.of("お気に入りのLike @ %s").format(index + 1);
-		
-		l.defaultSlot(s -> {
-			s.icon(i -> {
-				i.material = Material.LIGHT_GRAY_STAINED_GLASS_PANE;
-				i.displayName = " ";
-			});
-		});
 		
 		final int start = index * 45;
 		final int remainder = likes.size() % 45;
