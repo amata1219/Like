@@ -105,9 +105,15 @@ public class LikeInformationUI implements InventoryUI {
 							Text.of("&7-お気に入り数: &a-%s").format(like.favorites()),
 							Text.of("&7-作成日時: &a-%s").format(like.creationTimestamp()),
 							Text.of("&7-ワールド: &a-%s").format(config.worldAlias(like.world()).or(() -> "Unknown")),
-							Text.of("&7-座標: &a-X-&7-: &a-%s Y-&7-: &a-%s Z-&7-: &a-%s").format(like.x(), like.y(), like.z())
+							Text.of("&7-座標: &a-X-&7-: &a-%s Y-&7-: &a-%s Z-&7-: &a-%s").format(like.x(), like.y(), like.z()),
+							"",
+							Text.color("&7-クリック: &a-下記機能の実行確認画面に移行します！"),
+							Text.of("&7-: &a-このLikeにテレポートする！(&n-%sMP-&r&a)").format(config.teleportationCosts()),
+							Text.of("&7-: &a-半径%sm以内にいるプレイヤーをこのLikeに招待する！(&n-%sMP-&r&a)").format(config.radiusOfInvitationScope(), config.invitationCosts())
 						);
 					});
+					
+					s.onClick(e -> new TeleportationConfirmationUI(like, this).open(p));
 				}, slotIndex.getAndIncrement());
 			});
 		});
