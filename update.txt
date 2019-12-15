@@ -1,5 +1,3 @@
-Likeに関する追加機能
-
 ＠・「この作者の他のLike情報」が見れる機能にクリックでTP出来る機能(お金はLikeワープと同じ処理)
 
 ＠・/likelでクリックするとTPするけれど、ここにクッションページが欲しい(クリックでTPか招待かを選ぶページ。)
@@ -10,7 +8,6 @@ Likeに関する追加機能
 
 ＠・Bukkit.getOfflinePlayerだとBungee環境ではうまく動かないようで、下記のようなライブラリを追加したり探したりして動くようにできるとありがたいです
 https://github.com/GeorgH93/PCGF_PluginLib/blob/master/src/at/pcgamingfreaks/UUIDConverter.java
-https://github.com/desht/dhutils/blob/master/Lib/src/main/java/me/desht/dhutils/UUIDFetcher.java
 
 ＠・1.14でも動くかの確認と修正があればその対応
 

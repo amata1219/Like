@@ -26,6 +26,8 @@ public class MyFavoriteLikeUI extends AbstractLikeListUI {
 
 	@Override
 	protected void layout(Player p, Layout l, List<Like> likes) {
+		super.layout(p, l, likes);
+		
 		l.title = Text.of("お気に入りのLike @ %s").format(index + 1);
 		
 		l.defaultSlot(s -> {

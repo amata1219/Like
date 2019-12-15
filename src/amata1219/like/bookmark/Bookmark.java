@@ -1,25 +1,37 @@
 package amata1219.like.bookmark;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
-import amata1219.like.OldLike;
+import amata1219.like.Like;
+import amata1219.like.bookmark.Order;
 
 public class Bookmark {
 	
-	private final List<OldLike> likes;
+	private final List<Like> likes;
+	private Order order;
 	
-	public Bookmark(Collection<OldLike> likes){
-		this.likes = likes.stream()
-				.sorted((l1, l2) -> l1.getLikeCount() - l2.getLikeCount())
-				.collect(Collectors.toList());
+	public Bookmark(){
+		likes = new ArrayList<>();
+		order = Order.REGISTRATION_TIME_IN_DESCENDING;
 	}
 	
-	/*
-	 * add
-	 * remove
-	 * sort(onUpdateLikeCount)
-	 */
-
+	public Bookmark(List<Like> likes, Order order){
+		this.likes = likes;
+		this.order = order;
+	}
+	
+	public List<Like> likes(){
+		return new ArrayList<>(likes);
+	}
+	
+	public Order order(){
+		return order;
+	}
+	
+	public void setOrder(Order order){
+		this.order = Objects.requireNonNull(order);
+	}
+	
 }

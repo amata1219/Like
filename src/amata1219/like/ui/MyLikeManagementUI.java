@@ -24,6 +24,8 @@ public class MyLikeManagementUI extends AbstractLikeListUI {
 
 	@Override
 	protected void layout(Player p, Layout l, List<Like> likes) {
+		super.layout(p, l, likes);
+		
 		l.title = Text.of("自分のLike @ %s").format(index + 1);
 		
 		l.defaultSlot(s -> {
