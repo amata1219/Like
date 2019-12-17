@@ -9,17 +9,18 @@ import amata1219.like.bookmark.Order;
 
 public class Bookmark {
 	
+	public final String name;
 	private final List<Like> likes;
 	private Order order;
 	
-	public Bookmark(){
-		likes = new ArrayList<>();
-		order = Order.REGISTRATION_TIME_IN_DESCENDING;
-	}
-	
-	public Bookmark(List<Like> likes, Order order){
+	public Bookmark(String name, List<Like> likes, Order order){
+		this.name = name;
 		this.likes = likes;
 		this.order = order;
+	}
+	
+	public Bookmark(String name){
+		this(name, new ArrayList<>(), Order.REGISTRATION_TIME_IN_DESCENDING);
 	}
 	
 	public List<Like> likes(){
