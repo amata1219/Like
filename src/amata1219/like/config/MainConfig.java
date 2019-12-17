@@ -13,7 +13,7 @@ import com.google.common.collect.Maps;
 
 import amata1219.like.Like;
 import amata1219.like.Main;
-import amata1219.like.monad.Option;
+import amata1219.like.monad.Maybe;
 import amata1219.like.tuplet.Tuple;
 import amata1219.masquerade.text.Text;
 import at.pcgamingfreaks.UUIDConverter;
@@ -46,8 +46,8 @@ public class MainConfig extends Yaml {
 		worlds2aliases.clear();
 		list("Map of worlds where like creation is enabled and aliases").stream()
 		.map(s -> s.split(","))
-		.map(s -> Tuple.of(Option.of(Bukkit.getWorld(s[0])), s[1]))
-		.forEach(t -> t.first.then(w -> worlds2aliases.put(w, t.second)));
+		.map(s -> Tuple.of(Maybe.unit(Bukkit.getWorld(s[0])), s[1]))
+		.forEach(t -> t.first.apply(w -> worlds2aliases.put(w, t.second)));
 		
 		Section lines = section("Like holograms'' text lines");
 		likeFavoritesText = lines.colored("Favorites");
@@ -96,8 +96,8 @@ public class MainConfig extends Yaml {
 		return worlds2aliases.containsKey(world);
 	}
 	
-	public Option<String> worldAlias(World world){
-		return Option.of(worlds2aliases.get(world));
+	public Maybe<String> worldAlias(World world){
+		return Maybe.unit(worlds2aliases.get(world));
 	}
 	
 	public Material material(IconType type){

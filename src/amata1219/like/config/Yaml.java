@@ -12,7 +12,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import amata1219.like.monad.Option;
+import amata1219.like.monad.Maybe;
 
 public abstract class Yaml extends YamlConfiguration {
 
@@ -47,10 +47,10 @@ public abstract class Yaml extends YamlConfiguration {
 			e.printStackTrace();
 		}
 		
-		Option.of(plugin.getResource(resourceFileName))
+		Maybe.unit(plugin.getResource(resourceFileName))
 		.map(input -> new InputStreamReader(input, StandardCharsets.UTF_8))
 		.map(YamlConfiguration::loadConfiguration)
-		.then(this::setDefaults);
+		.apply(this::setDefaults);
 		
 		readAll();
 	}

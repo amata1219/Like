@@ -8,7 +8,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import amata1219.like.Main;
-import static amata1219.like.monad.Either.*;
+import amata1219.like.monad.Either;
 import amata1219.masquerade.text.Text;
 import net.md_5.bungee.api.ChatColor;
 
@@ -25,9 +25,9 @@ public class EditLikeDescriptionListener implements Listener {
 		e.setCancelled(true);
 		
 		Bukkit.getScheduler().runTask(plugin, () -> {
-			Right(plugin.descriptionEditors.get(player.getUniqueId()))
-			.flatMap(id -> plugin.likes.containsKey(id) ? Right(plugin.likes.get(id)) : Left(Text.color("&c-編集対象のLikeは削除されています。")))
-			.then(like -> {
+			Either.unit(plugin.descriptionEditors.get(player.getUniqueId()))
+			.flatMap(id -> plugin.likes.containsKey(id) ? Either.Success(plugin.likes.get(id)) : Either.Failure(Text.color("&c-編集対象のLikeは削除されています。")))
+			.onSuccess(like -> {
 				String message = e.getMessage();
 				if(message.equals("cancel")){
 					player.sendMessage(Text.color("&c-Like(%s)の表示内容の編集をキャンセルしました。"));

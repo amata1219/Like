@@ -1,92 +1,84 @@
 package amata1219.like.monad;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 
-import org.bukkit.util.Consumer;
+public interface Either<F, S> {
+	
+	public static <S> Either<String, S> unit(S value){
+		return Success(value);
+	}
+	
+	public static <F, S> Either<F, S> Success(S value){
+		return new Success<>(value);
+	}
+	
+	public static <F, S> Either<F, S> Failure(F error){
+		return new Failure<>(error);
+	}
+	
+	<T> Either<F, T> flatMap(Function<S, Either<F, T>> mapper);
+	
+	@SuppressWarnings("unchecked")
+	default <T> Either<F, T> map(Function<S, T> mapper){
+		return (Either<F, T>) flatMap(mapper.andThen(Either::Success));
+	}
+	
+	Either<F, S> onSuccess(Consumer<S> action);
+	
+	Either<F, S> onFailure(Consumer<F> action);
+	
+	public class Success<F, S> implements Either<F, S> {
+		
+		private final S value;
+		
+		private Success(S value){
+			this.value = value;
+		}
 
-public abstract class Either<R> implements Monad<R> {
-	
-	public static <R> Either<R> Right(R result){
-		return new Right<>(result);
+		@Override
+		public <T> Either<F, T> flatMap(Function<S, Either<F, T>> mapper) {
+			return mapper.apply(value);
+		}
+
+		@Override
+		public Either<F, S> onSuccess(Consumer<S> action) {
+			action.accept(value);
+			return this;
+		}
+
+		@Override
+		public Either<F, S> onFailure(Consumer<F> action) {
+			return this;
+		}
+		
 	}
 	
-	public static <R> Either<R> Left(String error){
-		return new Left<>(error);
-	}
-	
-	@Override
-	public abstract <U> Either<U> map(Function<R, U> mapper);
-	
-	public abstract <U> Either<U> flatMap(Function<R, Either<U>> mapper);
-	
-	@Override
-	public abstract Either<R> then(Consumer<R> action);
-	
-	public abstract Either<R> onFailure(Consumer<String> action);
-	
-	public static class Left<R> extends Either<R> {
+	public class Failure<F, S> implements Either<F, S> {
 		
-		private final String error;
+		private final F error;
 		
-		private Left(String error){
+		private Failure(F error){
 			this.error = error;
 		}
 
 		@SuppressWarnings("unchecked")
 		@Override
-		public <U> Either<U> map(Function<R, U> mapper) {
-			return (Either<U>) this;
-		}
-
-		@SuppressWarnings("unchecked")
-		@Override
-		public <U> Either<U> flatMap(Function<R, Either<U>> mapper) {
-			return (Either<U>) this;
+		public <T> Either<F, T> flatMap(Function<S, Either<F, T>> mapper) {
+			return (Either<F, T>) this;
 		}
 
 		@Override
-		public Either<R> then(Consumer<R> action) {
+		public Either<F, S> onSuccess(Consumer<S> action) {
 			return this;
 		}
 
 		@Override
-		public Either<R> onFailure(Consumer<String> action) {
+		public Either<F, S> onFailure(Consumer<F> action) {
 			action.accept(error);
 			return this;
 		}
 		
 	}
-	
-	public static class Right<R> extends Either<R> {
-		
-		private final R result;
-		
-		private Right(R result){
-			this.result = result;
-		}
-
-		@Override
-		public <U> Either<U> map(Function<R, U> mapper) {
-			return Right(mapper.apply(result));
-		}
-
-		@Override
-		public <U> Either<U> flatMap(Function<R, Either<U>> mapper) {
-			return mapper.apply(result);
-		}
-
-		@Override
-		public Either<R> then(Consumer<R> action) {
-			action.accept(result);
-			return this;
-		}
-
-		@Override
-		public Either<R> onFailure(Consumer<String> action) {
-			return this;
-		}
-		
-	}
-	
 
 }
