@@ -13,7 +13,6 @@ import com.gmail.filoghost.holographicdisplays.object.NamedHologram;
 import com.gmail.filoghost.holographicdisplays.object.line.CraftHologramLine;
 
 import amata1219.like.config.MainConfig;
-import amata1219.like.monad.Try;
 
 public class Like {
 	
@@ -28,13 +27,12 @@ public class Like {
 	private int favorites;
 	
 	public Like(NamedHologram hologram, UUID owner){
-		id = Try.of(() -> Long.parseLong(hologram.getName()))
-				.getOrElseThrow(() -> new IllegalArgumentException("Likeを読み込めませんでした(Hologram@" + hologram.getName() + ", Owner@" + owner + ")"));
+		this.id = Long.parseLong(hologram.getName());
 		this.hologram = hologram;
 		this.owner = owner;
 		
-		hologram.appendTextLine(config.likeFavoritesText(0));
-		hologram.appendTextLine(config.likeDescription(owner));
+		hologram.appendTextLine(config.likeFavoritesText().apply(0));
+		hologram.appendTextLine(config.likeDescription().apply(owner));
 		hologram.appendTextLine(config.likeUsage());
 		
 		//OldMain.applyTouchHandler(this, false);
@@ -92,12 +90,12 @@ public class Like {
 	
 	public void incrementFavorites(){
 		favorites++;
-		rewriteHologramLine(0, config.likeFavoritesText(favorites));
+		rewriteHologramLine(0, config.likeFavoritesText().apply(favorites));
 	}
 	
 	public void decrementFavorites(){
 		favorites = Math.min(favorites - 1, 0);
-		rewriteHologramLine(0, config.likeFavoritesText(favorites));
+		rewriteHologramLine(0, config.likeFavoritesText().apply(favorites));
 	}
 	
 	private void rewriteHologramLine(int index, String text){
@@ -106,12 +104,8 @@ public class Like {
 		lines.set(index, HologramDatabase.readLineFromString(text, hologram));
 		hologram.refreshAll();
 		HologramDatabase.saveHologram(hologram);
-	}
-	
-	/*private void save(){
-		HologramDatabase.saveHologram(hologram);
 		HologramDatabase.trySaveToDisk();
-	}*/
+	}
 	
 	public String creationTimestamp(){
 		return DATE_FORMAT.format(id);

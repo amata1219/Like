@@ -11,7 +11,7 @@ public class PlayerDataLoading {
 		Main plugin = Main.plugin();
 		PlayerData data = new PlayerData();
 		plugin.playerLikes.getOrDefault(uuid, Collections.emptyList()).forEach(data.myLikes::put);
-		plugin.playerDataConfig().favoriteLikes(uuid).forEach(data.favoriteLikes::put);
+		plugin.playerConfig().favoriteLikes(uuid).forEach(data.favoriteLikes::put);
 		return data;
 	}
 

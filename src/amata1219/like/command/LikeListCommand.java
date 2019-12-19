@@ -26,7 +26,7 @@ public class LikeListCommand implements PlayerCommand {
 				"&7-不正なコマンドが入力されたため実行出来ませんでした。",
 				"&7-このコマンドは、/likel, /likel me が有効です。"
 			)))
-		);
+		).onFailure(sender::sendMessage);
 	}
 
 }

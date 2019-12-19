@@ -65,5 +65,10 @@ public class Text {
 	public Text clone(){
 		return new Text(text);
 	}
+	
+	@Override
+	public String toString(){
+		return text;
+	}
 
 }

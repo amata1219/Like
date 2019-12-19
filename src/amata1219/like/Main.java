@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -70,7 +71,8 @@ public class Main extends JavaPlugin {
 	public final HashMap<Long, Like> likes = new HashMap<>();
 	public final HashMap<UUID, List<Like>> playerLikes = new HashMap<>();
 	public final HashMap<Player, PlayerData> players = new HashMap<>();
-	public final HashMap<UUID, Long> descriptionEditors = new HashMap<>();
+	public final HashMap<Player, Long> descriptionEditors = new HashMap<>();
+	public final HashSet<Player> cooldownMap = new HashSet<>();
 	
 	@Override
 	public void onEnable(){
@@ -84,7 +86,7 @@ public class Main extends JavaPlugin {
 		try{
 			Enchantment.registerEnchantment(GleamEnchantment.INSTANCE);
 		}catch(Exception e){
-
+			
 		}finally{
 			Reflection.setFieldValue(acceptingNew, null, false);
 		}
@@ -117,7 +119,7 @@ public class Main extends JavaPlugin {
 		return config;
 	}
 	
-	public PlayerFavoriteLikesConfig playerDataConfig(){
+	public PlayerFavoriteLikesConfig playerConfig(){
 		return playerConfig;
 	}
 	

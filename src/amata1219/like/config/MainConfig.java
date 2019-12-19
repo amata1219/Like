@@ -178,9 +178,8 @@ public class MainConfig extends Yaml {
 			super(text);
 		}
 		
-		public Text apply(int favorites){
-			text = text.replace("%favorites%", String.valueOf(favorites));
-			return this;
+		public String apply(int favorites){
+			return text.replace("%favorites%", String.valueOf(favorites));
 		}
 	}
 	
@@ -190,9 +189,8 @@ public class MainConfig extends Yaml {
 			super(text);
 		}
 		
-		public Text apply(UUID owner){
-			text = text.replace("%owner%", UUIDConverter.getNameFromUUID(owner));
-			return this;
+		public String apply(UUID owner){
+			return text.replace("%owner%", UUIDConverter.getNameFromUUID(owner));
 		}
 		
 	}

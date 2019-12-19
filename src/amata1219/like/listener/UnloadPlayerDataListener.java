@@ -15,7 +15,7 @@ public class UnloadPlayerDataListener implements Listener {
 		Main plugin = Main.plugin();
 		Player player = e.getPlayer();
 		PlayerData data = plugin.players.remove(player);
-		plugin.playerDataConfig().save(player.getUniqueId(), data.favoriteLikes);
+		plugin.playerConfig().save(player.getUniqueId(), data.favoriteLikes);
 	}
 
 }
