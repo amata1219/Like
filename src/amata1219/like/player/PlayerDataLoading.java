@@ -8,7 +8,7 @@ import amata1219.like.Main;
 public class PlayerDataLoading {
 	
 	public static PlayerData loadExistingPlayerData(UUID uuid){
-		Main plugin = Main.instance();
+		Main plugin = Main.plugin();
 		PlayerData data = new PlayerData();
 		plugin.playerLikes.getOrDefault(uuid, Collections.emptyList()).forEach(data.myLikes::put);
 		plugin.playerDataConfig().favoriteLikes(uuid).forEach(data.favoriteLikes::put);

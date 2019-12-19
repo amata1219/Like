@@ -12,7 +12,7 @@ public class UnloadPlayerDataListener implements Listener {
 	
 	@EventHandler
 	public void onQuit(PlayerQuitEvent e){
-		Main plugin = Main.instance();
+		Main plugin = Main.plugin();
 		Player player = e.getPlayer();
 		PlayerData data = plugin.players.remove(player);
 		plugin.playerDataConfig().save(player.getUniqueId(), data.favoriteLikes);

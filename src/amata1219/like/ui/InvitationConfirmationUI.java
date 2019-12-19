@@ -13,17 +13,17 @@ import amata1219.like.Main;
 import amata1219.like.config.MainConfig;
 import amata1219.like.config.MainConfig.IconType;
 import amata1219.like.config.MainConfig.InvitationText;
-import amata1219.masquerade.dsl.InventoryUI;
-import amata1219.masquerade.dsl.component.Layout;
-import amata1219.masquerade.option.Lines;
-import amata1219.masquerade.text.Text;
+import amata1219.like.masquerade.dsl.InventoryUI;
+import amata1219.like.masquerade.dsl.component.Layout;
+import amata1219.like.masquerade.option.Lines;
+import amata1219.like.masquerade.text.Text;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
 public class InvitationConfirmationUI implements InventoryUI {
 	
-	private final MainConfig config = Main.instance().config();
+	private final MainConfig config = Main.plugin().config();
 	private final Like like;
 	private final InventoryUI previous;
 	

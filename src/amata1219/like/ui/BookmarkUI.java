@@ -8,8 +8,8 @@ import org.bukkit.entity.Player;
 import amata1219.like.Like;
 import amata1219.like.bookmark.Bookmark;
 import amata1219.like.config.MainConfig.IconType;
-import amata1219.masquerade.dsl.component.Layout;
-import amata1219.masquerade.text.Text;
+import amata1219.like.masquerade.dsl.component.Layout;
+import amata1219.like.masquerade.text.Text;
 
 public class BookmarkUI extends AbstractMultipleUI {
 	

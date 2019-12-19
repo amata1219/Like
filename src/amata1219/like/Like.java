@@ -19,7 +19,7 @@ public class Like {
 	
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy.MM.dd (E) HH:mm:ss");
 	
-	private final MainConfig config = Main.instance().config();
+	private final MainConfig config = Main.plugin().config();
 	
 	public final long id;
 	public final NamedHologram hologram;

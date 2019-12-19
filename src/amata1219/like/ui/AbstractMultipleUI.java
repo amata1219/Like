@@ -10,14 +10,14 @@ import org.bukkit.entity.Player;
 import amata1219.like.Like;
 import amata1219.like.Main;
 import amata1219.like.config.MainConfig;
-import amata1219.masquerade.dsl.InventoryUI;
-import amata1219.masquerade.dsl.component.Layout;
-import amata1219.masquerade.item.Skull;
-import amata1219.masquerade.text.Text;
+import amata1219.like.masquerade.dsl.InventoryUI;
+import amata1219.like.masquerade.dsl.component.Layout;
+import amata1219.like.masquerade.item.Skull;
+import amata1219.like.masquerade.text.Text;
 
 public abstract class AbstractMultipleUI implements InventoryUI {
 
-	protected final Main plugin = Main.instance();
+	protected final Main plugin = Main.plugin();
 	protected final MainConfig config = plugin.config();
 	protected int index;
 	

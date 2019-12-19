@@ -9,14 +9,14 @@ import amata1219.like.Like;
 import amata1219.like.Main;
 import amata1219.like.config.MainConfig;
 import amata1219.like.config.MainConfig.IconType;
-import amata1219.masquerade.dsl.InventoryUI;
-import amata1219.masquerade.dsl.component.Layout;
-import amata1219.masquerade.option.Lines;
-import amata1219.masquerade.text.Text;
+import amata1219.like.masquerade.dsl.InventoryUI;
+import amata1219.like.masquerade.dsl.component.Layout;
+import amata1219.like.masquerade.option.Lines;
+import amata1219.like.masquerade.text.Text;
 
 public class DeletingLikeConfirmationUI implements InventoryUI {
 	
-	private final MainConfig config = Main.instance().config();
+	private final MainConfig config = Main.plugin().config();
 	private final Like like;
 	
 	public DeletingLikeConfirmationUI(Like like){
@@ -57,7 +57,7 @@ public class DeletingLikeConfirmationUI implements InventoryUI {
 				});
 				
 				s.onClick(e -> {
-					Main.instance().deleteLike(like);
+					Main.plugin().deleteLike(like);
 					p.sendMessage(Text.of("&c-Like(%s)を完全に削除しました。").format(like.id));
 				});
 			}, 4);

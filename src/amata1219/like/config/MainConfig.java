@@ -13,9 +13,9 @@ import com.google.common.collect.Maps;
 
 import amata1219.like.Like;
 import amata1219.like.Main;
+import amata1219.like.masquerade.text.Text;
 import amata1219.like.monad.Maybe;
 import amata1219.like.tuplet.Tuple;
-import amata1219.masquerade.text.Text;
 import at.pcgamingfreaks.UUIDConverter;
 
 import static amata1219.like.config.MainConfig.IconType.*;
@@ -37,7 +37,7 @@ public class MainConfig extends Yaml {
 	private String invitationMessage;
 	
 	public MainConfig(){
-		super(Main.instance(), "config.yml");
+		super(Main.plugin(), "config.yml");
 		readAll();
 	}
 	

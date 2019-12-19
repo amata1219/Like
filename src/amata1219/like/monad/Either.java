@@ -9,6 +9,10 @@ public interface Either<F, S> {
 		return Success(value);
 	}
 	
+	public static Either<String, ?> error(String error){
+		return Failure(error);
+	}
+	
 	public static <F, S> Either<F, S> Success(S value){
 		return new Success<>(value);
 	}

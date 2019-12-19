@@ -8,13 +8,13 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import amata1219.like.Main;
+import amata1219.like.masquerade.text.Text;
 import amata1219.like.monad.Either;
-import amata1219.masquerade.text.Text;
 import net.md_5.bungee.api.ChatColor;
 
 public class EditLikeDescriptionListener implements Listener {
 	
-	private final Main plugin = Main.instance();
+	private final Main plugin = Main.plugin();
 	
 	@EventHandler(ignoreCancelled = true)
 	public void onChat(AsyncPlayerChatEvent e){

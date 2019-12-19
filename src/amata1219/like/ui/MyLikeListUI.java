@@ -7,12 +7,12 @@ import java.util.stream.IntStream;
 import org.bukkit.entity.Player;
 import amata1219.like.Like;
 import amata1219.like.config.MainConfig.IconType;
-import amata1219.masquerade.dsl.component.Layout;
-import amata1219.masquerade.text.Text;
+import amata1219.like.masquerade.dsl.component.Layout;
+import amata1219.like.masquerade.text.Text;
 
-public class MyLikeManagementUI extends AbstractSortableLikeListUI {
+public class MyLikeListUI extends AbstractSortableLikeListUI {
 	
-	public MyLikeManagementUI(UUID owner){
+	public MyLikeListUI(UUID owner){
 		super(owner);
 	}
 
@@ -25,7 +25,7 @@ public class MyLikeManagementUI extends AbstractSortableLikeListUI {
 	protected void layout(Player p, Layout l, List<Like> likes) {
 		super.layout(p, l, likes);
 		
-		l.title = Text.of("自分のLike @ %s").format(index + 1);
+		l.title = Text.of("作成したLike一覧 @ %s").format(index + 1);
 		
 		final int start = index * 45;
 		final int remainder = likes.size() % 45;

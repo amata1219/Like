@@ -15,7 +15,7 @@ public class LoadPlayerDataListener implements Listener {
 	public void onJoin(PlayerJoinEvent e){
 		Player player = e.getPlayer();
 		PlayerData data = PlayerDataLoading.loadExistingPlayerData(player.getUniqueId());
-		Main.instance().players.put(player, data);
+		Main.plugin().players.put(player, data);
 	}
 
 }

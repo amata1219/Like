@@ -13,7 +13,7 @@ import amata1219.like.exception.NotImplementedException;
 public class PlayerFavoriteLikesConfig extends Yaml {
 	
 	public PlayerFavoriteLikesConfig(){
-		super(Main.instance(), "player_data.yml");
+		super(Main.plugin(), "player_data.yml");
 	}
 
 	@Override
@@ -25,7 +25,7 @@ public class PlayerFavoriteLikesConfig extends Yaml {
 		String data = getString(uuid.toString());
 		return Arrays.stream(data.split(","))
 		.map(Long::valueOf)
-		.map(Main.instance().likes::get)
+		.map(Main.plugin().likes::get)
 		.collect(Collectors.toList());
 	}
 	

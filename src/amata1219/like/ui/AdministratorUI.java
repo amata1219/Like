@@ -14,15 +14,15 @@ import amata1219.like.Like;
 import amata1219.like.Main;
 import amata1219.like.config.MainConfig;
 import amata1219.like.config.MainConfig.IconType;
-import amata1219.masquerade.dsl.InventoryUI;
-import amata1219.masquerade.dsl.component.Layout;
-import amata1219.masquerade.option.Lines;
-import amata1219.masquerade.text.Text;
+import amata1219.like.masquerade.dsl.InventoryUI;
+import amata1219.like.masquerade.dsl.component.Layout;
+import amata1219.like.masquerade.option.Lines;
+import amata1219.like.masquerade.text.Text;
 import at.pcgamingfreaks.UUIDConverter;
 
 public class AdministratorUI implements InventoryUI {
 	
-	private final Main plugin = Main.instance();
+	private final Main plugin = Main.plugin();
 	private final MainConfig config = plugin.config();
 	private final Like like;
 	
@@ -88,7 +88,7 @@ public class AdministratorUI implements InventoryUI {
 				});
 				
 				s.onClick(e -> {
-					Main.instance().descriptionEditors.put(p.getUniqueId(), like.id);
+					Main.plugin().descriptionEditors.put(p.getUniqueId(), like.id);
 					p.closeInventory();
 					p.sendMessage(Text.color("&a-新しい表示内容をチャット欄に入力して下さい。"));
 				});

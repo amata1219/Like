@@ -5,7 +5,6 @@
 	<classpathentry kind="lib" path="C:/Users/Jaman/Desktop/Minecraft/Plugin/HolographicDisplays.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Jaman/Desktop/Minecraft/Plugin/Vault-1.7.1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Jaman/Desktop/Minecraft/Spigot 1.14.4/spigot-1.14.4.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Masquerade"/>
 	<classpathentry kind="lib" path="C:/Users/Jaman/Desktop/Minecraft/Plugin/PluginLib-1.0.17-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
