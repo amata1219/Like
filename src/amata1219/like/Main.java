@@ -16,7 +16,7 @@ import org.bukkit.inventory.InventoryView;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import amata1219.like.config.MainConfig;
-import amata1219.like.config.PlayerFavoriteLikesConfig;
+import amata1219.like.config.PlayerDataLoading;
 import amata1219.like.masquerade.dsl.component.Layout;
 import amata1219.like.masquerade.enchantment.GleamEnchantment;
 import amata1219.like.masquerade.listener.UIListener;
@@ -67,12 +67,14 @@ public class Main extends JavaPlugin {
 	 */
 	
 	private MainConfig config;
-	private PlayerFavoriteLikesConfig playerConfig;
+	private PlayerDataLoading playerDatabase;
+	
 	public final HashMap<Long, Like> likes = new HashMap<>();
-	public final HashMap<UUID, List<Like>> playerLikes = new HashMap<>();
-	public final HashMap<Player, PlayerData> players = new HashMap<>();
-	public final HashMap<Player, Long> descriptionEditors = new HashMap<>();
-	public final HashSet<Player> cooldownMap = new HashSet<>();
+	//public final HashMap<UUID, List<Like>> playerLikes = new HashMap<>();
+	public final HashMap<UUID, PlayerData> players = new HashMap<>();
+	
+	public final HashMap<UUID, Long> descriptionEditors = new HashMap<>();
+	public final HashSet<UUID> cooldownMap = new HashSet<>();
 	
 	@Override
 	public void onEnable(){
@@ -92,7 +94,7 @@ public class Main extends JavaPlugin {
 		}
 		
 		config = new MainConfig();
-		playerConfig = new PlayerFavoriteLikesConfig();
+		playerDatabase = new PlayerDataLoading();
 		
 		getServer().getOnlinePlayers().stream()
 		.map(p -> Tuple.of(p, PlayerDataLoading.loadExistingPlayerData(p.getUniqueId())))
@@ -102,7 +104,7 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onDisable(){
 		players.entrySet()
-		.forEach(e -> playerConfig.save(e.getKey().getUniqueId(), e.getValue().favoriteLikes));
+		.forEach(e -> playerDatabase.save(e.getKey().getUniqueId(), e.getValue().favoriteLikes));
 	
 		getServer().getOnlinePlayers().forEach(player -> {
 			Maybe.unit(player.getOpenInventory())
@@ -119,8 +121,8 @@ public class Main extends JavaPlugin {
 		return config;
 	}
 	
-	public PlayerFavoriteLikesConfig playerConfig(){
-		return playerConfig;
+	public PlayerDataLoading playerDatabase(){
+		return playerDatabase;
 	}
 	
 	public List<Like> likes(UUID uuid){
