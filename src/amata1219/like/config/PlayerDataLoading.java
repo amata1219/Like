@@ -1,7 +1,6 @@
 package amata1219.like.config;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -10,7 +9,6 @@ import java.util.stream.Collectors;
 
 import amata1219.like.Like;
 import amata1219.like.Main;
-import amata1219.like.chunk.LikeMap;
 import amata1219.like.exception.NotImplementedException;
 import amata1219.like.player.PlayerData;
 
@@ -40,19 +38,12 @@ public class PlayerDataLoading extends Yaml {
 		return players;
 	}
 	
-	public PlayerData loadExistingPlayerData(UUID uuid){
-		PlayerData data = new PlayerData();
-	}
-	
-	public Collection<Like> favoriteLikes(UUID uuid){
-		return Arrays.stream(getString(uuid.toString()).split(","))
-				.map(Long::valueOf)
-				.map(Main.plugin().likes::get)
-				.collect(Collectors.toList());
-	}
-	
-	public void save(UUID uuid, LikeMap favoriteLikes){
-		set(uuid.toString(), favoriteLikes.toString());
+	public void save(UUID uuid, PlayerData data){
+		String text = data.favoriteLikes.values().stream()
+		.map(l -> l.id)
+		.map(String::valueOf)
+		.collect(Collectors.joining(","));
+		set(uuid.toString(), text);
 		update();
 	}
 
