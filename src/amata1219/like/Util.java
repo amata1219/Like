@@ -395,7 +395,7 @@ public class Util {
 		if(LikeInvs.containsKey(oldOwner))
 			LikeInvs.get(oldOwner).removeMine(like);
 
-		like.setCreator(newOwner);
+		like.setOwner(newOwner);
 
 		addMine(like);
 		if(LikeInvs.containsKey(newOwner))

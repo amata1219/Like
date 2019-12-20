@@ -11,8 +11,8 @@ import amata1219.like.masquerade.dsl.component.Layout;
 import amata1219.like.masquerade.event.ClickEvent;
 import amata1219.like.masquerade.event.CloseEvent;
 import amata1219.like.masquerade.event.OpenEvent;
-import amata1219.like.masquerade.reflection.SafeCast;
 import amata1219.like.monad.Maybe;
+import amata1219.like.reflection.SafeCast;
 
 public class UIListener implements Listener {
 

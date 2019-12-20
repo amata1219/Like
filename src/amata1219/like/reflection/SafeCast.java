@@ -1,4 +1,4 @@
-package amata1219.like.masquerade.reflection;
+package amata1219.like.reflection;
 
 import amata1219.like.monad.Maybe;
 

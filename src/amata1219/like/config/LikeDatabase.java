@@ -13,9 +13,9 @@ import amata1219.like.Main;
 import amata1219.like.exception.NotImplementedException;
 import amata1219.like.tuplet.Tuple;
 
-public class LikeLoading extends Yaml {
+public class LikeDatabase extends Yaml {
 
-	public LikeLoading() {
+	public LikeDatabase() {
 		super(Main.plugin(), "like_data.yml");
 	}
 
@@ -36,7 +36,6 @@ public class LikeLoading extends Yaml {
 			likes.put(id, like);
 			if(!playerLikes.containsKey(owner)) playerLikes.put(owner, new ArrayList<>());
 			playerLikes.get(owner).add(like);
-			//applyTouchHandler
 		}
 		return Tuple.of(likes, playerLikes);
 	}

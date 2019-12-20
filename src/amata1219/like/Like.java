@@ -5,19 +5,30 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+import org.bukkit.ChatColor;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 
+import com.gmail.filoghost.holographicdisplays.api.handler.TouchHandler;
 import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
 import com.gmail.filoghost.holographicdisplays.disk.HologramDatabase;
 import com.gmail.filoghost.holographicdisplays.object.NamedHologram;
 import com.gmail.filoghost.holographicdisplays.object.line.CraftHologramLine;
+import com.gmail.filoghost.holographicdisplays.object.line.CraftTouchableLine;
 
 import amata1219.like.config.MainConfig;
+import amata1219.like.reflection.Method;
+import amata1219.like.ui.LikeEditingUI;
 
 public class Like {
 	
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy.MM.dd (E) HH:mm:ss");
-	
+	private static final Method<CraftTouchableLine, Void> setTouchHandler = Method.of_(
+		CraftTouchableLine.class,
+		"setTouchhandler", 
+		TouchHandler.class, World.class, double.class, double.class, double.class
+	);
+			
 	private final MainConfig config = Main.plugin().config();
 	
 	public final long id;
@@ -36,8 +47,45 @@ public class Like {
 		hologram.appendTextLine(config.likeDescription().apply(owner));
 		hologram.appendTextLine(config.likeUsage());
 		
+		TouchHandler handler = player -> {
+			UUID uuid = player.getUniqueId();
+			if(player.isSneaking()){
+				if(isOwner(uuid)) new LikeEditingUI(this).open(player);
+				else if(player.hasPermission())
+			}else{
+				
+			}
+		};
+		
 		//OldMain.applyTouchHandler(this, false);
 	}
+	
+	/*
+	 * @Override
+			public void onTouch(Player player) {
+				UUID uuid = player.getUniqueId();
+				if(player.isSneaking()){
+					if(like.isCreator(uuid))
+						player.openInventory(Util.createEditMenu(like));
+					else
+						player.openInventory(player.hasPermission(Util.OP_PERMISSION) ? Util.createAdminMenu(like) : Util.createInfoMenu(like));
+				}else{
+					if(like.isCreator(uuid)){
+						Util.tell(player, ChatColor.RED, "自分のLikeはお気に入りに登録出来ません。");
+						return;
+					}
+
+					if(Util.MyLikes.get(uuid).contains(like)){
+						Util.tell(player, ChatColor.RED, "このLikeは既にお気に入りに登録しています。");
+						return;
+					}
+
+					Util.favorite(player, like);
+					Util.tell(player, ChatColor.GREEN, "このLikeをお気に入りに登録しました。");
+					player.sendMessage(Util.Tip);
+				}
+			}
+	 */
 	
 	public Like(NamedHologram hologram, UUID owner){
 		this(hologram, owner, 0);
@@ -63,7 +111,7 @@ public class Like {
 		return owner;
 	}
 	
-	public void setCreator(UUID uuid){
+	public void setOwner(UUID uuid){
 		this.owner = Objects.requireNonNull(uuid);
 		
 		/*
@@ -77,7 +125,7 @@ public class Like {
 		 */
 	}
 	
-	public boolean isCreator(UUID uuid){
+	public boolean isOwner(UUID uuid){
 		return owner.equals(uuid);
 	}
 	

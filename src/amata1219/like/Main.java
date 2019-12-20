@@ -1,6 +1,5 @@
 package amata1219.like;
 
-import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -15,15 +14,16 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import amata1219.like.config.LikeDatabase;
 import amata1219.like.config.MainConfig;
 import amata1219.like.masquerade.dsl.component.Layout;
 import amata1219.like.masquerade.enchantment.GleamEnchantment;
 import amata1219.like.masquerade.listener.UIListener;
-import amata1219.like.masquerade.reflection.Reflection;
-import amata1219.like.masquerade.reflection.SafeCast;
 import amata1219.like.monad.Maybe;
 import amata1219.like.player.PlayerData;
-import amata1219.like.player.PlayerDataLoading;
+import amata1219.like.player.PlayerDatabase;
+import amata1219.like.reflection.Field;
+import amata1219.like.reflection.SafeCast;
 import amata1219.like.tuplet.Tuple;
 
 public class Main extends JavaPlugin {
@@ -31,6 +31,7 @@ public class Main extends JavaPlugin {
 	private static Main plugin;
 	
 	public static final String INVITATION_TOKEN = UUID.randomUUID().toString();
+	public static final String OPERATOR_PERMISSION = "like.likeop";
 	
 	public static Main plugin(){
 		return plugin;
@@ -66,7 +67,8 @@ public class Main extends JavaPlugin {
 	 */
 	
 	private MainConfig config;
-	private PlayerDataLoading playerDatabase;
+	private LikeDatabase likeDatabase;
+	private PlayerDatabase playerDatabase;
 	
 	public final HashMap<Long, Like> likes = new HashMap<>();
 	//public final HashMap<UUID, List<Like>> playerLikes = new HashMap<>();
@@ -81,30 +83,31 @@ public class Main extends JavaPlugin {
 		
 		getServer().getPluginManager().registerEvents(new UIListener(), this);
 
-		Field acceptingNew = Reflection.getField(Enchantment.class, "acceptingNew");
-		Reflection.setFieldValue(acceptingNew, null, true);
-
+		Field<Enchantment, Boolean> acceptingNew = Field.of(Enchantment.class, "acceptingNew");
+		acceptingNew.set(null, true);
 		try{
 			Enchantment.registerEnchantment(GleamEnchantment.INSTANCE);
 		}catch(Exception e){
 			
 		}finally{
-			Reflection.setFieldValue(acceptingNew, null, false);
+			acceptingNew.set(null, false);
 		}
 		
 		config = new MainConfig();
-		playerDatabase = new PlayerDataLoading();
 		
-		getServer().getOnlinePlayers().stream()
-		.map(p -> Tuple.of(p, PlayerDataLoading.loadExistingPlayerData(p.getUniqueId())))
-		.forEach(t -> players.put(t.first, t.second));
+		likeDatabase = new LikeDatabase();
+		Tuple<HashMap<Long, Like>, HashMap<UUID, List<Like>>> maps = likeDatabase.load();
+		maps.first.forEach((id, like) -> likes.put(id, like));
+		
+		playerDatabase = new PlayerDatabase();
+		playerDatabase.load(maps.second).forEach((uuid, data) -> players.put(uuid, data));
 	}
 	
 	@Override
 	public void onDisable(){
-		players.entrySet()
-		.forEach(e -> playerDatabase.save(e.getKey().getUniqueId(), e.getValue().favoriteLikes));
-	
+		playerDatabase.save();
+		likeDatabase.save();
+		
 		getServer().getOnlinePlayers().forEach(player -> {
 			Maybe.unit(player.getOpenInventory())
 			.map(InventoryView::getTopInventory)

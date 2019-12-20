@@ -6,7 +6,7 @@ import org.bukkit.inventory.Inventory;
 
 import amata1219.like.masquerade.async.AsyncTask;
 import amata1219.like.masquerade.effect.Effect;
-import amata1219.like.masquerade.tuplet.Tuple;
+import amata1219.like.tuplet.Tuple;
 
 public final class AnimatedSlot extends Slot {
 
@@ -30,7 +30,7 @@ public final class AnimatedSlot extends Slot {
 	Tuple<AsyncTask, Integer> createTask(Inventory inventory, int index){
 		Icon icon = build();
 		AsyncTask task = AsyncTask.define(self -> inventory.setItem(index, frames.get((int) self.count() % frames.size()).apply(icon).toItemStack()));
-		return new Tuple<>(task, interval);
+		return Tuple.of(task, interval);
 	}
 
 }

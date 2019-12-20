@@ -12,9 +12,9 @@ import amata1219.like.Main;
 import amata1219.like.config.Yaml;
 import amata1219.like.exception.NotImplementedException;
 
-public class PlayerDataLoading extends Yaml {
+public class PlayerDatabase extends Yaml {
 	
-	public PlayerDataLoading(){
+	public PlayerDatabase(){
 		super(Main.plugin(), "player_data.yml");
 	}
 
@@ -38,12 +38,14 @@ public class PlayerDataLoading extends Yaml {
 		return players;
 	}
 	
-	public void save(UUID uuid, PlayerData data){
-		String text = data.favoriteLikes.values().stream()
-		.map(l -> l.id)
-		.map(String::valueOf)
-		.collect(Collectors.joining(","));
-		set(uuid.toString(), text);
+	public void save(){
+		plugin.players.forEach((uuid, data) -> {
+			String text = data.favoriteLikes.values().stream()
+					.map(l -> l.id)
+					.map(String::valueOf)
+					.collect(Collectors.joining(","));
+			set(uuid.toString(), text);
+		});
 		update();
 	}
 
