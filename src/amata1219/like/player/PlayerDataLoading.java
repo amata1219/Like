@@ -1,4 +1,4 @@
-package amata1219.like.config;
+package amata1219.like.player;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -9,8 +9,8 @@ import java.util.stream.Collectors;
 
 import amata1219.like.Like;
 import amata1219.like.Main;
+import amata1219.like.config.Yaml;
 import amata1219.like.exception.NotImplementedException;
-import amata1219.like.player.PlayerData;
 
 public class PlayerDataLoading extends Yaml {
 	
@@ -31,7 +31,7 @@ public class PlayerDataLoading extends Yaml {
 			playerLikes.getOrDefault(uuid, Collections.emptyList()).forEach(data::addLike);
 			Arrays.stream(getString(uuid.toString()).split(","))
 				.map(Long::valueOf)
-				.map(Main.plugin().likes::get)
+				.map(plugin.likes::get)
 				.forEach(data::addFavoriteLike);
 			players.put(uuid, data);
 		}

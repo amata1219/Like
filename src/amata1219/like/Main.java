@@ -16,7 +16,6 @@ import org.bukkit.inventory.InventoryView;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import amata1219.like.config.MainConfig;
-import amata1219.like.config.PlayerDataLoading;
 import amata1219.like.masquerade.dsl.component.Layout;
 import amata1219.like.masquerade.enchantment.GleamEnchantment;
 import amata1219.like.masquerade.listener.UIListener;

@@ -10,21 +10,21 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.java.JavaPlugin;
 
+import amata1219.like.Main;
 import amata1219.like.monad.Maybe;
 
 public abstract class Yaml extends YamlConfiguration {
 
-	protected final JavaPlugin plugin;
+	protected final Main plugin;
 	private final File file;
 	private final String resourceFileName;
 
-	public Yaml(JavaPlugin plugin, String fileName){
+	public Yaml(Main plugin, String fileName){
 		this(plugin, new File(plugin.getDataFolder(), fileName));
 	}
 
-	public Yaml(JavaPlugin plugin, File file){
+	public Yaml(Main plugin, File file){
 		this.plugin = plugin;
 		this.file = file;
 		this.resourceFileName = file.getName().replace('\\', '/');

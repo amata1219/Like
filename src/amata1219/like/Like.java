@@ -26,16 +26,21 @@ public class Like {
 	private UUID owner;
 	private int favorites;
 	
-	public Like(NamedHologram hologram, UUID owner){
+	public Like(NamedHologram hologram, UUID owner, int favorites){
 		this.id = Long.parseLong(hologram.getName());
 		this.hologram = hologram;
 		this.owner = owner;
+		this.favorites = favorites;
 		
-		hologram.appendTextLine(config.likeFavoritesText().apply(0));
+		hologram.appendTextLine(config.likeFavoritesText().apply(favorites));
 		hologram.appendTextLine(config.likeDescription().apply(owner));
 		hologram.appendTextLine(config.likeUsage());
 		
 		//OldMain.applyTouchHandler(this, false);
+	}
+	
+	public Like(NamedHologram hologram, UUID owner){
+		this(hologram, owner, 0);
 	}
 	
 	public World world(){
