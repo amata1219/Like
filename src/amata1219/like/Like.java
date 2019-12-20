@@ -127,6 +127,15 @@ public class Like {
 		return DATE_FORMAT.format(id);
 	}
 	
+	public void teleportTo(Location loc){
+		hologram.teleport(loc.add(0, 2, 0));
+		hologram.despawnEntities();
+		hologram.refreshAll();
+		setTouchHandler(true);
+		setTouchHandler(false);
+		save(true);
+	}
+	
 	public void save(boolean alsoToDisk){
 		HologramDatabase.saveHologram(hologram);
 		if(alsoToDisk) HologramDatabase.trySaveToDisk();
