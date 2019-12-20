@@ -23,6 +23,14 @@ public abstract class Matcher<T> {
 		return (LabeledStatement<T, F, S>) DEFAULT.label(expression);
 	}
 	
+	public static <T, F, S> LabeledStatement<T, F, S> E1se(Supplier<F> expression){
+		return Else(() -> Result.Failure(expression.get()));
+	}
+	
+	public static <F, S> Result<F, S> None(){
+		return null;
+	}
+	
 	public <F, S> LabeledStatement<T, F, S> label(Supplier<Result<F, S>> expression){
 		return new LabeledStatement<>(this, expression);
 	}

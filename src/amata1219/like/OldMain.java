@@ -33,7 +33,7 @@ import com.gmail.filoghost.holographicdisplays.object.line.CraftTouchableLine;
 import amata1219.like.command.Args;
 import amata1219.like.command.CommandExecutor;
 import amata1219.like.command.LikeCCommand;
-import amata1219.like.command.LikeCommand;
+import amata1219.like.command.OldLikeCommand;
 import amata1219.like.command.LikeLCommand;
 import amata1219.like.command.LikeOpCommand;
 import amata1219.like.command.LikeSCommand;
@@ -62,7 +62,7 @@ public class OldMain extends JavaPlugin implements Listener {
 		economy = rsp.getProvider();
 
 		commands = new HashMap<>();
-		commands.put("like", new LikeCommand());
+		commands.put("like", new OldLikeCommand());
 		commands.put("likec", new LikeCCommand());
 		commands.put("likel", new LikeLCommand());
 		commands.put("likes", new LikeSCommand());

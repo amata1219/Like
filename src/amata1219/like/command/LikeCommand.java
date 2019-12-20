@@ -1,20 +1,38 @@
 package amata1219.like.command;
 
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
+import java.util.function.Supplier;
+
 import org.bukkit.entity.Player;
 
-import amata1219.like.Util;
+import amata1219.like.masquerade.text.Text;
+import amata1219.like.slash.dsl.ArgumentList;
+import amata1219.like.slash.dsl.PlayerCommand;
+import amata1219.like.ui.MyLikeListUI;
 
-public class LikeCommand implements CommandExecutor {
+import static amata1219.like.slash.dsl.component.Matcher.*;
 
+public class LikeCommand implements PlayerCommand {
+	
+	private final Supplier<String> error = () -> Text.color(
+			"&7-不正なコマンドが入力されたため実行出来ませんでした。",
+			"&7-このコマンドは、/likes [move/lore/desc] が有効です。"
+	);
+	
+	private final PlayerCommand likeCreate = new LikeCreateCommand(), likeList = new LikeListCommand();
+
+	@SuppressWarnings("unchecked")
 	@Override
-	public void onCommand(CommandSender sender, Args args){
-		if(Util.isNotPlayer(sender))
-			return;
+	public void onCommand(Player sender, ArgumentList<String> args) {
+		args.next(error).match(
+			Case("create").then(() -> likeCreate.onCommand(sender, args)),
+			Case("list").then(() -> likeList.onCommand(sender, args)),
+			Case("status").then(() -> new MyLikeListUI(sender.getUniqueId()).open(sender))
+			Else(() -> Result.)
+		).onFailure(sender::sendMessage);
+	}
 
-		Player player = Util.castPlayer(sender);
-		switch(args.next()){
+	/*
+	 * switch(args.next()){
 		case "create":
 			Util.create(player);
 			break;
@@ -44,6 +62,6 @@ public class LikeCommand implements CommandExecutor {
 			player.teleport(Util.Likes.get(id).getLocation(player.getLocation()));
 			break;
 		}
-	}
-
+	 */
+	
 }
