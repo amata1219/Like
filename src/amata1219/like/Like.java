@@ -1,19 +1,17 @@
 package amata1219.like;
 
 import java.text.SimpleDateFormat;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.entity.Player;
-
 import com.gmail.filoghost.holographicdisplays.api.handler.TouchHandler;
 import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
 import com.gmail.filoghost.holographicdisplays.disk.HologramDatabase;
 import com.gmail.filoghost.holographicdisplays.object.NamedHologram;
+import com.gmail.filoghost.holographicdisplays.object.NamedHologramManager;
 import com.gmail.filoghost.holographicdisplays.object.line.CraftHologramLine;
 import com.gmail.filoghost.holographicdisplays.object.line.CraftTouchableLine;
 
@@ -53,57 +51,8 @@ public class Like {
 		hologram.appendTextLine(config.likeDescription().apply(owner));
 		hologram.appendTextLine(config.likeUsage());
 		
-		TouchHandler handler = player -> {
-			UUID uuid = player.getUniqueId();
-			if(player.isSneaking()){
-				if(isOwner(uuid)) new LikeEditingUI(this).open(player);
-				else if(player.hasPermission(Main.OPERATOR_PERMISSION)) new AdministratorUI(this).open(player);
-				else new LikeInformationUI(this).open(player);
-			}else{
-				if(isOwner(uuid)){
-					Text.of("&c-自分のLikeはお気に入りに登録出来ません。").accept(player::sendMessage);
-					return;
-				}
-				
-				PlayerData data = plugin.players.get(uuid);
-				if(data.favoriteLikes.containsKey(this)){
-					Text.of("&c-このLikeは既にお気に入りに登録しています。").accept(player::sendMessage);
-					return;
-				}
-				
-				data.favoriteLike(this);
-			}
-		};
-		
-		//OldMain.applyTouchHandler(this, false);
+		setTouchHandler(false);
 	}
-	
-	/*
-	 * @Override
-			public void onTouch(Player player) {
-				UUID uuid = player.getUniqueId();
-				if(player.isSneaking()){
-					if(like.isCreator(uuid))
-						player.openInventory(Util.createEditMenu(like));
-					else
-						player.openInventory(player.hasPermission(Util.OP_PERMISSION) ? Util.createAdminMenu(like) : Util.createInfoMenu(like));
-				}else{
-					if(like.isCreator(uuid)){
-						Util.tell(player, ChatColor.RED, "自分のLikeはお気に入りに登録出来ません。");
-						return;
-					}
-
-					if(Util.MyLikes.get(uuid).contains(like)){
-						Util.tell(player, ChatColor.RED, "このLikeは既にお気に入りに登録しています。");
-						return;
-					}
-
-					Util.favorite(player, like);
-					Util.tell(player, ChatColor.GREEN, "このLikeをお気に入りに登録しました。");
-					player.sendMessage(Util.Tip);
-				}
-			}
-	 */
 	
 	public Like(NamedHologram hologram, UUID owner){
 		this(hologram, owner, 0);
@@ -130,17 +79,10 @@ public class Like {
 	}
 	
 	public void setOwner(UUID uuid){
-		this.owner = Objects.requireNonNull(uuid);
-		
-		/*
-		 * old creator
-		 * 
-		 * data.myLikes.remove(this)
-		 * 
-		 * new creator
-		 * 
-		 * data.myLikes.add(this)
-		 */
+		Objects.requireNonNull(uuid);
+		plugin.players.get(owner).unregisterLike(this);
+		this.owner = uuid;
+		plugin.players.get(owner).registerLike(this);
 	}
 	
 	public boolean isOwner(UUID uuid){
@@ -174,8 +116,12 @@ public class Like {
 		((CraftHologramLine) lines.get(index)).despawn();
 		lines.set(index, HologramDatabase.readLineFromString(text, hologram));
 		hologram.refreshAll();
+		if(index == 0){
+			setTouchHandler(true);
+			setTouchHandler(false);
+		}
 		HologramDatabase.saveHologram(hologram);
-		HologramDatabase.trySaveToDisk();
+		//HologramDatabase.trySaveToDisk();
 	}
 	
 	public String creationTimestamp(){
@@ -184,9 +130,40 @@ public class Like {
 	
 	public void delete(){
 		plugin.players.get(owner).likes.remove(this);
-		plugin.players.values().stream()
-		.map(data -> data.favoriteLikes)
-		.forEach(map -> map.remove(this));
+		plugin.players.values().stream().forEach(data -> data.unfavoriteLike(this));
+		hologram.delete();
+		NamedHologramManager.removeHologram(hologram);
+		HologramDatabase.deleteHologram(hologram.getName());
+		HologramDatabase.trySaveToDisk();
+	}
+	
+	private void setTouchHandler(boolean delete){
+		TouchHandler handler = delete ? null : player -> {
+			UUID uuid = player.getUniqueId();
+			if(player.isSneaking()){
+				if(isOwner(uuid)) new LikeEditingUI(this).open(player);
+				else if(player.hasPermission(Main.OPERATOR_PERMISSION)) new AdministratorUI(this).open(player);
+				else new LikeInformationUI(this).open(player);
+			}else{
+				if(isOwner(uuid)){
+					Text.of("&c-自分のLikeはお気に入りに登録出来ません。").accept(player::sendMessage);
+					return;
+				}
+				
+				PlayerData data = plugin.players.get(uuid);
+				if(data.favoriteLikes.containsKey(this)){
+					Text.of("&c-このLikeは既にお気に入りに登録しています。").accept(player::sendMessage);
+					return;
+				}
+				
+				data.favoriteLike(this);
+				Text.of("&a-このLikeをお気に入りに登録しました！", config.tip()).accept(player::sendMessage);
+			}
+		};
+		Location loc = hologram.getLocation();
+		loc.setPitch(90.0F);
+		CraftTouchableLine line = (CraftTouchableLine) hologram.getLine(0);
+		setTouchHandler.invoke(line, handler, loc.getWorld(), loc.getX(), loc.getY() - line.getHeight() * 3, loc.getZ());
 	}
 	
 	@Override
