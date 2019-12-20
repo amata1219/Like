@@ -1,6 +1,5 @@
 package amata1219.like.ui;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -23,7 +22,7 @@ public abstract class AbstractMultipleUI implements InventoryUI {
 	
 	@Override
 	public Function<Player, Layout> layout(){
-		final List<Like> likes = new ArrayList<>(likes());
+		List<Like> likes = likes();
 		return build(Math.min(likes.size() - (index * 45), 45), (p, l) -> {
 			l.defaultSlot(s -> {
 				s.icon(i -> {

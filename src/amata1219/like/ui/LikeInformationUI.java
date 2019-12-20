@@ -89,7 +89,7 @@ public class LikeInformationUI implements InventoryUI {
 			}, 9);
 			
 			AtomicInteger slotIndex = new AtomicInteger(10);
-			plugin.likes(like.owner()).stream()
+			plugin.players.get(like.owner()).likes.values().stream()
 			.filter(like -> like != this.like)
 			.sorted(Comparator.comparing(Like::favorites).reversed())
 			.limit(8)

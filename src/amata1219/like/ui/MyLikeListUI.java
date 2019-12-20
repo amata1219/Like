@@ -1,5 +1,6 @@
 package amata1219.like.ui;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.IntStream;
@@ -18,7 +19,7 @@ public class MyLikeListUI extends AbstractSortableLikeListUI {
 
 	@Override
 	protected List<Like> likes() {
-		return plugin.likes(owner);
+		return new ArrayList<>(plugin.players.get(owner).likes.values());
 	}
 
 	@Override

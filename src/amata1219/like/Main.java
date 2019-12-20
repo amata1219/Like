@@ -1,14 +1,11 @@
 package amata1219.like;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
@@ -37,43 +34,12 @@ public class Main extends JavaPlugin {
 		return plugin;
 	}
 	
-	/*
-	 * player data config
-	 * 
-	 * player_config.string(uuid).split(",").map(to_id).forEach(likemap::add)
-	 * 
-	 * onEnable {
-	 * 
-	 * make configs
-	 * load likes
-	 * load online players' data
-	 * 
-	 * }
-	 * 
-	 * プレイヤーデータ
-	 * 
-	 * ・ログイン時にロード
-	 * ・ログアウト時にセーブ・アンロード
-	 * 
-	 * Like
-	 * 
-	 * ・onEnableでロード → mines: map[uuid, list[like]]にセット
-	 * ・onDisableでアンロード
-	 * 
-	 * MyLike
-	 * 
-	 * 
-	 * 
-	 */
-	
 	private MainConfig config;
 	private LikeDatabase likeDatabase;
 	private PlayerDatabase playerDatabase;
 	
 	public final HashMap<Long, Like> likes = new HashMap<>();
-	//public final HashMap<UUID, List<Like>> playerLikes = new HashMap<>();
 	public final HashMap<UUID, PlayerData> players = new HashMap<>();
-	
 	public final HashMap<UUID, Long> descriptionEditors = new HashMap<>();
 	public final HashSet<UUID> cooldownMap = new HashSet<>();
 	
@@ -125,6 +91,10 @@ public class Main extends JavaPlugin {
 	
 	public PlayerDatabase playerDatabase(){
 		return playerDatabase;
+	}
+	
+	public LikeDatabase likeDatabase(){
+		return likeDatabase;
 	}
 
 }
