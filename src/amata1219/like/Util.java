@@ -429,7 +429,7 @@ public class Util {
 	public static void favorite(Player player, OldLike like){
 		UUID uuid = player.getUniqueId();
 
-		LikeInvs.get(uuid).addLike(like);
+		LikeInvs.get(uuid).registerLike(like);
 		MyLikes.get(uuid).remove(like);
 
 		like.incrementLikeCount();
@@ -488,7 +488,7 @@ public class Util {
 					LikeInvs inv = entry.getValue();
 					inv.removeLike(like);
 					if(!delete)
-						inv.addLike(like);
+						inv.registerLike(like);
 				}
 
 				if(delete) for(LikeMap map : MyLikes.values()){

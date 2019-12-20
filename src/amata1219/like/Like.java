@@ -1,6 +1,7 @@
 package amata1219.like;
 
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -17,8 +18,12 @@ import com.gmail.filoghost.holographicdisplays.object.line.CraftHologramLine;
 import com.gmail.filoghost.holographicdisplays.object.line.CraftTouchableLine;
 
 import amata1219.like.config.MainConfig;
+import amata1219.like.masquerade.text.Text;
+import amata1219.like.player.PlayerData;
 import amata1219.like.reflection.Method;
+import amata1219.like.ui.AdministratorUI;
 import amata1219.like.ui.LikeEditingUI;
+import amata1219.like.ui.LikeInformationUI;
 
 public class Like {
 	
@@ -29,7 +34,8 @@ public class Like {
 		TouchHandler.class, World.class, double.class, double.class, double.class
 	);
 			
-	private final MainConfig config = Main.plugin().config();
+	private final Main plugin = Main.plugin();
+	private final MainConfig config = plugin.config();
 	
 	public final long id;
 	public final NamedHologram hologram;
@@ -51,9 +57,21 @@ public class Like {
 			UUID uuid = player.getUniqueId();
 			if(player.isSneaking()){
 				if(isOwner(uuid)) new LikeEditingUI(this).open(player);
-				else if(player.hasPermission())
+				else if(player.hasPermission(Main.OPERATOR_PERMISSION)) new AdministratorUI(this).open(player);
+				else new LikeInformationUI(this).open(player);
 			}else{
+				if(isOwner(uuid)){
+					Text.of("&c-自分のLikeはお気に入りに登録出来ません。").accept(player::sendMessage);
+					return;
+				}
 				
+				PlayerData data = plugin.players.get(uuid);
+				if(data.favoriteLikes.containsKey(this)){
+					Text.of("&c-このLikeは既にお気に入りに登録しています。").accept(player::sendMessage);
+					return;
+				}
+				
+				data.favoriteLike(this);
 			}
 		};
 		
@@ -162,6 +180,13 @@ public class Like {
 	
 	public String creationTimestamp(){
 		return DATE_FORMAT.format(id);
+	}
+	
+	public void delete(){
+		plugin.players.get(owner).likes.remove(this);
+		plugin.players.values().stream()
+		.map(data -> data.favoriteLikes)
+		.forEach(map -> map.remove(this));
 	}
 	
 	@Override

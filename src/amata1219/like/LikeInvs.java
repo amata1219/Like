@@ -27,7 +27,7 @@ public class LikeInvs {
 		likes.add(newPage(0, false));
 
 		for(OldLike like : Util.MyLikes.get(uuid).values())
-			addLike(like);
+			registerLike(like);
 
 		if(!Util.Mines.containsKey(uuid))
 			return;
@@ -136,7 +136,7 @@ public class LikeInvs {
 
 	public void moveLike(OldLike like){
 		removeLike(like);
-		addLike(like);
+		registerLike(like);
 	}
 
 	public Inventory firstLike(){

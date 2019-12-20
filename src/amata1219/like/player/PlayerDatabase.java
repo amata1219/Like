@@ -28,11 +28,11 @@ public class PlayerDatabase extends Yaml {
 		for(String path : getKeys(false)){
 			PlayerData data = new PlayerData();
 			UUID uuid = UUID.fromString(path);
-			playerLikes.getOrDefault(uuid, Collections.emptyList()).forEach(data::addLike);
+			playerLikes.getOrDefault(uuid, Collections.emptyList()).forEach(data::registerLike);
 			Arrays.stream(getString(uuid.toString()).split(","))
 				.map(Long::valueOf)
 				.map(plugin.likes::get)
-				.forEach(data::addFavoriteLike);
+				.forEach(data::favoriteLike);
 			players.put(uuid, data);
 		}
 		return players;

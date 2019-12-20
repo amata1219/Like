@@ -123,29 +123,8 @@ public class Main extends JavaPlugin {
 		return config;
 	}
 	
-	public PlayerDataLoading playerDatabase(){
+	public PlayerDatabase playerDatabase(){
 		return playerDatabase;
-	}
-	
-	public List<Like> likes(UUID uuid){
-		return playerLikes.getOrDefault(uuid, Collections.emptyList());
-	}
-	
-	public void deleteLike(Like like){
-		UUID uuid = like.owner();
-		
-		Collection<Like> likes = playerLikes.get(uuid);
-		likes.remove(like);
-		if(likes.isEmpty()) playerLikes.remove(uuid);
-		
-		Player player = getServer().getPlayer(uuid);
-		if(player != null && player.isOnline()) players.get(player).myLikes.remove(like);
-		
-		players.values().stream()
-		.map(d -> d.favoriteLikes)
-		.forEach(m -> m.remove(like));
-		
-		this.likes.remove(like);
 	}
 
 }
