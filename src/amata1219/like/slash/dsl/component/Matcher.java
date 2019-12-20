@@ -31,6 +31,10 @@ public abstract class Matcher<T> {
 		return null;
 	}
 	
+	public static <F, S> Result<F, S> Message(F message){
+		return Result.Failure(message);
+	}
+	
 	public <F, S> LabeledStatement<T, F, S> label(Supplier<Result<F, S>> expression){
 		return new LabeledStatement<>(this, expression);
 	}

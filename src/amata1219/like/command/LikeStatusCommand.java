@@ -29,7 +29,7 @@ public class LikeStatusCommand implements PlayerCommand {
 			).flatMap(like -> {
 				if(!like.isOwner(sender.getUniqueId())) return Failure("&c-他人のLikeは移動出来ません。");
 				like.teleportTo(sender.getLocation());
-				return Failure("&a-Like(ID: " + like.id + ")を現在地に移動しました。");
+				return Message("&a-Like(ID: " + like.id + ")を現在地に移動しました。");
 			})),
 			E1se(error)
 		).onFailure(s -> Text.of(s).accept(sender::sendMessage));
