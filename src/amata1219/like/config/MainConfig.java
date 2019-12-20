@@ -29,7 +29,6 @@ public class MainConfig extends Yaml {
 	private String likeUsage;
 	private String tip;
 	private int numberOfSecondsOfLikeCreationCooldown;
-	private int likeCreationLimitPerChunk;
 	private double teleportationCosts;
 	private String teleportationMessage;
 	private double invitationCosts;
@@ -80,7 +79,6 @@ public class MainConfig extends Yaml {
 			.build();
 		
 		numberOfSecondsOfLikeCreationCooldown = getInt("Number of seconds of like creation cooldown");
-		likeCreationLimitPerChunk = getInt("Like creation limit per chunk");
 		
 		Section teleportation = section("Teleportation");
 		teleportationCosts = teleportation.doub1e("Costs");
@@ -122,10 +120,6 @@ public class MainConfig extends Yaml {
 	
 	public int numberOfSecondsOfLikeCreationCooldown(){
 		return numberOfSecondsOfLikeCreationCooldown;
-	}
-	
-	public int likeCreationLimitPerChunk(){
-		return likeCreationLimitPerChunk;
 	}
 	
 	public double teleportationCosts(){

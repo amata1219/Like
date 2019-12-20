@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import org.bukkit.inventory.Inventory;
 
-import amata1219.like.masquerade.async.AsyncTask;
 import amata1219.like.masquerade.effect.Effect;
+import amata1219.like.masquerade.task.AsyncTask;
 import amata1219.like.tuplet.Tuple;
 
 public final class AnimatedSlot extends Slot {

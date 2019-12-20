@@ -15,6 +15,8 @@ import amata1219.like.ui.MyLikeListUI;
 
 public class LikeListCommand implements PlayerCommand {
 	
+	public static final LikeListCommand INSTANCE = new LikeListCommand();
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public void onCommand(Player sender, ArgumentList<String> args) {

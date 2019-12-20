@@ -120,17 +120,22 @@ public class Like {
 			setTouchHandler(true);
 			setTouchHandler(false);
 		}
-		HologramDatabase.saveHologram(hologram);
-		//HologramDatabase.trySaveToDisk();
+		save(true);
 	}
 	
 	public String creationTimestamp(){
 		return DATE_FORMAT.format(id);
 	}
 	
+	public void save(boolean alsoToDisk){
+		HologramDatabase.saveHologram(hologram);
+		if(alsoToDisk) HologramDatabase.trySaveToDisk();
+	}
+	
 	public void delete(){
 		plugin.players.get(owner).likes.remove(this);
 		plugin.players.values().stream().forEach(data -> data.unfavoriteLike(this));
+		plugin.likes.remove(id);
 		hologram.delete();
 		NamedHologramManager.removeHologram(hologram);
 		HologramDatabase.deleteHologram(hologram.getName());

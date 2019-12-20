@@ -12,12 +12,12 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
-import amata1219.like.masquerade.async.AsyncTask;
 import amata1219.like.masquerade.effect.Effect;
 import amata1219.like.masquerade.event.ClickEvent;
 import amata1219.like.masquerade.event.CloseEvent;
 import amata1219.like.masquerade.event.OpenEvent;
 import amata1219.like.masquerade.option.Option;
+import amata1219.like.masquerade.task.AsyncTask;
 
 public class Layout implements InventoryHolder {
 

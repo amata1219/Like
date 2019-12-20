@@ -1,4 +1,4 @@
-package amata1219.like.masquerade.async;
+package amata1219.like.masquerade.task;
 
 import java.util.function.Consumer;
 

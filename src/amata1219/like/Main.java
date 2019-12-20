@@ -12,6 +12,7 @@ import org.bukkit.inventory.InventoryView;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import amata1219.like.config.LikeDatabase;
+import amata1219.like.config.LikeLimitDatabase;
 import amata1219.like.config.MainConfig;
 import amata1219.like.masquerade.dsl.component.Layout;
 import amata1219.like.masquerade.enchantment.GleamEnchantment;
@@ -37,6 +38,7 @@ public class Main extends JavaPlugin {
 	private MainConfig config;
 	private LikeDatabase likeDatabase;
 	private PlayerDatabase playerDatabase;
+	private LikeLimitDatabase likeLimitDatabase;
 	
 	public final HashMap<Long, Like> likes = new HashMap<>();
 	public final HashMap<UUID, PlayerData> players = new HashMap<>();
@@ -67,6 +69,8 @@ public class Main extends JavaPlugin {
 		
 		playerDatabase = new PlayerDatabase();
 		playerDatabase.load(maps.second).forEach((uuid, data) -> players.put(uuid, data));
+		
+		likeLimitDatabase = new LikeLimitDatabase();
 	}
 	
 	@Override
@@ -89,12 +93,16 @@ public class Main extends JavaPlugin {
 		return config;
 	}
 	
+	public LikeDatabase likeDatabase(){
+		return likeDatabase;
+	}
+	
 	public PlayerDatabase playerDatabase(){
 		return playerDatabase;
 	}
 	
-	public LikeDatabase likeDatabase(){
-		return likeDatabase;
+	public LikeLimitDatabase likeLimitDatabase(){
+		return likeLimitDatabase;
 	}
 
 }

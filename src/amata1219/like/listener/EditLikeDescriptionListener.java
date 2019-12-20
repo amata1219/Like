@@ -1,5 +1,7 @@
 package amata1219.like.listener;
 
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,13 +21,14 @@ public class EditLikeDescriptionListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void onChat(AsyncPlayerChatEvent e){
 		Player player = e.getPlayer();
+		UUID uuid = player.getUniqueId();
 		
-		if(!plugin.descriptionEditors.containsKey(player)) return;
+		if(!plugin.descriptionEditors.containsKey(uuid)) return;
 		
 		e.setCancelled(true);
 		
 		Bukkit.getScheduler().runTask(plugin, () -> {
-			Either.unit(plugin.descriptionEditors.get(player.getUniqueId()))
+			Either.unit(plugin.descriptionEditors.get(uuid))
 			.flatMap(id -> plugin.likes.containsKey(id) ? Either.Success(plugin.likes.get(id)) : Either.Failure(Text.color("&c-編集対象のLikeは削除されています。")))
 			.onSuccess(like -> {
 				String message = e.getMessage();
