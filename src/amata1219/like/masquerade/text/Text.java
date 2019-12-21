@@ -3,6 +3,8 @@ package amata1219.like.masquerade.text;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+import org.bukkit.command.CommandSender;
+
 import com.google.common.base.Joiner;
 
 public class Text {
@@ -59,6 +61,10 @@ public class Text {
 	
 	public void accept(Consumer<String> action){
 		action.accept(text);
+	}
+	
+	public void sendTo(CommandSender receiver){
+		receiver.sendMessage(text);
 	}
 	
 	@Override
