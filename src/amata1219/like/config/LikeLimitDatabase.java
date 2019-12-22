@@ -23,6 +23,7 @@ public class LikeLimitDatabase extends Yaml {
 	
 	public void set(UUID uuid, int limit){
 		set(uuid.toString(), limit);
+		update();
 	}
 
 }

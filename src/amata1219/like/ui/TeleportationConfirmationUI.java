@@ -6,6 +6,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -20,10 +21,15 @@ import amata1219.like.masquerade.dsl.component.Layout;
 import amata1219.like.masquerade.option.Lines;
 import amata1219.like.masquerade.text.Text;
 import at.pcgamingfreaks.UUIDConverter;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.milkbowl.vault.economy.Economy;
 
 public class TeleportationConfirmationUI implements InventoryUI {
 	
 	private final Main plugin = Main.plugin();
+	private final Economy economy = plugin.economy();
 	private final MainConfig config = plugin.config();
 	private final Like like;
 	private final InventoryUI previous;
@@ -69,6 +75,8 @@ public class TeleportationConfirmationUI implements InventoryUI {
 				
 				s.onClick(e -> {
 					p.teleport(like.hologram.getLocation());
+					economy.withdrawPlayer(p, config.teleportationCosts());
+					economy.depositPlayer(Bukkit.getOfflinePlayer(like.owner()), config.teleportationCosts());
 					config.teleportationText().apply(like).accept(p::sendMessage);
 				});
 			}, 4);
@@ -95,7 +103,19 @@ public class TeleportationConfirmationUI implements InventoryUI {
 					}
 					
 					InvitationText text = config.invitationText().apply(p, like);
-					playersNearby.forEach(invitee -> text.clone().apply(invitee).accept(invitee::sendMessage));
+					playersNearby.forEach(invitee -> text.clone().apply(invitee).accept(t -> {
+						TextComponent component = new TextComponent(t);
+						
+						String command = Text.of("/like %s %s").format(Main.INVITATION_TOKEN, like.id);
+						component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));
+						
+						TextComponent description = new TextComponent(Text.color("&7-クリックするとこのLikeにテレポートします！"));
+						component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponent[] {description}));
+						
+						invitee.spigot().sendMessage(component);
+					}));
+					
+					plugin.economy().withdrawPlayer(p, config.invitationCosts());
 					
 					Text.of("&a-%s人のプレイヤーを招待しました。").apply(playersNearby.size()).accept(p::sendMessage);
 				});

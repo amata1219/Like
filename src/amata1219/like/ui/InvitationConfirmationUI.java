@@ -23,7 +23,8 @@ import net.md_5.bungee.api.chat.TextComponent;
 
 public class InvitationConfirmationUI implements InventoryUI {
 	
-	private final MainConfig config = Main.plugin().config();
+	private final Main plugin = Main.plugin();
+	private final MainConfig config = plugin.config();
 	private final Like like;
 	private final InventoryUI previous;
 	
@@ -92,6 +93,8 @@ public class InvitationConfirmationUI implements InventoryUI {
 						
 						invitee.spigot().sendMessage(component);
 					}));
+					
+					plugin.economy().withdrawPlayer(p, config.invitationCosts());
 					
 					Text.of("&a-%s人のプレイヤーを招待しました。").apply(playersNearby.size()).accept(p::sendMessage);
 				});
