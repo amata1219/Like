@@ -6,10 +6,10 @@ import org.bukkit.command.CommandExecutor;
 
 import amata1219.like.Main;
 import amata1219.like.bookmark.Bookmark;
+import amata1219.like.slash.builder.ContextualExecutorBuilder;
+import amata1219.like.slash.effect.MessageEffect;
 import amata1219.like.ui.BookmarkUI;
-import amata1219.slash.builder.ContextualExecutorBuilder;
-import amata1219.slash.effect.MessageEffect;
-import amata1219.slash.util.Text;
+import amata1219.like.masquerade.text.Text;
 
 public class BookmarkCommand {
 	

@@ -34,7 +34,7 @@ public interface Either<F, S> {
 	
 	public class Success<F, S> implements Either<F, S> {
 		
-		private final S value;
+		public final S value;
 		
 		private Success(S value){
 			this.value = value;
@@ -60,7 +60,7 @@ public interface Either<F, S> {
 	
 	public class Failure<F, S> implements Either<F, S> {
 		
-		private final F error;
+		public final F error;
 		
 		private Failure(F error){
 			this.error = error;

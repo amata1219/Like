@@ -3,11 +3,11 @@ package amata1219.like.command;
 import java.util.Queue;
 
 import amata1219.like.masquerade.text.Text;
+import amata1219.like.slash.ContextualExecutor;
+import amata1219.like.slash.builder.ContextualExecutorBuilder;
+import amata1219.like.slash.effect.MessageEffect;
 import amata1219.like.ui.MyFavoriteLikeListUI;
 import amata1219.like.ui.MyLikeListUI;
-import amata1219.slash.ContextualExecutor;
-import amata1219.slash.builder.ContextualExecutorBuilder;
-import amata1219.slash.effect.MessageEffect;
 
 public class LikeListCommand {
 	

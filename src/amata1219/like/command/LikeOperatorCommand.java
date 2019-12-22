@@ -14,16 +14,16 @@ import amata1219.like.bookmark.Bookmark;
 import amata1219.like.bookmark.Order;
 import amata1219.like.config.LikeLimitDatabase;
 import amata1219.like.config.MainConfig;
-import amata1219.slash.ContextualExecutor;
-import amata1219.slash.builder.ContextualExecutorBuilder;
-import amata1219.slash.builder.Parser;
-import amata1219.slash.contexts.PartiallyParsedArguments;
-import amata1219.slash.effect.MessageEffect;
-import amata1219.slash.executor.BranchedExecutor;
-import amata1219.slash.executor.EchoExecutor;
-import amata1219.slash.monad.Maybe;
-import amata1219.slash.util.Text;
-import amata1219.slash.util.Tuple;
+import amata1219.like.slash.ContextualExecutor;
+import amata1219.like.slash.builder.ContextualExecutorBuilder;
+import amata1219.like.slash.builder.Parser;
+import amata1219.like.slash.contexts.PartiallyParsedArguments;
+import amata1219.like.slash.effect.MessageEffect;
+import amata1219.like.slash.executor.BranchedExecutor;
+import amata1219.like.slash.executor.EchoExecutor;
+import amata1219.like.tuplet.Tuple;
+import amata1219.like.masquerade.text.Text;
+import amata1219.like.monad.Maybe;
 
 public class LikeOperatorCommand {
 	

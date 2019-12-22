@@ -32,11 +32,11 @@ public interface Maybe<T> {
 	
 	T or(Supplier<T> supplier);
 	
-	void apply(Consumer<T> action);
+	Maybe<T> apply(Consumer<T> action);
 	
 	public class Some<T> implements Maybe<T> {
 		
-		private final T value;
+		public final T value;
 		
 		private Some(T value){
 			this.value = value;
@@ -58,8 +58,9 @@ public interface Maybe<T> {
 		}
 		
 		@Override
-		public void apply(Consumer<T> action) {
+		public Maybe<T> apply(Consumer<T> action) {
 			action.accept(value);
+			return this;
 		}
 
 	}
@@ -88,8 +89,8 @@ public interface Maybe<T> {
 		}
 		
 		@Override
-		public void apply(Consumer<T> action) {
-			
+		public Maybe<T> apply(Consumer<T> action) {
+			return this;
 		}
 
 	}

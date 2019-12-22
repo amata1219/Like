@@ -4,8 +4,8 @@ import org.bukkit.command.CommandExecutor;
 
 import amata1219.like.Like;
 import amata1219.like.masquerade.text.Text;
-import amata1219.slash.builder.ContextualExecutorBuilder;
-import amata1219.slash.effect.MessageEffect;
+import amata1219.like.slash.builder.ContextualExecutorBuilder;
+import amata1219.like.slash.effect.MessageEffect;
 
 public class LikeMovingCommand {
 	

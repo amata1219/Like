@@ -4,8 +4,8 @@ import org.bukkit.command.CommandExecutor;
 
 import amata1219.like.Like;
 import amata1219.like.Main;
-import amata1219.slash.builder.ContextualExecutorBuilder;
-import amata1219.slash.builder.Parser;
+import amata1219.like.slash.builder.ContextualExecutorBuilder;
+import amata1219.like.slash.builder.Parser;
 
 public class LikeTeleportationAuthenticationCommand {
 	

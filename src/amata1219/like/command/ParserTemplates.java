@@ -1,6 +1,6 @@
 package amata1219.like.command;
 
-import static amata1219.slash.monad.Either.*;
+import static amata1219.like.monad.Either.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -10,7 +10,7 @@ import amata1219.like.Like;
 import amata1219.like.Main;
 import amata1219.like.bookmark.Bookmark;
 import amata1219.like.bookmark.Order;
-import amata1219.slash.builder.Parser;
+import amata1219.like.slash.builder.Parser;
 import at.pcgamingfreaks.UUIDConverter;
 
 public class ParserTemplates {
