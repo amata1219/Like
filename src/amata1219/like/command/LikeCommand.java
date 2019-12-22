@@ -1,34 +1,33 @@
 package amata1219.like.command;
 
-import java.util.function.Supplier;
-
-import org.bukkit.entity.Player;
-
-import amata1219.like.masquerade.text.Text;
-import amata1219.like.slash.dsl.ArgumentList;
-import amata1219.like.slash.dsl.PlayerCommand;
+import org.bukkit.command.CommandExecutor;
 import amata1219.like.ui.MyLikeListUI;
+import amata1219.slash.ContextualExecutor;
+import amata1219.slash.builder.ContextualExecutorBuilder;
+import amata1219.slash.executor.BranchedExecutor;
+import amata1219.slash.executor.EchoExecutor;
+import amata1219.slash.monad.Maybe;
+import amata1219.slash.util.Text;
+import amata1219.slash.util.Tuple;
 
-import static amata1219.like.slash.dsl.component.Matcher.*;
-
-public class LikeCommand implements PlayerCommand {
+public class LikeCommand {
 	
-	private final Supplier<String> error = () -> Text.color(
-			"&7-不正なコマンドが入力されたため実行出来ませんでした。",
-			"&7-このコマンドは、/like create, /like list, /like list me, /like status が有効です。"
-	);
+	private static final ContextualExecutor status = ContextualExecutorBuilder.playerCommandBuilder().execution(context -> sender -> {
+		new MyLikeListUI(sender.getUniqueId()).open(sender);
+	}).build();
 	
-	private final PlayerCommand likeCreate = new LikeCreateCommand(), likeList = new LikeListCommand();
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public void onCommand(Player sender, ArgumentList<String> args) {
-		args.next(error).match(
-			Case("create").then(() -> likeCreate.onCommand(sender, args)),
-			Case("list").then(() -> likeList.onCommand(sender, args)),
-			Case("status").then(() -> new MyLikeListUI(sender.getUniqueId()).open(sender)),
-			E1se(error)
-		).onFailure(sender::sendMessage);
-	}
-
+	private static final ContextualExecutor description = EchoExecutor.of(sender -> Text.of(
+			"Likeを作成する: /like create",
+			"&7-お気に入りのLikeの一覧を開く: /likel",
+			"&7-作成したLikeの一覧を開く: /likel me"
+			));
+	
+	public static final CommandExecutor executor = BranchedExecutor.of(
+			Maybe.Some(description),
+			Maybe.Some(description),
+			Tuple.of("create", LikeCreationCommand.executor),
+			Tuple.of("list", LikeListCommand.executor),
+			Tuple.of("status", status)
+			);
+			
 }
