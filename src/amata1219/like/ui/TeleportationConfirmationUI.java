@@ -106,7 +106,7 @@ public class TeleportationConfirmationUI implements InventoryUI {
 					playersNearby.forEach(invitee -> text.clone().apply(invitee).accept(t -> {
 						TextComponent component = new TextComponent(t);
 						
-						String command = Text.of("/like %s %s").format(Main.INVITATION_TOKEN, like.id);
+						String command = Text.of("/liketoken %s %s").format(Main.INVITATION_TOKEN, like.id);
 						component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));
 						
 						TextComponent description = new TextComponent(Text.color("&7-クリックするとこのLikeにテレポートします！"));

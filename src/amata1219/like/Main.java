@@ -5,6 +5,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.Inventory;
@@ -15,6 +18,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import amata1219.like.bookmark.Bookmark;
 import amata1219.like.bookmark.BookmarkDatabase;
+import amata1219.like.command.BookmarkCommand;
+import amata1219.like.command.LikeCommand;
+import amata1219.like.command.LikeCreationCommand;
+import amata1219.like.command.LikeListCommand;
+import amata1219.like.command.LikeMovingCommand;
+import amata1219.like.command.LikeOperatorCommand;
+import amata1219.like.command.LikeTeleportationAuthenticationCommand;
 import amata1219.like.config.LikeDatabase;
 import amata1219.like.config.LikeLimitDatabase;
 import amata1219.like.config.MainConfig;
@@ -43,6 +53,8 @@ public class Main extends JavaPlugin {
 	
 	private Economy economy;
 	
+	private final HashMap<String, CommandExecutor> executors = new HashMap<>();
+	
 	private MainConfig config;
 	private LikeDatabase likeDatabase;
 	private PlayerDatabase playerDatabase;
@@ -67,8 +79,6 @@ public class Main extends JavaPlugin {
 
 		economy = provider.getProvider();
 		
-		getServer().getPluginManager().registerEvents(new UIListener(), this);
-
 		Field<Enchantment, Boolean> acceptingNew = Field.of(Enchantment.class, "acceptingNew");
 		acceptingNew.set(null, true);
 		try{
@@ -78,6 +88,8 @@ public class Main extends JavaPlugin {
 		}finally{
 			acceptingNew.set(null, false);
 		}
+		
+		getServer().getPluginManager().registerEvents(new UIListener(), this);
 		
 		config = new MainConfig();
 		
@@ -91,6 +103,14 @@ public class Main extends JavaPlugin {
 		likeLimitDatabase = new LikeLimitDatabase();
 		bookmarkDatabase = new BookmarkDatabase();
 		bookmarkDatabase.load().forEach((name, bookmark) -> bookmarks.put(name, bookmark));
+		
+		executors.put("like", LikeCommand.executor);
+		executors.put("likec", LikeCreationCommand.executor);
+		executors.put("likel", LikeListCommand.executor);
+		executors.put("likes", LikeMovingCommand.executor);
+		executors.put("liketoken", LikeTeleportationAuthenticationCommand.executor);
+		executors.put("likeb", BookmarkCommand.executor);
+		executors.put("likeop", LikeOperatorCommand.executor);
 	}
 	
 	@Override
@@ -109,6 +129,11 @@ public class Main extends JavaPlugin {
 		});
 
 		HandlerList.unregisterAll(this);
+	}
+	
+	@Override
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args){
+		return executors.get(command.getName()).onCommand(sender, command, label, args);
 	}
 	
 	public Economy economy(){

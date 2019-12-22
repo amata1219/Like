@@ -76,8 +76,8 @@ public class InvitationConfirmationUI implements InventoryUI {
 					p.closeInventory();
 					
 					if(playersNearby.isEmpty()){
-						Text.of("&c-近くに誰もいないため招待出来ませんでした。").accept(p::sendMessage);
-						Text.of("&7-※MPは消費されていません。").accept(p::sendMessage);
+						Text.of("&c-近くに誰もいないため招待出来ませんでした。").sendTo(p);
+						Text.of("&7-※MPは消費されていません。").sendTo(p);
 						return;
 					}
 					
@@ -85,7 +85,7 @@ public class InvitationConfirmationUI implements InventoryUI {
 					playersNearby.forEach(invitee -> text.clone().apply(invitee).accept(t -> {
 						TextComponent component = new TextComponent(t);
 						
-						String command = Text.of("/like %s %s").format(Main.INVITATION_TOKEN, like.id);
+						String command = Text.of("/liketoken %s %s").format(Main.INVITATION_TOKEN, like.id);
 						component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));
 						
 						TextComponent description = new TextComponent(Text.color("&7-クリックするとこのLikeにテレポートします！"));
