@@ -9,7 +9,10 @@ import amata1219.slash.effect.MessageEffect;
 
 public class LikeMovingCommand {
 	
-	private static final MessageEffect description = () -> "&7-不正なコマンドが入力されたため実行出来ませんでした。\n-&7-このコマンドは、/likem [like_id] が有効です。";
+	private static final MessageEffect description = () -> Text.color(
+			"&7-不正なコマンドが入力されたため実行出来ませんでした。",
+			"&7-このコマンドは、/likem [like_id] が有効です。"
+		);
 	
 	public static final CommandExecutor executor = ContextualExecutorBuilder.playerCommandBuilder()
 			.parsers(

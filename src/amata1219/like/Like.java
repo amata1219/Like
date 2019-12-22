@@ -141,14 +141,14 @@ public class Like {
 		if(alsoToDisk) HologramDatabase.trySaveToDisk();
 	}
 	
-	public void delete(){
+	public void delete(boolean alsoSave){
 		plugin.players.get(owner).likes.remove(this);
 		plugin.players.values().stream().forEach(data -> data.unfavoriteLike(this));
 		plugin.likes.remove(id);
 		hologram.delete();
 		NamedHologramManager.removeHologram(hologram);
 		HologramDatabase.deleteHologram(hologram.getName());
-		HologramDatabase.trySaveToDisk();
+		if(alsoSave) HologramDatabase.trySaveToDisk();
 	}
 	
 	private void setTouchHandler(boolean delete){
