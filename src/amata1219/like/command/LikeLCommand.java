@@ -4,11 +4,11 @@ import java.util.Queue;
 
 import org.bukkit.command.CommandExecutor;
 
-import amata1219.slash.dsl.ContextualExecutorBuilder;
-import amata1219.slash.dsl.MessageEffect;
 import amata1219.like.masquerade.text.Text;
 import amata1219.like.ui.MyFavoriteLikeListUI;
 import amata1219.like.ui.MyLikeListUI;
+import amata1219.slash.builder.ContextualExecutorBuilder;
+import amata1219.slash.effect.MessageEffect;
 
 public class LikeLCommand {
 	

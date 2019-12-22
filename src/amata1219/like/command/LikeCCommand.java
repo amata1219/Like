@@ -13,7 +13,7 @@ import amata1219.like.config.MainConfig;
 import amata1219.like.masquerade.task.SyncTask;
 import amata1219.like.masquerade.text.Text;
 import amata1219.like.player.PlayerData;
-import amata1219.slash.dsl.ContextualExecutorBuilder;
+import amata1219.slash.builder.ContextualExecutorBuilder;
 
 public class LikeCCommand {
 	

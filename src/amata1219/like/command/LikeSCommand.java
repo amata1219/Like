@@ -1,39 +1,34 @@
 package amata1219.like.command;
 
-import java.util.function.Supplier;
+import org.bukkit.command.CommandExecutor;
 
-import org.bukkit.entity.Player;
-
+import amata1219.like.Like;
 import amata1219.like.Main;
 import amata1219.like.masquerade.text.Text;
-import amata1219.slash.dsl.ContextualExecutorBuilder;
+import amata1219.slash.builder.ContextualExecutorBuilder;
+import amata1219.slash.builder.Parser;
+import amata1219.slash.effect.MessageEffect;
+import static amata1219.slash.monad.Either.*;
 
 public class LikeSCommand {
 	
-	//public static final CommandExecutor executor = ContextualExecutorBuilder.playerCommandBuilder().co
+	private static final MessageEffect description = () -> "&7-不正なコマンドが入力されたため実行出来ませんでした。\n-&7-このコマンドは、/likem [like_id] が有効です。";
 	
-	/*
-	 * 	private final Main plugin = Main.plugin();
-	
-	private final Supplier<String> error = () -> Text.color(
-			"&7-不正なコマンドが入力されたため実行出来ませんでした。",
-			"&7-このコマンドは、/likes [move/lore/desc] が有効です。"
-	);
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public void onCommand(Player sender, ArgumentList<String> args) {
-		args.next(error).match(
-			Case("move").label(() -> args.nextLong(() -> "&c-移動するLikeのIDを指定して下さい。").flatMap(
-				id -> plugin.likes.containsKey(id) ? Success(plugin.likes.get(id)) : Failure("&c-指定されたIDのLikeは存在しません")
-			).flatMap(like -> {
-				if(!like.isOwner(sender.getUniqueId())) return Failure("&c-他人のLikeは移動出来ません。");
+	public static final CommandExecutor executor = ContextualExecutorBuilder.playerCommandBuilder()
+			.parsers(
+				description,
+				s -> Parser.i64(() -> "&c-移動するLikeのIDを指定して下さい").parse(s).flatMap(
+					id -> Main.plugin().likes.containsKey(id) ? Success(Main.plugin().likes.get(id)) : Failure(() -> "&c-指定されたIDのLikeは存在しません。")
+				)
+			)
+			.execution(context -> sender -> {
+				Like like = context.arguments.parsed(0);
+				if(!like.isOwner(sender.getUniqueId())) Text.of("&c-他人のLikeは移動出来ません。").sendTo(sender);
+				
 				like.teleportTo(sender.getLocation());
-				return Message("&a-Like(ID: " + like.id + ")を現在地に移動しました。");
-			})),
-			E1se(error)
-		).onFailure(s -> Text.of(s).accept(sender::sendMessage));
-	}
-	 */
+				Text.of("&a-Like(ID: %s)を現在地に移動しました。")
+					.apply(like.id)
+					.sendTo(sender);
+			}).build();
 
 }
