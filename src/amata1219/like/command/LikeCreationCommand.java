@@ -15,7 +15,7 @@ import amata1219.like.masquerade.text.Text;
 import amata1219.like.player.PlayerData;
 import amata1219.slash.builder.ContextualExecutorBuilder;
 
-public class LikeCCommand {
+public class LikeCreationCommand {
 	
 	public static final CommandExecutor executor = ContextualExecutorBuilder.playerCommandBuilder().execution(context -> sender -> {
 		Main plugin = Main.plugin();

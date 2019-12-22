@@ -32,11 +32,11 @@ import com.gmail.filoghost.holographicdisplays.object.line.CraftTouchableLine;
 
 import amata1219.like.command.Args;
 import amata1219.like.command.CommandExecutor;
-import amata1219.like.command.LikeCCommand;
+import amata1219.like.command.LikeCreationCommand;
 import amata1219.like.command.OldLikeCommand;
-import amata1219.like.command.LikeLCommand;
+import amata1219.like.command.LikeListCommand;
 import amata1219.like.command.LikeOpCommand;
-import amata1219.like.command.LikeSCommand;
+import amata1219.like.command.LikeMovingCommand;
 import net.milkbowl.vault.Vault;
 import net.milkbowl.vault.economy.Economy;
 
@@ -63,9 +63,9 @@ public class OldMain extends JavaPlugin implements Listener {
 
 		commands = new HashMap<>();
 		commands.put("like", new OldLikeCommand());
-		commands.put("likec", new LikeCCommand());
-		commands.put("likel", new LikeLCommand());
-		commands.put("likes", new LikeSCommand());
+		commands.put("likec", new LikeCreationCommand());
+		commands.put("likel", new LikeListCommand());
+		commands.put("likes", new LikeMovingCommand());
 		commands.put("likeop", new LikeOpCommand());
 
 		getServer().getPluginManager().registerEvents(this, this);

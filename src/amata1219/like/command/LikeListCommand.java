@@ -10,7 +10,7 @@ import amata1219.like.ui.MyLikeListUI;
 import amata1219.slash.builder.ContextualExecutorBuilder;
 import amata1219.slash.effect.MessageEffect;
 
-public class LikeLCommand {
+public class LikeListCommand {
 	
 	private static final MessageEffect description = () -> Text.color(
 		"&7-お気に入りのLikeの一覧を開く: /likel",
