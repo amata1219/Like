@@ -3,6 +3,7 @@ package amata1219.like.bookmark;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import amata1219.like.Like;
 import amata1219.like.bookmark.Order;
@@ -10,7 +11,7 @@ import amata1219.like.bookmark.Order;
 public class Bookmark {
 	
 	public final String name;
-	private final List<Like> likes;
+	public final List<Like> likes;
 	private Order order;
 	
 	public Bookmark(String name, List<Like> likes, Order order){
@@ -33,6 +34,11 @@ public class Bookmark {
 	
 	public void setOrder(Order order){
 		this.order = Objects.requireNonNull(order);
+	}
+	
+	@Override
+	public String toString(){
+		return order.ordinal() + ":" + likes.stream().map(like -> String.valueOf(like.id)).collect(Collectors.joining(","));
 	}
 	
 }

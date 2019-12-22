@@ -57,7 +57,7 @@ public class DeletingLikeConfirmationUI implements InventoryUI {
 				});
 				
 				s.onClick(e -> {
-					like.delete();
+					like.delete(true);
 					p.sendMessage(Text.of("&c-Like(%s)を完全に削除しました。").format(like.id));
 				});
 			}, 4);

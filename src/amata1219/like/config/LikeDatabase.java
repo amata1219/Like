@@ -9,14 +9,13 @@ import com.gmail.filoghost.holographicdisplays.object.NamedHologram;
 import com.gmail.filoghost.holographicdisplays.object.NamedHologramManager;
 
 import amata1219.like.Like;
-import amata1219.like.Main;
 import amata1219.like.exception.NotImplementedException;
 import amata1219.like.tuplet.Tuple;
 
 public class LikeDatabase extends Yaml {
 
 	public LikeDatabase() {
-		super(Main.plugin(), "like_data.yml");
+		super("like_data.yml");
 	}
 
 	@Override

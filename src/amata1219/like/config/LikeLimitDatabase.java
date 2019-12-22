@@ -2,13 +2,12 @@ package amata1219.like.config;
 
 import java.util.UUID;
 
-import amata1219.like.Main;
 import amata1219.like.exception.NotImplementedException;
 
 public class LikeLimitDatabase extends Yaml {
 
 	public LikeLimitDatabase() {
-		super(Main.plugin(), "like_limit.yml");
+		super("like_limit.yml");
 	}
 
 	@Override

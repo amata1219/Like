@@ -11,6 +11,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import amata1219.like.bookmark.Bookmark;
 import amata1219.like.config.LikeDatabase;
 import amata1219.like.config.LikeLimitDatabase;
 import amata1219.like.config.MainConfig;
@@ -42,6 +43,7 @@ public class Main extends JavaPlugin {
 	
 	public final HashMap<Long, Like> likes = new HashMap<>();
 	public final HashMap<UUID, PlayerData> players = new HashMap<>();
+	public final HashMap<String, Bookmark> bookmarks = new HashMap<>();
 	public final HashMap<UUID, Long> descriptionEditors = new HashMap<>();
 	public final HashSet<UUID> cooldownMap = new HashSet<>();
 	

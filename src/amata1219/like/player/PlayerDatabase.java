@@ -8,14 +8,13 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import amata1219.like.Like;
-import amata1219.like.Main;
 import amata1219.like.config.Yaml;
 import amata1219.like.exception.NotImplementedException;
 
 public class PlayerDatabase extends Yaml {
 	
 	public PlayerDatabase(){
-		super(Main.plugin(), "player_data.yml");
+		super("player_data.yml");
 	}
 
 	@Override

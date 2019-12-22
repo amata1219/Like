@@ -16,16 +16,16 @@ import amata1219.like.monad.Maybe;
 
 public abstract class Yaml extends YamlConfiguration {
 
-	protected final Main plugin;
+	protected final Main plugin = Main.plugin();
 	private final File file;
 	private final String resourceFileName;
 
-	public Yaml(Main plugin, String fileName){
-		this(plugin, new File(plugin.getDataFolder(), fileName));
+	public Yaml( String fileName){
+		this.file = new File(plugin.getDataFolder(), fileName);
+		this.resourceFileName = file.getName().replace('\\', '/');
 	}
 
-	public Yaml(Main plugin, File file){
-		this.plugin = plugin;
+	public Yaml(File file){
 		this.file = file;
 		this.resourceFileName = file.getName().replace('\\', '/');
 	}

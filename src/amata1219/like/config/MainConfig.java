@@ -12,7 +12,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 
 import amata1219.like.Like;
-import amata1219.like.Main;
 import amata1219.like.masquerade.text.Text;
 import amata1219.like.monad.Maybe;
 import amata1219.like.tuplet.Tuple;
@@ -36,7 +35,7 @@ public class MainConfig extends Yaml {
 	private String invitationMessage;
 	
 	public MainConfig(){
-		super(Main.plugin(), "config.yml");
+		super("config.yml");
 		readAll();
 	}
 	

@@ -16,6 +16,7 @@ import com.gmail.filoghost.holographicdisplays.object.line.CraftHologramLine;
 import com.gmail.filoghost.holographicdisplays.object.line.CraftTouchableLine;
 
 import amata1219.like.config.MainConfig;
+import amata1219.like.masquerade.task.AsyncTask;
 import amata1219.like.masquerade.text.Text;
 import amata1219.like.player.PlayerData;
 import amata1219.like.reflection.Method;
@@ -47,15 +48,19 @@ public class Like {
 		this.owner = owner;
 		this.favorites = favorites;
 		
+		setTouchHandler(false);
+	}
+	
+	public Like(NamedHologram hologram, UUID owner){
+		this.id = Long.parseLong(hologram.getName());
+		this.hologram = hologram;
+		this.owner = owner;
+		
 		hologram.appendTextLine(config.likeFavoritesText().apply(favorites));
 		hologram.appendTextLine(config.likeDescription().apply(owner));
 		hologram.appendTextLine(config.likeUsage());
 		
 		setTouchHandler(false);
-	}
-	
-	public Like(NamedHologram hologram, UUID owner){
-		this(hologram, owner, 0);
 	}
 	
 	public World world(){
@@ -143,7 +148,8 @@ public class Like {
 	
 	public void delete(boolean alsoSave){
 		plugin.players.get(owner).likes.remove(this);
-		plugin.players.values().stream().forEach(data -> data.unfavoriteLike(this));
+		AsyncTask.define(() -> plugin.players.values().forEach(data -> data.unfavoriteLike(this))).execute();
+		plugin.bookmarks.values().forEach(bookmark -> bookmark.likes.remove(this));
 		plugin.likes.remove(id);
 		hologram.delete();
 		NamedHologramManager.removeHologram(hologram);
