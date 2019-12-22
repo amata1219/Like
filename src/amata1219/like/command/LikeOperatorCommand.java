@@ -10,6 +10,8 @@ import com.gmail.filoghost.holographicdisplays.disk.HologramDatabase;
 
 import amata1219.like.Like;
 import amata1219.like.Main;
+import amata1219.like.bookmark.Bookmark;
+import amata1219.like.bookmark.Order;
 import amata1219.like.config.LikeLimitDatabase;
 import amata1219.like.config.MainConfig;
 import amata1219.slash.ContextualExecutor;
@@ -27,13 +29,13 @@ public class LikeOperatorCommand {
 	
 	private static final MessageEffect movedescription = () -> Text.color(
 			"&7-不正なコマンドが入力されたため実行出来ませんでした。",
-			"&7-このコマンドは、/likeop move [like_id] が有効です。"
+			"&7-Likeを現在地に移動する: /likeop move [like_id]"
 			);
 	
 	private static final ContextualExecutor move = ContextualExecutorBuilder.playerCommandBuilder()
 			.parsers(
 				movedescription,
-				ParserTemplates.like(() -> "&c-移動するLikeのIDを指定して下さい。")
+				ParserTemplates.like()
 			).execution(context -> sender -> {
 				Like like = context.arguments.parsed(0);
 				like.teleportTo(sender.getLocation());
@@ -42,13 +44,13 @@ public class LikeOperatorCommand {
 	
 	private static final MessageEffect deletedescription = () -> Text.color(
 			"&7-不正なコマンドが入力されたため実行出来ませんでした。",
-			"&7-このコマンドは、/likeop delete [like_id] が有効です。"
+			"&7-Likeを削除する: /likeop delete [like_id]"
 			);
 	
 	private static final ContextualExecutor delete = ContextualExecutorBuilder.playerCommandBuilder()
 			.parsers(
 				deletedescription,
-				ParserTemplates.like(() -> "削除するLikeのIDを指定して下さい。")
+				ParserTemplates.like()
 			).execution(context -> sender -> {
 				Like like = context.arguments.parsed(0);
 				like.delete(true);
@@ -57,7 +59,7 @@ public class LikeOperatorCommand {
 			
 	private static final MessageEffect deleteplayerdescription = () -> Text.color(
 			"&7-不正なコマンドが入力されたため実行出来ませんでした。",
-			"&7-このコマンドは、/likeop deleteplayer [player_name] が有効です。"
+			"&7-プレイヤーが作成したLikeを全削除する: /likeop deleteplayer [player_name]"
 			);
 	
 	private static final ContextualExecutor deleteplayer = ContextualExecutorBuilder.playerCommandBuilder()
@@ -81,7 +83,7 @@ public class LikeOperatorCommand {
 	
 	private static final MessageEffect deleteworlddescription = () -> Text.color(
 			"&7-不正なコマンドが入力されたため実行出来ませんでした。",
-			"&7-このコマンドは、/likeop deleteworld [world_name] が有効です。"
+			"&7-ワールド内のLikeを全削除する: /likeop deleteworld [world_name]"
 			);
 	
 	private static final ContextualExecutor deleteworld = ContextualExecutorBuilder.playerCommandBuilder()
@@ -103,13 +105,13 @@ public class LikeOperatorCommand {
 	
 	private static final MessageEffect changeownerdescription = () -> Text.color(
 			"&7-不正なコマンドが入力されたため実行出来ませんでした。",
-			"&7-このコマンドは、/likeop changeowner [like_id] [new_owner_name] が有効です。"
+			"&7-Likeの所有者を変更する: /likeop changeowner [like_id] [new_owner_name]"
 			);
 	
 	private static final ContextualExecutor changeowner = ContextualExecutorBuilder.playerCommandBuilder()
 			.parsers(
 				changeownerdescription,
-				ParserTemplates.like(() -> "編集するLikeをIDを指定して下さい。"),
+				ParserTemplates.like(),
 				ParserTemplates.player()
 			).execution(context -> sender -> {
 				Like like = context.arguments.parsed(0);
@@ -126,7 +128,7 @@ public class LikeOperatorCommand {
 	
 	private static final MessageEffect changedatadescription = () -> Text.color(
 			"&7-不正なコマンドが入力されたため実行出来ませんでした。",
-			"&7-このコマンドは、/likeop changeowner [old_owner_name] [new_owner_name] が有効です。"
+			"&7-プレイヤーの作成したLikeを新しいプレイヤーに引き継ぐ: /likeop changedata [old_owner_name] [new_owner_name]"
 			);
 	
 	private static final ContextualExecutor changedata = ContextualExecutorBuilder.playerCommandBuilder()
@@ -154,7 +156,9 @@ public class LikeOperatorCommand {
 	
 	private static final MessageEffect limitdescription = () -> Text.color(
 			"&7-不正なコマンドが入力されたため実行出来ませんでした。",
-			"&7-このコマンドは、/likeop limit [player] [operation] [limit] が有効です。"
+			"&7-プレイヤーのLike作成上限数を指定値に書き換える: /likeop limit [player] set [limit]",
+			"&7-プレイヤーのLike作成上限数を指定値だけ引き上げる: /likeop limit [player] add [amount_to_add]",
+			"&7-プレイヤーのLike作成上限数を指定値だけ引き下げる: /likeop limit [player] sub [amount_to_sub]"
 			);
 	
 	private static final ContextualExecutor limit = ContextualExecutorBuilder.playerCommandBuilder()
@@ -190,6 +194,107 @@ public class LikeOperatorCommand {
 				Text.of("&a-%sのLike作成上限数を%sに設定しました。").apply(player.getName(), limit).sendTo(sender);
 			}).build();
 	
+	private static final ContextualExecutor bookdescription = EchoExecutor.of(sender -> Text.of(
+			"&7-不正なコマンドが入力されたため実行出来ませんでした。",
+			"&7-ブックマークを作成・削除する: /likeop book [create/delete] [book_name]",
+			"&7-Likeを追加・削除する: /likeop book [add/remove] [book_name] [like_id]",
+			"&7-ソートする: /likeop book sort [newest/oldest]"
+			).sendTo(sender));
+	
+	private static final ContextualExecutor bookcreation = ContextualExecutorBuilder.playerCommandBuilder()
+			.parsers(
+				() -> Text.color(
+					"&7-不正なコマンドが入力されたため実行出来ませんでした。",
+					"&7-ブックマークを作成する: /likeop book create [book_name]"
+				), 
+				Parser.identity()
+			).execution(context -> sender -> {
+				String name = context.arguments.parsed(0);
+				HashMap<String, Bookmark> bookmarks = Main.plugin().bookmarks;
+				if(bookmarks.containsKey(name)){
+					Text.of("&c-指定された名前のブックマークが既に存在しています。").sendTo(sender);
+					return;
+				}
+				bookmarks.put(name, new Bookmark(name));
+				Text.of("&c-ブックマーク(%s)を作成しました。").apply(name).sendTo(sender);
+			}).build();
+	
+	private static final ContextualExecutor bookdeletion = ContextualExecutorBuilder.playerCommandBuilder()
+			.parsers(
+				() -> Text.color(
+					"&7-不正なコマンドが入力されたため実行出来ませんでした。",
+					"&7-ブックマークを削除する: /likeop book delete [book_name]"
+				), 
+				ParserTemplates.bookmark()
+			).execution(context -> sender -> {
+				Bookmark bookmark = context.arguments.parsed(0);
+				Main.plugin().bookmarkDatabase().remove(bookmark);
+				Text.of("&c-ブックマーク(%s)を削除しました。").apply(bookmark.name).sendTo(sender);
+			}).build();
+	
+	private static final ContextualExecutor booklikeaddition = ContextualExecutorBuilder.playerCommandBuilder()
+			.parsers(
+				() -> Text.color(
+					"&7-不正なコマンドが入力されたため実行出来ませんでした。",
+					"&7-ブックマークにLikeを追加する: /likeop book add [book_name] [like_id]"
+				), 
+				ParserTemplates.bookmark(),
+				ParserTemplates.like()
+			).execution(context -> sender -> {
+				Bookmark bookmark = context.arguments.parsed(0);
+				Like like = context.arguments.parsed(1);
+				if(bookmark.likes.contains(like)){
+					Text.of("&c-このLikeは既に追加されています。").sendTo(sender);
+					return;
+				}
+				bookmark.likes.add(like);
+				Text.of("&c-ブックマーク(%s)にLike(ID: %s)を追加しました。").apply(bookmark.name, like.id).sendTo(sender);
+			}).build();
+	
+	private static final ContextualExecutor booklikeremoving = ContextualExecutorBuilder.playerCommandBuilder()
+			.parsers(
+				() -> Text.color(
+					"&7-不正なコマンドが入力されたため実行出来ませんでした。",
+					"&7-ブックマークにLikeを追加する: /likeop book remove [book_name] [like_id]"
+				), 
+				ParserTemplates.bookmark(),
+				ParserTemplates.like()
+			).execution(context -> sender -> {
+				Bookmark bookmark = context.arguments.parsed(0);
+				Like like = context.arguments.parsed(1);
+				if(!bookmark.likes.contains(like)){
+					Text.of("&c-このLikeは追加されていません。").sendTo(sender);
+					return;
+				}
+				bookmark.likes.remove(like);
+				Text.of("&c-ブックマーク(%s)からLike(ID: %s)を削除しました。").apply(bookmark.name, like.id).sendTo(sender);
+			}).build();
+	
+	private static final ContextualExecutor booksort = ContextualExecutorBuilder.playerCommandBuilder()
+			.parsers(
+				() -> Text.color(
+					"&7-不正なコマンドが入力されたため実行出来ませんでした。",
+					"&7-ブックマークにLikeを追加する: /likeop book sort [book_name] [newest/oldest]"
+				), 
+				ParserTemplates.bookmark(),
+				ParserTemplates.order()
+			).execution(context -> sender -> {
+				Bookmark bookmark = context.arguments.parsed(0);
+				Order order = context.arguments.parsed(1);
+				bookmark.setOrder(order);
+				Text.of("&c-ブックマーク(%s)のLike表示順を%sにしました。").apply(bookmark.name, order.toString().toLowerCase()).sendTo(sender);
+			}).build();
+	
+	private static final ContextualExecutor book = BranchedExecutor.of(
+			Maybe.Some(bookdescription),
+			Maybe.Some(bookdescription),
+			Tuple.of("create", bookcreation),
+			Tuple.of("delete", bookdeletion),
+			Tuple.of("add", booklikeaddition),
+			Tuple.of("remove", booklikeremoving),
+			Tuple.of("sort", booksort)
+			);
+
 	private static final ContextualExecutor description = EchoExecutor.of(sender -> Text.of(
 			"&7-Likeを現在地に移動する: /likeop move [like_id]",
 			"&7-Likeを削除する: /likeop delete [like_id]",
@@ -200,7 +305,10 @@ public class LikeOperatorCommand {
 			"&7-プレイヤーのLike作成上限数を書き換える: /likeop limit [player] set [limit]",
 			"&7-プレイヤーのLike作成上限数を引き上げる: /likeop limit [player] add [amount_to_add]",
 			"&7-プレイヤーのLike作成上限数を引き下げる: /likeop limit [player] sub [amount_to_sub]",
-			"&7-コンフィグをリロードする: /likeop reload"
+			"&7-コンフィグをリロードする: /likeop reload",
+			"&7-ブックマークを作成・削除する: /likeop book [create/delete] [book_name]",
+			"&7-ブックマークに対してLikeを追加・削除する: /likeop book [add/remove] [book_name] [like_id]",
+			"&7-ブックマークをソートする: /likeop book sort [book_name] [newest/oldest]"
 			).sendTo(sender));
 	
 					
@@ -214,7 +322,8 @@ public class LikeOperatorCommand {
 				Tuple.of("changeowner", changeowner),
 				Tuple.of("changedata", changedata),
 				Tuple.of("reload", reload),
-				Tuple.of("limit", limit)
+				Tuple.of("limit", limit),
+				Tuple.of("book", book)
 			);
-
+	
 }

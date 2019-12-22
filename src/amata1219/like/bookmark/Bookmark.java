@@ -21,7 +21,7 @@ public class Bookmark {
 	}
 	
 	public Bookmark(String name){
-		this(name, new ArrayList<>(), Order.REGISTRATION_TIME_IN_DESCENDING);
+		this(name, new ArrayList<>(), Order.NEWEST);
 	}
 	
 	public List<Like> likes(){

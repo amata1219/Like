@@ -17,7 +17,7 @@ public class LikeMovingCommand {
 	public static final CommandExecutor executor = ContextualExecutorBuilder.playerCommandBuilder()
 			.parsers(
 				description,
-				ParserTemplates.like(() -> "&c-移動するLikeのIDを指定して下さい")
+				ParserTemplates.like()
 			)
 			.execution(context -> sender -> {
 				Like like = context.arguments.parsed(0);

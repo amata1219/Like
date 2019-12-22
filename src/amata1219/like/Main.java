@@ -130,5 +130,9 @@ public class Main extends JavaPlugin {
 	public LikeLimitDatabase likeLimitDatabase(){
 		return likeLimitDatabase;
 	}
+	
+	public BookmarkDatabase bookmarkDatabase(){
+		return bookmarkDatabase;
+	}
 
 }

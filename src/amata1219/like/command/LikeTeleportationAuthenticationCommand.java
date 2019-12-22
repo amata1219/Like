@@ -13,7 +13,7 @@ public class LikeTeleportationAuthenticationCommand {
 			.parsers(
 				() -> "You don't have like.like",
 				Parser.identity(),
-				ParserTemplates.like(() -> "You don't have like.like")
+				ParserTemplates.like()
 			)
 			.execution(context -> sender -> {
 				String token = context.arguments.parsed(0);
