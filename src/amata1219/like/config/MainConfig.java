@@ -44,11 +44,10 @@ public class MainConfig extends Config {
 	@Override
 	public void load() {
 		FileConfiguration config = config();
-		
 		worlds2aliases.clear();
 		
 		config.getStringList("Map of worlds where like creation is enabled and aliases").stream()
-		.map(s -> s.split(","))
+		.map(s -> s.split(":"))
 		.map(s -> Tuple.of(Maybe.unit(Bukkit.getWorld(s[0])), s[1]))
 		.forEach(t -> t.first.apply(w -> worlds2aliases.put(w, t.second)));
 		
