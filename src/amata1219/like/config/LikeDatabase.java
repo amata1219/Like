@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import org.bukkit.configuration.file.FileConfiguration;
+
 import com.gmail.filoghost.holographicdisplays.object.NamedHologram;
 import com.gmail.filoghost.holographicdisplays.object.NamedHologramManager;
 
@@ -12,24 +14,25 @@ import amata1219.like.Like;
 import amata1219.like.exception.NotImplementedException;
 import amata1219.like.tuplet.Tuple;
 
-public class LikeDatabase extends Yaml {
+public class LikeDatabase extends Config {
 
 	public LikeDatabase() {
 		super("like_data.yml");
 	}
 
 	@Override
-	public void readAll() {
+	public void load() {
 		throw new NotImplementedException();
 	}
 	
-	public Tuple<HashMap<Long, Like>, HashMap<UUID, List<Like>>> load(){
+	public Tuple<HashMap<Long, Like>, HashMap<UUID, List<Like>>> read(){
+		FileConfiguration config = config();
 		HashMap<Long, Like> likes = new HashMap<>();
 		HashMap<UUID, List<Like>> playerLikes = new HashMap<>();
-		for(String path : getKeys(false)){
+		for(String path : config.getKeys(false)){
 			NamedHologram hologram = NamedHologramManager.getHologram(path);
 			long id = Long.parseLong(path);
-			String[] data = getString(path).split(",");
+			String[] data = config.getString(path).split(",");
 			UUID owner = UUID.fromString(data[0]);
 			Like like = new Like(hologram, owner, Integer.parseInt(data[1]));
 			likes.put(id, like);
@@ -40,12 +43,14 @@ public class LikeDatabase extends Yaml {
 	}
 	
 	public void remove(Like like){
-		set(String.valueOf(like.id), null);
+		FileConfiguration config = config();
+		config.set(String.valueOf(like.id), null);
 		update();
 	}
 	
 	public void save(){
-		plugin.likes.forEach((id, like) -> set(String.valueOf(id), like.toString()));
+		FileConfiguration config = config();
+		plugin.likes.forEach((id, like) -> config.set(String.valueOf(id), like.toString()));
 		update();
 	}
 

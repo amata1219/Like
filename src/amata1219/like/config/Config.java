@@ -52,6 +52,11 @@ public abstract class Config {
 		config.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(stream, StandardCharsets.UTF_8)));
 	}
 	
+	public void update(){
+		save();
+		reload();
+	}
+	
 	protected String color(String s){
 		return ChatColor.translateAlternateColorCodes('&', s);
 	}
