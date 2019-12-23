@@ -71,8 +71,8 @@ public class Main extends JavaPlugin {
 	public void onEnable(){
 		plugin = this;
 		
-		Plugin valut = getServer().getPluginManager().getPlugin("Vault");
-		if(!(valut instanceof Vault)) throw new NullPointerException("Not found Vault.");
+		Plugin vault = getServer().getPluginManager().getPlugin("Vault");
+		if(!(vault instanceof Vault)) throw new NullPointerException("Not found Vault.");
 
 		RegisteredServiceProvider<Economy> provider = getServer().getServicesManager().getRegistration(Economy.class);
 		if(provider == null) throw new NullPointerException("Not found Vault.");

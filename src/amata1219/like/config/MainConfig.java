@@ -47,7 +47,7 @@ public class MainConfig extends Yaml {
 		.map(s -> Tuple.of(Maybe.unit(Bukkit.getWorld(s[0])), s[1]))
 		.forEach(t -> t.first.apply(w -> worlds2aliases.put(w, t.second)));
 		
-		Section lines = section("Like holograms'' text lines");
+		Section lines = section("Like holograms' text lines");
 		likeFavoritesText = lines.colored("Favorites");
 		likeDescription = lines.colored("Description");
 		likeUsage = lines.colored("Usage");
