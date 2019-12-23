@@ -94,15 +94,15 @@ public class Main extends JavaPlugin {
 		config = new MainConfig();
 		
 		likeDatabase = new LikeDatabase();
-		Tuple<HashMap<Long, Like>, HashMap<UUID, List<Like>>> maps = likeDatabase.load();
+		Tuple<HashMap<Long, Like>, HashMap<UUID, List<Like>>> maps = likeDatabase.read();
 		maps.first.forEach((id, like) -> likes.put(id, like));
 		
 		playerDatabase = new PlayerDatabase();
-		playerDatabase.load(maps.second).forEach((uuid, data) -> players.put(uuid, data));
+		playerDatabase.read(maps.second).forEach((uuid, data) -> players.put(uuid, data));
 		
 		likeLimitDatabase = new LikeLimitDatabase();
 		bookmarkDatabase = new BookmarkDatabase();
-		bookmarkDatabase.load().forEach((name, bookmark) -> bookmarks.put(name, bookmark));
+		bookmarkDatabase.read().forEach((name, bookmark) -> bookmarks.put(name, bookmark));
 		
 		executors.put("like", LikeCommand.executor);
 		executors.put("likec", LikeCreationCommand.executor);
