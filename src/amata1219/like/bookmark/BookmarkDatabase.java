@@ -1,28 +1,30 @@
 package amata1219.like.bookmark;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.bukkit.configuration.file.FileConfiguration;
+
 import amata1219.like.Like;
-import amata1219.like.config.Yaml;
+import amata1219.like.config.Config;
 import amata1219.like.exception.NotImplementedException;
 
-public class BookmarkDatabase extends Yaml {
+public class BookmarkDatabase extends Config {
 
 	public BookmarkDatabase() {
 		super("bookmark_data.yml");
 	}
 
 	@Override
-	public void readAll() {
+	public void load() {
 		throw new NotImplementedException();
 	}
 	
-	public HashMap<String, Bookmark> load(){
+	public HashMap<String, Bookmark> read(){
+		FileConfiguration config = config();
 		HashMap<String, Bookmark> bookmarks = new HashMap<>();
-		for(String path : getKeys(false)){
-			String data = getString(path);
+		for(String path : config.getKeys(false)){
+			String data = config.getString(path);
 			String[] parts = data.split(":");
 			Order order = Order.values()[Integer.parseInt(parts[0])];
 			ArrayList<Like> likes = new ArrayList<>();
@@ -40,13 +42,15 @@ public class BookmarkDatabase extends Yaml {
 	}
 	
 	public void remove(Bookmark bookmark){
+		FileConfiguration config = config();
 		plugin.bookmarks.remove(bookmark.name);
-		set(bookmark.name, null);
+		config.set(bookmark.name, null);
 		update();
 	}
 	
 	public void save(){
-		plugin.bookmarks.forEach((name, bookmark) -> set(name, bookmark.toString()));
+		FileConfiguration config = config();
+		plugin.bookmarks.forEach((name, bookmark) -> config.set(name, bookmark.toString()));
 		update();
 	}
 
