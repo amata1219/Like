@@ -6,12 +6,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import amata1219.like.Main;
 
-public class Config {
+public abstract class Config {
 	
 	protected final Main plugin = Main.plugin();
 	private FileConfiguration config;
@@ -21,6 +23,7 @@ public class Config {
 	public Config(String name){
 		this.name = name;
 		this.file = new File(plugin.getDataFolder(), name);
+		saveDefault();
 	}
 	
 	public void saveDefault(){
@@ -48,5 +51,15 @@ public class Config {
 		if(stream == null) return;
 		config.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(stream, StandardCharsets.UTF_8)));
 	}
+	
+	protected String color(String s){
+		return ChatColor.translateAlternateColorCodes('&', s);
+	}
+	
+	protected Material material(String s){
+		return Material.valueOf(s);
+	}
+	
+	public abstract void load();
 
 }

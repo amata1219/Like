@@ -1,6 +1,6 @@
 'Map of worlds where like creation is enabled and aliases':
 - "world:main"
-'Like holograms'' text lines':
+'Like holograms text lines':
   'Favorites': "&d&l %favorites% &e&l★"
   'Description': "&6&l%owner%&r&6's Like"
   'Usage': "&6Right click to Like!"
@@ -20,7 +20,7 @@
   'Delete like': "DIAMOND"
   'Cancel like deletion': "DIAMOND"
   'Like': "SUNFLOWER"
-  'Owner''s other likes': "DIAMOND"
+  'Owners other likes': "DIAMOND"
   'Sort by creation date in ascending order': "DIAMOND"
   'Sort by creation date in descending order': "DIAMOND"
   'Sort by favorites in ascending order': "DIAMOND"

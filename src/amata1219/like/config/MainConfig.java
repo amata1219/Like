@@ -6,6 +6,8 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import com.google.common.collect.ImmutableMap;
@@ -19,7 +21,7 @@ import at.pcgamingfreaks.UUIDConverter;
 
 import static amata1219.like.config.MainConfig.IconType.*;
 
-public class MainConfig extends Yaml {
+public class MainConfig extends Config {
 	
 	private final HashMap<World, String> worlds2aliases = Maps.newHashMap();
 	private ImmutableMap<IconType, Material> icons2materials;
@@ -36,57 +38,60 @@ public class MainConfig extends Yaml {
 	
 	public MainConfig(){
 		super("config.yml");
-		readAll();
+		load();
 	}
 	
 	@Override
-	public void readAll() {
+	public void load() {
+		FileConfiguration config = config();
+		
 		worlds2aliases.clear();
-		list("Map of worlds where like creation is enabled and aliases").stream()
+		
+		config.getStringList("Map of worlds where like creation is enabled and aliases").stream()
 		.map(s -> s.split(","))
 		.map(s -> Tuple.of(Maybe.unit(Bukkit.getWorld(s[0])), s[1]))
 		.forEach(t -> t.first.apply(w -> worlds2aliases.put(w, t.second)));
 		
-		Section lines = section("Like holograms' text lines");
-		likeFavoritesText = lines.colored("Favorites");
-		likeDescription = lines.colored("Description");
-		likeUsage = lines.colored("Usage");
+		ConfigurationSection lines = config.getConfigurationSection("Like holograms text lines");
+		likeFavoritesText = color(lines.getString("Favorites"));
+		likeDescription = color(lines.getString("Description"));
+		likeUsage = color(lines.getString("Usage"));
 		
-		tip = colored("Tip");
+		tip = color(config.getString("Tip"));
 		
-		Section icons = section("Icon materials on inventory UI");
+		ConfigurationSection icons = config.getConfigurationSection("Icon materials on inventory UI");
 		icons2materials = new ImmutableMap.Builder<IconType, Material>()
-			.put(FAVORITES, icons.material("Favorites"))
-			.put(CREATION_TIMESTAMP, icons.material("Creation timestamp"))
-			.put(ID, icons.material("ID"))
-			.put(UNFAVORITE, icons.material("Unfavorite"))
-			.put(EDIT_DESCRIPTION, icons.material("Edit description"))
-			.put(GO_TO_LIKE_TELEPORTATION_OR_LIKE_INVITATION_CONFIRMATION_PAGE, icons.material("Go to like teleportation or like invitation confirmation page"))
-			.put(TELEPORT_TO_LIKE, icons.material("Teleport to like"))
-			.put(CANCEL_LIKE_TELEPORTATION, icons.material("Cancel like teleportation"))
-			.put(INVITE_TO_LIKE, icons.material("Invite to like"))
-			.put(CANCEL_LIKE_INVITATION, icons.material("Cancel like invitation"))
-			.put(GO_TO_LIKE_DELETION_PAGE, icons.material("Go to like deletion page"))
-			.put(DELETE_LIKE, icons.material("Delete like"))
-			.put(CANCEL_LIKE_DELETION, icons.material("Cancel like deletion"))
-			.put(LIKE, icons.material("Like"))
-			.put(OWNERS_OTHER_LIKES, icons.material("Owner''s other likes"))
-			.put(SORT_BY_CREATION_DATE_IN_ASCENDING_ORDER, icons.material("Sort by creation date in ascending order"))
-			.put(SORT_BY_CREATION_DATE_IN_DESCENDING_ORDER, icons.material("Sort by creation date in descending order"))
-			.put(SORT_BY_FAVORITES_IN_ASCENDING_ORDER, icons.material("Sort by favorites in ascending order"))
-			.put(SORT_BY_FAVORITES_IN_DESCENDING_ORDER, icons.material("Sort by favorites in descending order"))
+			.put(FAVORITES, material(icons.getString("Favorites")))
+			.put(CREATION_TIMESTAMP, material(icons.getString("Creation timestamp")))
+			.put(ID, material(icons.getString("ID")))
+			.put(UNFAVORITE, material(icons.getString("Unfavorite")))
+			.put(EDIT_DESCRIPTION, material(icons.getString("Edit description")))
+			.put(GO_TO_LIKE_TELEPORTATION_OR_LIKE_INVITATION_CONFIRMATION_PAGE, material(icons.getString("Go to like teleportation or like invitation confirmation page")))
+			.put(TELEPORT_TO_LIKE, material(icons.getString("Teleport to like")))
+			.put(CANCEL_LIKE_TELEPORTATION, material(icons.getString("Cancel like teleportation")))
+			.put(INVITE_TO_LIKE, material(icons.getString("Invite to like")))
+			.put(CANCEL_LIKE_INVITATION, material(icons.getString("Cancel like invitation")))
+			.put(GO_TO_LIKE_DELETION_PAGE, material(icons.getString("Go to like deletion page")))
+			.put(DELETE_LIKE, material(icons.getString("Delete like")))
+			.put(CANCEL_LIKE_DELETION, material(icons.getString("Cancel like deletion")))
+			.put(LIKE, material(icons.getString("Like")))
+			.put(OWNERS_OTHER_LIKES, material(icons.getString("Owners other likes")))
+			.put(SORT_BY_CREATION_DATE_IN_ASCENDING_ORDER, material(icons.getString("Sort by creation date in ascending order")))
+			.put(SORT_BY_CREATION_DATE_IN_DESCENDING_ORDER, material(icons.getString("Sort by creation date in descending order")))
+			.put(SORT_BY_FAVORITES_IN_ASCENDING_ORDER, material(icons.getString("Sort by favorites in ascending order")))
+			.put(SORT_BY_FAVORITES_IN_DESCENDING_ORDER, material(icons.getString("Sort by favorites in descending order")))
 			.build();
 		
-		numberOfSecondsOfLikeCreationCooldown = getInt("Number of seconds of like creation cooldown");
+		numberOfSecondsOfLikeCreationCooldown = config.getInt("Number of seconds of like creation cooldown");
 		
-		Section teleportation = section("Teleportation");
-		teleportationCosts = teleportation.doub1e("Costs");
-		teleportationMessage = teleportation.colored("Message");
+		ConfigurationSection teleportation = config.getConfigurationSection("Teleportation");
+		teleportationCosts = teleportation.getDouble("Costs");
+		teleportationMessage = color(teleportation.getString("Message"));
 		
-		Section invitation = section("Invitation");
-		invitationCosts = invitation.doub1e("Costs");
-		radiusOfInvitationScope = invitation.integer("Radius of scope");
-		invitationMessage = invitation.colored("Message");
+		ConfigurationSection invitation = config.getConfigurationSection("Invitation");
+		invitationCosts = invitation.getDouble("Costs");
+		radiusOfInvitationScope = invitation.getInt("Radius of scope");
+		invitationMessage = color(invitation.getString("Message"));
 	}
 	
 	public boolean canLikesBeCreatedIn(World world){
