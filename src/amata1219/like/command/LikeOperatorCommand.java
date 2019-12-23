@@ -150,7 +150,7 @@ public class LikeOperatorCommand {
 	private static final ContextualExecutor reload = ContextualExecutorBuilder.playerCommandBuilder().execution(context -> sender -> {
 		MainConfig config = Main.plugin().config();
 		config.reload();
-		config.readAll();
+		config.load();
 		Text.of("&a-コンフィグを再読み込みしました。").sendTo(sender);
 	}).build();
 	
