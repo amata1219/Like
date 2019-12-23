@@ -72,10 +72,10 @@ public class Main extends JavaPlugin {
 		plugin = this;
 		
 		Plugin valut = getServer().getPluginManager().getPlugin("Vault");
-		if(!(valut instanceof Vault)) new NullPointerException("Not found Vault.");
+		if(!(valut instanceof Vault)) throw new NullPointerException("Not found Vault.");
 
 		RegisteredServiceProvider<Economy> provider = getServer().getServicesManager().getRegistration(Economy.class);
-		if(provider == null) new NullPointerException("Not found Vault.");
+		if(provider == null) throw new NullPointerException("Not found Vault.");
 
 		economy = provider.getProvider();
 		

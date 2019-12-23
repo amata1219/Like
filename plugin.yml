@@ -1,7 +1,7 @@
 name: Like
 main: amata1219.like.Main
 version: 1.1.0
-depend: [HolographicDisplays, Vault, Essentials, PCGF_PluginLib]
+depend: [HolographicDisplays, Vault, PCGF_PluginLib]
 author: amata1219(Twitter@amata1219)
 
 default-permission-message: &denied You don't have <permission>
@@ -16,6 +16,12 @@ commands:
     permission: like.like
     permission-message: *denied
   likes:
+    permission: like.like
+    permission-message: *denied
+  liketoken:
+    permission: like.like
+    permission-message: *denied
+  likeb:
     permission: like.like
     permission-message: *denied
   likeop:
