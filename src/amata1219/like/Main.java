@@ -47,10 +47,6 @@ public class Main extends JavaPlugin {
 	public static final String INVITATION_TOKEN = UUID.randomUUID().toString();
 	public static final String OPERATOR_PERMISSION = "like.likeop";
 	
-	public static Main plugin(){
-		return plugin;
-	}
-	
 	private Economy economy;
 	
 	private final HashMap<String, CommandExecutor> executors = new HashMap<>();
@@ -129,6 +125,10 @@ public class Main extends JavaPlugin {
 		});
 
 		HandlerList.unregisterAll(this);
+	}
+	
+	public static Main plugin(){
+		return plugin;
 	}
 	
 	@Override
