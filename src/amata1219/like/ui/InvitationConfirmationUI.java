@@ -20,10 +20,12 @@ import amata1219.like.masquerade.text.Text;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.milkbowl.vault.economy.Economy;
 
 public class InvitationConfirmationUI implements InventoryUI {
 	
 	private final Main plugin = Main.plugin();
+	private final Economy economy = plugin.economy();
 	private final MainConfig config = plugin.config();
 	private final Like like;
 	private final InventoryUI previous;
@@ -67,6 +69,12 @@ public class InvitationConfirmationUI implements InventoryUI {
 				});
 				
 				s.onClick(e -> {
+					double costs = config.invitationCosts();
+					if(!economy.has(p, costs)){
+						Text.of("&a-所持金が足りません。招待するには%sMP必要です。").apply(costs).sendTo(p);
+						return;
+					}
+					
 					final int radius = config.radiusOfInvitationScope();
 					List<Player> playersNearby = p.getNearbyEntities(radius, radius, radius).stream()
 							.filter(entity -> entity.getType() == EntityType.PLAYER)
@@ -94,7 +102,7 @@ public class InvitationConfirmationUI implements InventoryUI {
 						invitee.spigot().sendMessage(component);
 					}));
 					
-					plugin.economy().withdrawPlayer(p, config.invitationCosts());
+					economy.withdrawPlayer(p, costs);
 					
 					Text.of("&a-%s人のプレイヤーを招待しました。").apply(playersNearby.size()).accept(p::sendMessage);
 				});

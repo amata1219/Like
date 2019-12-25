@@ -74,9 +74,14 @@ public class TeleportationConfirmationUI implements InventoryUI {
 				});
 				
 				s.onClick(e -> {
-					p.teleport(like.hologram.getLocation());
-					economy.withdrawPlayer(p, config.teleportationCosts());
+					double costs = config.teleportationCosts();
+					if(!economy.has(p, costs)){
+						Text.of("&a-所持金が足りません。テレポートするには%sMP必要です。").apply(costs).sendTo(p);
+						return;
+					}
+					economy.withdrawPlayer(p, costs);
 					economy.depositPlayer(Bukkit.getOfflinePlayer(like.owner()), config.teleportationCosts());
+					p.teleport(like.hologram.getLocation());
 					config.teleportationText().apply(like).accept(p::sendMessage);
 				});
 			}, 4);
@@ -88,6 +93,12 @@ public class TeleportationConfirmationUI implements InventoryUI {
 				});
 				
 				s.onClick(e -> {
+					double costs = config.invitationCosts();
+					if(!economy.has(p, costs)){
+						Text.of("&a-所持金が足りません。招待するには%sMP必要です。").apply(costs).sendTo(p);
+						return;
+					}
+					
 					final int radius = config.radiusOfInvitationScope();
 					List<Player> playersNearby = p.getNearbyEntities(radius, radius, radius).stream()
 							.filter(entity -> entity.getType() == EntityType.PLAYER)
@@ -115,7 +126,7 @@ public class TeleportationConfirmationUI implements InventoryUI {
 						invitee.spigot().sendMessage(component);
 					}));
 					
-					plugin.economy().withdrawPlayer(p, config.invitationCosts());
+					plugin.economy().withdrawPlayer(p, costs);
 					
 					Text.of("&a-%s人のプレイヤーを招待しました。").apply(playersNearby.size()).accept(p::sendMessage);
 				});
