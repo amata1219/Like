@@ -10,6 +10,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.plugin.Plugin;
@@ -28,6 +29,8 @@ import amata1219.like.command.LikeTeleportationAuthenticationCommand;
 import amata1219.like.config.LikeDatabase;
 import amata1219.like.config.LikeLimitDatabase;
 import amata1219.like.config.MainConfig;
+import amata1219.like.listener.CreatePlayerDataListener;
+import amata1219.like.listener.EditLikeDescriptionListener;
 import amata1219.like.masquerade.dsl.component.Layout;
 import amata1219.like.masquerade.enchantment.GleamEnchantment;
 import amata1219.like.masquerade.listener.UIListener;
@@ -85,20 +88,24 @@ public class Main extends JavaPlugin {
 			acceptingNew.set(null, false);
 		}
 		
-		getServer().getPluginManager().registerEvents(new UIListener(), this);
+		registerEventListeners(
+			new UIListener(),
+			new CreatePlayerDataListener(),
+			new EditLikeDescriptionListener()
+		);
 		
 		config = new MainConfig();
 		
 		likeDatabase = new LikeDatabase();
-		Tuple<HashMap<Long, Like>, HashMap<UUID, List<Like>>> maps = likeDatabase.read();
+		Tuple<HashMap<Long, Like>, HashMap<UUID, List<Like>>> maps = likeDatabase.readAll();
 		maps.first.forEach((id, like) -> likes.put(id, like));
 		
 		playerDatabase = new PlayerDatabase();
-		playerDatabase.read(maps.second).forEach((uuid, data) -> players.put(uuid, data));
+		playerDatabase.readAll(maps.second).forEach((uuid, data) -> players.put(uuid, data));
 		
 		likeLimitDatabase = new LikeLimitDatabase();
 		bookmarkDatabase = new BookmarkDatabase();
-		bookmarkDatabase.read().forEach((name, bookmark) -> bookmarks.put(name, bookmark));
+		bookmarkDatabase.readAll().forEach((name, bookmark) -> bookmarks.put(name, bookmark));
 		
 		executors.put("like", LikeCommand.executor);
 		executors.put("likec", LikeCreationCommand.executor);
@@ -111,10 +118,10 @@ public class Main extends JavaPlugin {
 	
 	@Override
 	public void onDisable(){
-		bookmarkDatabase.save();
-		likeLimitDatabase.save();
-		playerDatabase.save();
-		likeDatabase.save();
+		bookmarkDatabase.writeAll();
+		likeLimitDatabase.update();
+		playerDatabase.writeAll();
+		likeDatabase.writeAll();
 		
 		getServer().getOnlinePlayers().forEach(player -> {
 			Maybe.unit(player.getOpenInventory())
@@ -134,6 +141,10 @@ public class Main extends JavaPlugin {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args){
 		return executors.get(command.getName()).onCommand(sender, command, label, args);
+	}
+	
+	private void registerEventListeners(Listener... listeners){
+		for(Listener listener : listeners) getServer().getPluginManager().registerEvents(listener, this);
 	}
 	
 	public Economy economy(){

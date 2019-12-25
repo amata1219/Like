@@ -174,7 +174,7 @@ public class LikeOperatorCommand {
 				String operation = args.parsed(1);
 				int operand = args.parsed(2);
 				LikeLimitDatabase database = Main.plugin().likeLimitDatabase();
-				int limit = database.limit(uuid);
+				int limit = database.read(uuid);
 				switch(operation){
 				case "set":
 					limit = operand;
@@ -189,7 +189,7 @@ public class LikeOperatorCommand {
 					limitdescription.sendTo(sender);
 					return;
 				}
-				database.set(uuid, limit);
+				database.write(uuid, limit);
 				database.update();
 				Text.of("&a-%sのLike作成上限数を%sに設定しました。").apply(player.getName(), limit).sendTo(sender);
 			}).build();

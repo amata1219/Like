@@ -20,7 +20,7 @@ public class BookmarkDatabase extends Config {
 		throw new NotImplementedException();
 	}
 	
-	public HashMap<String, Bookmark> read(){
+	public HashMap<String, Bookmark> readAll(){
 		FileConfiguration config = config();
 		HashMap<String, Bookmark> bookmarks = new HashMap<>();
 		for(String path : config.getKeys(false)){
@@ -48,7 +48,7 @@ public class BookmarkDatabase extends Config {
 		update();
 	}
 	
-	public void save(){
+	public void writeAll(){
 		FileConfiguration config = config();
 		plugin.bookmarks.forEach((name, bookmark) -> config.set(name, bookmark.toString()));
 		update();

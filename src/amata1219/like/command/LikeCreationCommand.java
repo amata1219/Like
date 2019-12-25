@@ -31,7 +31,7 @@ public class LikeCreationCommand {
 		
 		UUID uuid = sender.getUniqueId();
 		PlayerData data = plugin.players.get(uuid);
-		if(data.likes.size() >= plugin.likeLimitDatabase().limit(uuid)){
+		if(data.likes.size() >= plugin.likeLimitDatabase().read(uuid)){
 			Text.of("&c-作成上限に達している為これ以上Likeは作成出来ません。").accept(sender::sendMessage);
 			return;
 		}

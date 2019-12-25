@@ -24,7 +24,7 @@ public class PlayerDatabase extends Config {
 		throw new NotImplementedException();
 	}
 	
-	public HashMap<UUID, PlayerData> read(HashMap<UUID, List<Like>> playerLikes){
+	public HashMap<UUID, PlayerData> readAll(HashMap<UUID, List<Like>> playerLikes){
 		FileConfiguration config = config();
 		HashMap<UUID, PlayerData> players = new HashMap<>();
 		for(String path : config.getKeys(false)){
@@ -40,7 +40,7 @@ public class PlayerDatabase extends Config {
 		return players;
 	}
 	
-	public void save(){
+	public void writeAll(){
 		FileConfiguration config = config();
 		plugin.players.forEach((uuid, data) -> {
 			String text = data.favoriteLikes.values().stream()

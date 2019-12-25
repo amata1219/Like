@@ -25,7 +25,7 @@ public class LikeDatabase extends Config {
 		throw new NotImplementedException();
 	}
 	
-	public Tuple<HashMap<Long, Like>, HashMap<UUID, List<Like>>> read(){
+	public Tuple<HashMap<Long, Like>, HashMap<UUID, List<Like>>> readAll(){
 		FileConfiguration config = config();
 		HashMap<Long, Like> likes = new HashMap<>();
 		HashMap<UUID, List<Like>> playerLikes = new HashMap<>();
@@ -48,7 +48,7 @@ public class LikeDatabase extends Config {
 		update();
 	}
 	
-	public void save(){
+	public void writeAll(){
 		FileConfiguration config = config();
 		plugin.likes.forEach((id, like) -> config.set(String.valueOf(id), like.toString()));
 		update();
