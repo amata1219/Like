@@ -21,7 +21,7 @@ public class LikeCommand {
 			"Likeを作成する: /like create",
 			"&7-お気に入りのLikeの一覧を開く: /likel",
 			"&7-作成したLikeの一覧を開く: /likel me"
-			));
+			).sendTo(sender));
 	
 	public static final CommandExecutor executor = BranchedExecutor.of(
 			Maybe.Some(description),

@@ -31,10 +31,13 @@ public class PlayerDatabase extends Config {
 			PlayerData data = new PlayerData();
 			UUID uuid = UUID.fromString(path);
 			playerLikes.getOrDefault(uuid, Collections.emptyList()).forEach(data::registerLike);
-			Arrays.stream(config.getString(uuid.toString()).split(","))
+			String[] likes = config.getString(uuid.toString()).split(",");
+			if((likes.length == 1 && likes[0].isEmpty()) || likes.length > 1){
+				Arrays.stream(likes)
 				.map(Long::valueOf)
 				.map(plugin.likes::get)
 				.forEach(data::favoriteLike);
+			}
 			players.put(uuid, data);
 		}
 		return players;

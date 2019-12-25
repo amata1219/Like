@@ -29,7 +29,7 @@ public class Like {
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy.MM.dd (E) HH:mm:ss");
 	private static final Method<CraftTouchableLine, Void> setTouchHandler = Method.of_(
 		CraftTouchableLine.class,
-		"setTouchhandler", 
+		"setTouchHandler", 
 		TouchHandler.class, World.class, double.class, double.class, double.class
 	);
 			
