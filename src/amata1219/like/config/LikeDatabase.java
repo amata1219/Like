@@ -29,7 +29,10 @@ public class LikeDatabase extends Config {
 		FileConfiguration config = config();
 		HashMap<Long, Like> likes = new HashMap<>();
 		HashMap<UUID, List<Like>> playerLikes = new HashMap<>();
+		System.out.println("readall -> " + NamedHologramManager.size());
+		NamedHologramManager.getHolograms().forEach(System.out::println);
 		for(String path : config.getKeys(false)){
+			System.out.println("path: " + path);
 			NamedHologram hologram = NamedHologramManager.getHologram(path);
 			long id = Long.parseLong(path);
 			String[] data = config.getString(path).split(",");

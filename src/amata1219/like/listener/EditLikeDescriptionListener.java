@@ -38,7 +38,7 @@ public class EditLikeDescriptionListener implements Listener {
 					like.setDescription(ChatColor.translateAlternateColorCodes('&', message));
 					player.sendMessage(Text.of("&a-Like(%s)の表示内容を編集しました。").format(like.id));
 				}
-				plugin.descriptionEditors.remove(player);
+				plugin.descriptionEditors.remove(uuid);
 			})
 			.onFailure(player::sendMessage);
 		});

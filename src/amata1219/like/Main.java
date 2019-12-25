@@ -96,17 +96,6 @@ public class Main extends JavaPlugin {
 		
 		config = new MainConfig();
 		
-		likeDatabase = new LikeDatabase();
-		Tuple<HashMap<Long, Like>, HashMap<UUID, List<Like>>> maps = likeDatabase.readAll();
-		maps.first.forEach((id, like) -> likes.put(id, like));
-		
-		playerDatabase = new PlayerDatabase();
-		playerDatabase.readAll(maps.second).forEach((uuid, data) -> players.put(uuid, data));
-		
-		likeLimitDatabase = new LikeLimitDatabase();
-		bookmarkDatabase = new BookmarkDatabase();
-		bookmarkDatabase.readAll().forEach((name, bookmark) -> bookmarks.put(name, bookmark));
-		
 		executors.put("like", LikeCommand.executor);
 		executors.put("likec", LikeCreationCommand.executor);
 		executors.put("likel", LikeListCommand.executor);
@@ -114,6 +103,19 @@ public class Main extends JavaPlugin {
 		executors.put("liketoken", LikeTeleportationAuthenticationCommand.executor);
 		executors.put("likeb", BookmarkCommand.executor);
 		executors.put("likeop", LikeOperatorCommand.executor);
+		
+		getServer().getScheduler().runTask(this, () -> {
+			likeDatabase = new LikeDatabase();
+			Tuple<HashMap<Long, Like>, HashMap<UUID, List<Like>>> maps = likeDatabase.readAll();
+			maps.first.forEach((id, like) -> likes.put(id, like));
+			
+			playerDatabase = new PlayerDatabase();
+			playerDatabase.readAll(maps.second).forEach((uuid, data) -> players.put(uuid, data));
+			
+			likeLimitDatabase = new LikeLimitDatabase();
+			bookmarkDatabase = new BookmarkDatabase();
+			bookmarkDatabase.readAll().forEach((name, bookmark) -> bookmarks.put(name, bookmark));
+		});
 	}
 	
 	@Override

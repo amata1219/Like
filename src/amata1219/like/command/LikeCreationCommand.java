@@ -38,6 +38,7 @@ public class LikeCreationCommand {
 		
 		NamedHologram hologram = new NamedHologram(sender.getLocation().add(0, 2, 0), String.valueOf(System.currentTimeMillis()));
 		NamedHologramManager.addHologram(hologram);
+		hologram.refreshAll();
 		
 		Like like = new Like(hologram, uuid);
 		like.save(true);
