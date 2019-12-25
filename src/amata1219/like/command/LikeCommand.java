@@ -19,9 +19,9 @@ public class LikeCommand {
 	
 	private static final ContextualExecutor description = EchoExecutor.of(sender -> Text.of(
 			"Likeを作成する: /like create",
-			"&7-お気に入りのLikeの一覧を開く: /likel",
-			"&7-作成したLikeの一覧を開く: /likel me"
-			).sendTo(sender));
+			"&7-お気に入りのLikeの一覧を開く: /like list",
+			"&7-作成したLikeの一覧を開く: /like list me"
+	).sendTo(sender));
 	
 	public static final CommandExecutor executor = BranchedExecutor.of(
 			Maybe.Some(description),
@@ -29,6 +29,6 @@ public class LikeCommand {
 			Tuple.of("create", LikeCreationCommand.executor),
 			Tuple.of("list", LikeListCommand.executor),
 			Tuple.of("status", status)
-			);
-			
+	);
+
 }

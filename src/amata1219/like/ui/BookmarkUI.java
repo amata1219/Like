@@ -30,7 +30,7 @@ public class BookmarkUI extends AbstractMultipleUI {
 		
 		final int start = index * 45;
 		final int remainder = likes.size() % 45;
-		IntStream.range(start, start + (remainder == 0 ? 45 : remainder)).forEach(slotIndex -> {
+		IntStream.range(start, start + (remainder != 0 ? remainder : likes.isEmpty() ? 0 : 45)).forEach(slotIndex -> {
 			l.put(s -> {
 				final Like like = likes.get(slotIndex);
 				s.icon(i -> {

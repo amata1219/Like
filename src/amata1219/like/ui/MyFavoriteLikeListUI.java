@@ -14,6 +14,11 @@ import amata1219.like.masquerade.text.Text;
 import at.pcgamingfreaks.UUIDConverter;
 
 public class MyFavoriteLikeListUI extends AbstractSortableLikeListUI {
+	
+	public static void main(String[] args){
+		System.out.println("test");
+		IntStream.range(0, 0).forEach(System.out::println);
+	}
 
 	public MyFavoriteLikeListUI(UUID owner) {
 		super(owner);
@@ -32,7 +37,7 @@ public class MyFavoriteLikeListUI extends AbstractSortableLikeListUI {
 		
 		final int start = index * 45;
 		final int remainder = likes.size() % 45;
-		IntStream.range(start, start + (remainder == 0 ? 45 : remainder)).forEach(slotIndex -> {
+		IntStream.range(start, start + (remainder != 0 ? remainder : likes.isEmpty() ? 0 : 45)).forEach(slotIndex -> {
 			l.put(s -> {
 				final Like like = likes.get(slotIndex);
 				s.icon(i -> {
