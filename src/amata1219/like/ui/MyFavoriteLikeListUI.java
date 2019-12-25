@@ -14,11 +14,6 @@ import amata1219.like.masquerade.text.Text;
 import at.pcgamingfreaks.UUIDConverter;
 
 public class MyFavoriteLikeListUI extends AbstractSortableLikeListUI {
-	
-	public static void main(String[] args){
-		System.out.println("test");
-		IntStream.range(0, 0).forEach(System.out::println);
-	}
 
 	public MyFavoriteLikeListUI(UUID owner) {
 		super(owner);

@@ -15,7 +15,7 @@ import amata1219.like.masquerade.text.Text;
 public abstract class AbstractSortableLikeListUI extends AbstractMultipleUI {
 	
 	protected final UUID owner;
-	protected Order order = Order.CREATION_TIME_IN_ASCENDING;
+	protected Order order = Order.CREATION_TIME_IN_DESCENDING;
 	
 	protected AbstractSortableLikeListUI(UUID owner){
 		this.owner = owner;

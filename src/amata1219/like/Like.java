@@ -183,7 +183,7 @@ public class Like {
 		Location loc = hologram.getLocation();
 		loc.setPitch(90.0F);
 		for(int i = 0; i < 3; i++){
-			CraftTouchableLine line = (CraftTouchableLine) hologram.getLine(0);
+			CraftTouchableLine line = (CraftTouchableLine) hologram.getLine(i);
 			setTouchHandler.invoke(line, handler, loc.getWorld(), loc.getX(), loc.getY() - line.getHeight() * (3 - i), loc.getZ());
 		}
 	}

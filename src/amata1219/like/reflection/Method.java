@@ -23,6 +23,7 @@ public class Method<T, R> {
 	
 	private Method(java.lang.reflect.Method method){
 		this.method = method;
+		this.method.setAccessible(true);
 	}
 	
 	@SuppressWarnings("unchecked")

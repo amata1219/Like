@@ -59,7 +59,6 @@ public class MainConfig extends Config {
 		tip = color(config.getString("Tip"));
 		
 		ConfigurationSection icons = config.getConfigurationSection("Icon materials on inventory UI");
-		System.out.println(icons.getString("Favorites"));
 		icons2materials = new ImmutableMap.Builder<IconType, Material>()
 			.put(FAVORITES, material(icons.getString("Favorites")))
 			.put(CREATION_TIMESTAMP, material(icons.getString("Creation timestamp")))

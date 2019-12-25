@@ -12,6 +12,7 @@ import amata1219.like.config.MainConfig;
 import amata1219.like.masquerade.dsl.InventoryUI;
 import amata1219.like.masquerade.dsl.component.Layout;
 import amata1219.like.masquerade.item.Skull;
+import amata1219.like.masquerade.option.Lines;
 import amata1219.like.masquerade.text.Text;
 
 public abstract class AbstractMultipleUI implements InventoryUI {
@@ -23,7 +24,7 @@ public abstract class AbstractMultipleUI implements InventoryUI {
 	@Override
 	public Function<Player, Layout> layout(){
 		List<Like> likes = likes();
-		return build(Math.min(likes.size() - (index * 45), 45), (p, l) -> {
+		return build(Lines.x6, (p, l) -> {
 			l.defaultSlot(s -> {
 				s.icon(i -> {
 					i.material = Material.LIGHT_GRAY_STAINED_GLASS_PANE;

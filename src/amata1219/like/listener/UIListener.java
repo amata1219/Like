@@ -1,4 +1,4 @@
-package amata1219.like.masquerade.listener;
+package amata1219.like.listener;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -25,7 +25,9 @@ public class UIListener implements Listener {
 	public void onClick(InventoryClickEvent event){
 		extractLayout(event.getInventory()).apply(l -> {
 			event.setCancelled(true);
-			l.fire(new ClickEvent(event));
+			ClickEvent e = new ClickEvent(event);
+			l.fire(e);
+			l.slotAt(event.getSlot()).fire(e);
 		});
 	}
 
