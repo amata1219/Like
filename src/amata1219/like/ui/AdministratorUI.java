@@ -80,6 +80,13 @@ public class AdministratorUI implements InventoryUI {
 					i.material = config.material(IconType.UNFAVORITE);
 					i.displayName = Text.color("&c-お気に入りの解除");
 				});
+				
+				s.onClick(e -> {
+					like.decrementFavorites();
+					plugin.players.get(p.getUniqueId()).unfavoriteLike(like);
+					p.closeInventory();
+					Text.of("&c-お気に入りを解除しました。").sendTo(p);
+				});
 			}, 6);
 			
 			l.put(s -> {
@@ -114,7 +121,7 @@ public class AdministratorUI implements InventoryUI {
 				});
 			}, 9);
 			
-			AtomicInteger slotIndex = new AtomicInteger(10);
+			AtomicInteger slotIndex = new AtomicInteger(19);
 			plugin.players.get(like.owner()).likes.values().stream()
 			.filter(like -> like != this.like)
 			.sorted(Comparator.comparing(Like::favorites).reversed())

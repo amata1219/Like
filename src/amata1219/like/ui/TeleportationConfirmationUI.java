@@ -41,7 +41,7 @@ public class TeleportationConfirmationUI implements InventoryUI {
 
 	@Override
 	public Function<Player, Layout> layout() {
-		return build(Lines.x2, (p, l) -> {
+		return build(Lines.x3, (p, l) -> {
 			l.title = "テレポートと招待の実行確認画面";
 			
 			l.defaultSlot(s -> {
@@ -149,7 +149,7 @@ public class TeleportationConfirmationUI implements InventoryUI {
 				});
 			}, 9);
 			
-			AtomicInteger slotIndex = new AtomicInteger(10);
+			AtomicInteger slotIndex = new AtomicInteger(19);
 			plugin.players.get(like.owner()).likes.values().stream()
 			.filter(like -> like != this.like)
 			.sorted(Comparator.comparing(Like::favorites).reversed())
