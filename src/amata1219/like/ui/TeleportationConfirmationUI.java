@@ -54,7 +54,7 @@ public class TeleportationConfirmationUI implements InventoryUI {
 			l.put(s -> {
 				s.icon(i -> {
 					i.material = config.material(IconType.LIKE);
-					i.displayName = " ";
+					i.displayName = Text.of("&a&l-%s").format(like.id);
 					i.lore(
 						Text.of("&7-%s").format(like.description()),
 						"",
@@ -89,7 +89,7 @@ public class TeleportationConfirmationUI implements InventoryUI {
 			l.put(s -> {
 				s.icon(i -> {
 					i.material = config.material(IconType.GO_TO_LIKE_TELEPORTATION_OR_LIKE_INVITATION_CONFIRMATION_PAGE);
-					i.displayName = Text.of("このLikeに近くのプレイヤーを招待する！ (%sMP)").format(config.invitationCosts());
+					i.displayName = Text.of("&a-このLikeに近くのプレイヤーを招待する！ (%sMP)").format(config.invitationCosts());
 				});
 				
 				s.onClick(e -> {
@@ -157,7 +157,7 @@ public class TeleportationConfirmationUI implements InventoryUI {
 				l.put(s -> {
 					s.icon(i -> {
 						i.material = config.material(IconType.LIKE);
-						i.displayName = " ";
+						i.displayName = Text.of("&a&l-%s").format(like.id);
 						i.lore(
 							Text.of("&7-%s").format(like.description()),
 							"",
