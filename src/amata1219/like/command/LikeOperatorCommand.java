@@ -216,7 +216,7 @@ public class LikeOperatorCommand {
 					return;
 				}
 				bookmarks.put(name, new Bookmark(name));
-				Text.of("&c-ブックマーク(%s)を作成しました。").apply(name).sendTo(sender);
+				Text.of("&a-ブックマーク(%s)を作成しました。").apply(name).sendTo(sender);
 			}).build();
 	
 	private static final ContextualExecutor bookdeletion = ContextualExecutorBuilder.playerCommandBuilder()
@@ -282,7 +282,7 @@ public class LikeOperatorCommand {
 				Bookmark bookmark = context.arguments.parsed(0);
 				Order order = context.arguments.parsed(1);
 				bookmark.setOrder(order);
-				Text.of("&c-ブックマーク(%s)のLike表示順を%sにしました。").apply(bookmark.name, order.toString().toLowerCase()).sendTo(sender);
+				Text.of("&a-ブックマーク(%s)のLike表示順を%sにしました。").apply(bookmark.name, order.toString().toLowerCase()).sendTo(sender);
 			}).build();
 	
 	private static final ContextualExecutor book = BranchedExecutor.of(

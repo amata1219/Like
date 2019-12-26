@@ -45,7 +45,7 @@ public class LikeEditingUI implements InventoryUI {
 					String playerName = UUIDConverter.getNameFromUUID(owner);
 					i.displayName = Text.of("&a-%s").format(playerName);
 				});
-			}, 0);
+			}, 1);
 			
 			l.put(s -> {
 				s.icon(i -> {
@@ -65,8 +65,11 @@ public class LikeEditingUI implements InventoryUI {
 			l.put(s -> {
 				s.icon(i -> {
 					i.material = config.material(IconType.ID);
-					i.displayName = Text.of("&a-管理ID-&7-:-&f %s").format(like.id);
+					i.displayName = Text.of("&a-ID-&7-:-&f %s").format(like.id);
+					i.lore(Text.color("&7-クリックするとチャット欄にIDを表示します。"));
 				});
+				
+				s.onClick(e -> Text.of("&7-ID > %s").apply(like.id).sendTo(p));
 			}, 5);
 			
 			l.put(s -> {

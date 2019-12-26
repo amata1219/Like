@@ -69,7 +69,10 @@ public class AdministratorUI implements InventoryUI {
 				s.icon(i -> {
 					i.material = config.material(IconType.ID);
 					i.displayName = Text.of("&a-ID-&7-:-&f %s").format(like.id);
+					i.lore(Text.color("&7-クリックするとチャット欄にIDを表示します。"));
 				});
+				
+				s.onClick(e -> Text.of("&7-ID > %s").apply(like.id).sendTo(p));
 			}, 5);
 			
 			l.put(s -> {
