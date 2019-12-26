@@ -104,7 +104,7 @@ public class Main extends JavaPlugin {
 		executors.put("likeb", BookmarkCommand.executor);
 		executors.put("likeop", LikeOperatorCommand.executor);
 		
-		getServer().getScheduler().runTask(this, () -> {
+		getServer().getScheduler().runTaskLater(this, () -> {
 			likeDatabase = new LikeDatabase();
 			Tuple<HashMap<Long, Like>, HashMap<UUID, List<Like>>> maps = likeDatabase.readAll();
 			maps.first.forEach((id, like) -> likes.put(id, like));
@@ -115,7 +115,7 @@ public class Main extends JavaPlugin {
 			likeLimitDatabase = new LikeLimitDatabase();
 			bookmarkDatabase = new BookmarkDatabase();
 			bookmarkDatabase.readAll().forEach((name, bookmark) -> bookmarks.put(name, bookmark));
-		});
+		}, 5);
 	}
 	
 	@Override

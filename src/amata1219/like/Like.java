@@ -151,6 +151,7 @@ public class Like {
 		AsyncTask.define(() -> plugin.players.values().forEach(data -> data.unfavoriteLike(this))).execute();
 		plugin.bookmarks.values().forEach(bookmark -> bookmark.likes.remove(this));
 		plugin.likes.remove(id);
+		plugin.likeDatabase().remove(this);
 		hologram.delete();
 		NamedHologramManager.removeHologram(hologram);
 		HologramDatabase.deleteHologram(hologram.getName());

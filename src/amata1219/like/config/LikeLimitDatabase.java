@@ -18,7 +18,6 @@ public class LikeLimitDatabase extends Config {
 	}
 	
 	public int read(UUID uuid){
-		FileConfiguration config = config();
 		String path = uuid.toString();
 		if(!config.contains(path)) config.set(path, config.getInt("Default"));
 		return config.getInt(path);

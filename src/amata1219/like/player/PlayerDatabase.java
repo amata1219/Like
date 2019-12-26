@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.bukkit.configuration.file.FileConfiguration;
-
 import amata1219.like.Like;
 import amata1219.like.config.Config;
 import amata1219.like.exception.NotImplementedException;
@@ -25,7 +23,6 @@ public class PlayerDatabase extends Config {
 	}
 	
 	public HashMap<UUID, PlayerData> readAll(HashMap<UUID, List<Like>> playerLikes){
-		FileConfiguration config = config();
 		HashMap<UUID, PlayerData> players = new HashMap<>();
 		for(String path : config.getKeys(false)){
 			PlayerData data = new PlayerData();
@@ -44,7 +41,6 @@ public class PlayerDatabase extends Config {
 	}
 	
 	public void writeAll(){
-		FileConfiguration config = config();
 		plugin.players.forEach((uuid, data) -> {
 			String text = data.favoriteLikes.values().stream()
 					.map(l -> l.id)
