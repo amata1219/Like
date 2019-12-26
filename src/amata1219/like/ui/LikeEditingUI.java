@@ -84,7 +84,10 @@ public class LikeEditingUI implements InventoryUI {
 				s.onClick(e -> {
 					Main.plugin().descriptionEditors.put(p.getUniqueId(), like.id);
 					p.closeInventory();
-					Text.of("&a-新しい表示内容をチャット欄に入力して下さい。").accept(p::sendMessage);
+					Text.of(
+						"&a-新しい表示内容をチャット欄に入力して下さい。",
+						"cancelと入力した場合はキャンセルされます。"
+					).sendTo(p);
 				});
 			}, 6);
 			
