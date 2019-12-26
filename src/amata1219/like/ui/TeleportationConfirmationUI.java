@@ -147,7 +147,7 @@ public class TeleportationConfirmationUI implements InventoryUI {
 					i.material = config.material(IconType.OWNERS_OTHER_LIKES);
 					i.displayName = Text.color("&a-この作者の他のLike情報");
 				});
-			}, 9);
+			}, 18);
 			
 			AtomicInteger slotIndex = new AtomicInteger(19);
 			plugin.players.get(like.owner()).likes.values().stream()

@@ -31,7 +31,7 @@ public class AdministratorUI implements InventoryUI {
 
 	@Override
 	public Function<Player, Layout> layout() {
-		return build(Lines.x2, (p, l) -> {
+		return build(Lines.x3, (p, l) -> {
 			l.title = "Likeの情報(管理者用)";
 			
 			l.defaultSlot(s -> {
@@ -119,7 +119,7 @@ public class AdministratorUI implements InventoryUI {
 					i.material = config.material(IconType.OWNERS_OTHER_LIKES);
 					i.displayName = Text.color("&a-この作者の他のLike情報");
 				});
-			}, 9);
+			}, 18);
 			
 			AtomicInteger slotIndex = new AtomicInteger(19);
 			plugin.players.get(like.owner()).likes.values().stream()
