@@ -167,18 +167,18 @@ public class Like {
 				else new LikeInformationUI(this).open(player);
 			}else{
 				if(isOwner(uuid)){
-					Text.of("&c-自分のLikeはお気に入りに登録出来ません。").accept(player::sendMessage);
+					Text.of("&c-自分のLikeはお気に入りに登録出来ません。").sendTo(player);
 					return;
 				}
 				
 				PlayerData data = plugin.players.get(uuid);
 				if(data.favoriteLikes.containsKey(this)){
-					Text.of("&c-このLikeは既にお気に入りに登録しています。").accept(player::sendMessage);
+					Text.of("&c-このLikeは既にお気に入りに登録しています。").sendTo(player);
 					return;
 				}
 				
 				data.favoriteLike(this);
-				Text.of("&a-このLikeをお気に入りに登録しました！", config.tip()).accept(player::sendMessage);
+				Text.of("&a-このLikeをお気に入りに登録しました！", config.tip()).sendTo(player);
 			}
 		};
 		Location loc = hologram.getLocation();

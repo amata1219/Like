@@ -5,8 +5,8 @@ import java.util.function.Function;
 
 public interface Either<F, S> {
 	
-	public static <S> Either<String, S> unit(S value){
-		return Success(value);
+	public static <F, S> Either<F, S> unit(S value, F error){
+		return value != null ? Success(value) : Failure(error);
 	}
 	
 	public static Either<String, ?> error(String error){

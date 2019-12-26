@@ -2,6 +2,8 @@ package amata1219.like.command;
 
 import static amata1219.like.monad.Either.*;
 
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
@@ -10,7 +12,9 @@ import amata1219.like.Like;
 import amata1219.like.Main;
 import amata1219.like.bookmark.Bookmark;
 import amata1219.like.bookmark.Order;
+import amata1219.like.monad.Either;
 import amata1219.like.slash.builder.Parser;
+import amata1219.like.slash.effect.MessageEffect;
 import at.pcgamingfreaks.UUIDConverter;
 
 public class ParserTemplates {
@@ -23,11 +27,12 @@ public class ParserTemplates {
 	
 	public static Parser<OfflinePlayer> player(){
 		return arg -> Parser.identity().parse(arg).flatMap(
-			name -> {
-				OfflinePlayer player = Bukkit.getOfflinePlayer(UUIDConverter.getUUIDFromNameAsUUID(name, Bukkit.getOnlineMode()));
-				return player != null ? Success(player) : Failure(() -> "&c-指定されたプレイヤーは存在しません。");
+			name -> Either.<MessageEffect, UUID>unit(UUIDConverter.getUUIDFromNameAsUUID(name, Bukkit.getOnlineMode()), () -> "&c-指定されたプレイヤーは存在しません。").flatMap(
+			uuid -> {
+				OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
+				return player != null && Main.plugin().players.containsKey(player.getUniqueId()) ? Success(player) : Failure(() -> "&c-指定されたプレイヤーは存在しません。");
 			}
-		);
+		));
 	}
 	
 	public static Parser<World> world(){

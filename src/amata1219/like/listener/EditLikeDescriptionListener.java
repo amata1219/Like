@@ -28,7 +28,7 @@ public class EditLikeDescriptionListener implements Listener {
 		e.setCancelled(true);
 		
 		Bukkit.getScheduler().runTask(plugin, () -> {
-			Either.unit(plugin.descriptionEditors.get(uuid))
+			Either.<String, Long>unit(plugin.descriptionEditors.get(uuid), Text.color("&c-編集対象のLikeは削除されています。"))
 			.flatMap(id -> plugin.likes.containsKey(id) ? Either.Success(plugin.likes.get(id)) : Either.Failure(Text.color("&c-編集対象のLikeは削除されています。")))
 			.onSuccess(like -> {
 				String message = e.getMessage();
