@@ -18,10 +18,13 @@ public class LikeCommand {
 	}).build();
 	
 	private static final ContextualExecutor description = EchoExecutor.of(sender -> Text.of(
-			"Likeを作成する: /like create, /likec",
-			"&7-お気に入りのLikeの一覧を開く: /like status, /like list, /likel",
-			"&7-作成したLikeの一覧を開く: /like list mine, /likel mine",
-			"&7-Likeを現在地に移動する: /likem [like_id]"
+			"&7-Likeを作成する: /like create, /likec",
+			"&7-お気に入りのLikeの一覧を開く: /like list, /likel",
+			"&7-作成したLikeの一覧を開く: /like status, /like list mine, /likel mine",
+			"&7-Likeの説明文を書き換える: /likes desc [like_id] [description]",
+			"&7-Likeを現在地に移動する: /likes move [like_id]",
+			"&7-ブックマーク一覧を表示する: /likeb",
+			"&7-指定したブックマークを開く: /likeb [book_name]"
 	).sendTo(sender));
 	
 	public static final CommandExecutor executor = BranchedExecutor.of(

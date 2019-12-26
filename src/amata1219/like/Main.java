@@ -23,7 +23,7 @@ import amata1219.like.command.BookmarkCommand;
 import amata1219.like.command.LikeCommand;
 import amata1219.like.command.LikeCreationCommand;
 import amata1219.like.command.LikeListCommand;
-import amata1219.like.command.LikeMovingCommand;
+import amata1219.like.command.LikeStatusCommand;
 import amata1219.like.command.LikeOperatorCommand;
 import amata1219.like.command.LikeTeleportationAuthenticationCommand;
 import amata1219.like.config.LikeDatabase;
@@ -99,7 +99,7 @@ public class Main extends JavaPlugin {
 		executors.put("like", LikeCommand.executor);
 		executors.put("likec", LikeCreationCommand.executor);
 		executors.put("likel", LikeListCommand.executor);
-		executors.put("likem", LikeMovingCommand.executor);
+		executors.put("likem", LikeStatusCommand.executor);
 		executors.put("liketoken", LikeTeleportationAuthenticationCommand.executor);
 		executors.put("likeb", BookmarkCommand.executor);
 		executors.put("likeop", LikeOperatorCommand.executor);
