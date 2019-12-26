@@ -14,6 +14,7 @@
 #お気に入りした時に表示されるメッセージ
 'Icon materials on inventory UI':
 #InventoryUI上のアイコン設定
+#参考: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
   'Favorites': "SUNFLOWER"
   #お気に入り数
   'Creation timestamp': "CLOCK"
