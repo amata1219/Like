@@ -3,6 +3,8 @@ package amata1219.like.bookmark;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.bukkit.configuration.file.FileConfiguration;
+
 import amata1219.like.Like;
 import amata1219.like.config.Config;
 import amata1219.like.exception.NotImplementedException;
@@ -19,6 +21,7 @@ public class BookmarkDatabase extends Config {
 	}
 	
 	public HashMap<String, Bookmark> readAll(){
+		FileConfiguration config = config();
 		HashMap<String, Bookmark> bookmarks = new HashMap<>();
 		for(String path : config.getKeys(false)){
 			String data = config.getString(path);
@@ -39,12 +42,14 @@ public class BookmarkDatabase extends Config {
 	}
 	
 	public void remove(Bookmark bookmark){
+		FileConfiguration config = config();
 		plugin.bookmarks.remove(bookmark.name);
 		config.set(bookmark.name, null);
 		update();
 	}
 	
 	public void writeAll(){
+		FileConfiguration config = config();
 		plugin.bookmarks.forEach((name, bookmark) -> config.set(name, bookmark.toString()));
 		update();
 	}

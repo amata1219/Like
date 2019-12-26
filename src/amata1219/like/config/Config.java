@@ -16,7 +16,7 @@ import amata1219.like.Main;
 public abstract class Config {
 	
 	protected final Main plugin = Main.plugin();
-	protected FileConfiguration config;
+	private FileConfiguration config;
 	private final File file;
 	private final String name;
 	

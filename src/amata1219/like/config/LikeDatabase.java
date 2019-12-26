@@ -26,6 +26,7 @@ public class LikeDatabase extends Config {
 	}
 	
 	public Tuple<HashMap<Long, Like>, HashMap<UUID, List<Like>>> readAll(){
+		FileConfiguration config = config();
 		HashMap<Long, Like> likes = new HashMap<>();
 		HashMap<UUID, List<Like>> playerLikes = new HashMap<>();
 		for(String path : config.getKeys(false)){
@@ -42,6 +43,7 @@ public class LikeDatabase extends Config {
 	}
 	
 	public void remove(Like like){
+		FileConfiguration config = config();
 		config.set(String.valueOf(like.id), null);
 		update();
 	}

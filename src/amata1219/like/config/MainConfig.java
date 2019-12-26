@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import com.google.common.collect.ImmutableMap;
@@ -42,6 +43,8 @@ public class MainConfig extends Config {
 	
 	@Override
 	public void load() {
+		FileConfiguration config = config();
+		
 		worlds2aliases.clear();
 		
 		config.getStringList("Map of worlds where like creation is enabled and aliases").stream()
