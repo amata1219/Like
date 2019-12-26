@@ -172,12 +172,13 @@ public class Like {
 				}
 				
 				PlayerData data = plugin.players.get(uuid);
-				if(data.favoriteLikes.containsKey(this)){
+				if(data.isFavoriteLike(this)){
 					Text.of("&c-このLikeは既にお気に入りに登録しています。").sendTo(player);
 					return;
 				}
 				
 				data.favoriteLike(this);
+				incrementFavorites();
 				Text.of("&a-このLikeをお気に入りに登録しました！", config.tip()).sendTo(player);
 			}
 		};
