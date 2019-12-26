@@ -38,9 +38,8 @@ public class DeletingLikeConfirmationUI implements InventoryUI {
 			l.put(s -> {
 				s.icon(i -> {
 					i.material = config.material(IconType.LIKE);
-					i.displayName = Text.color("%a-Like");
+					i.displayName = Text.of("&a&l-%s").format(like.id);
 					i.lore(
-						Text.of("&7-: &f-ID &7-@ &a-%s").format(like.id),
 						Text.of("&7-: &f-お気に入り数 &7-@ &a-%s").format(like.favorites()),
 						Text.of("&7-: &f-作成日時 &7-@ &a-%s").format(like.creationTimestamp())
 					);

@@ -40,6 +40,7 @@ public class MyFavoriteLikeListUI extends AbstractSortableLikeListUI {
 					i.displayName = Text.of("&a&l-%s").format(like.id);
 					i.amount = Math.min(like.favorites(), 64);
 					i.lore(
+						"",
 						Text.of("&7-%s").format(like.description()),
 						"",
 						Text.of("&7-作成者: &a-%s").format(UUIDConverter.getNameFromUUID(like.owner())),

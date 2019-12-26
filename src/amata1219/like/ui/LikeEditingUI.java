@@ -45,7 +45,11 @@ public class LikeEditingUI implements InventoryUI {
 					UUID owner = like.owner();
 					String playerName = UUIDConverter.getNameFromUUID(owner);
 					i.displayName = Text.of("&a-%s").format(playerName);
-					i.raw = item -> ((SkullMeta) item.getItemMeta()).setOwningPlayer(Bukkit.getOfflinePlayer(owner));
+					i.raw = item -> {
+						SkullMeta meta = (SkullMeta) item.getItemMeta();
+						meta.setOwningPlayer(Bukkit.getOfflinePlayer(owner));
+						item.setItemMeta(meta);
+					};
 				});
 			}, 0);
 			

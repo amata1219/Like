@@ -38,6 +38,7 @@ public class BookmarkUI extends AbstractMultipleUI {
 					i.displayName = Text.of("&a&l-%s").format(like.id);
 					i.amount = Math.min(like.favorites(), 64);
 					i.lore(
+						"",
 						Text.of("&7-%s").format(like.description()),
 						"",
 						Text.of("&7-お気に入り数: &a-%s").format(like.favorites()),

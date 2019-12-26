@@ -56,6 +56,7 @@ public class TeleportationConfirmationUI implements InventoryUI {
 					i.material = config.material(IconType.LIKE);
 					i.displayName = Text.of("&a&l-%s").format(like.id);
 					i.lore(
+						"",
 						Text.of("&7-%s").format(like.description()),
 						"",
 						Text.of("&7-作成者: &a-%s").format(UUIDConverter.getNameFromUUID(like.owner())),
@@ -159,6 +160,7 @@ public class TeleportationConfirmationUI implements InventoryUI {
 						i.material = config.material(IconType.LIKE);
 						i.displayName = Text.of("&a&l-%s").format(like.id);
 						i.lore(
+							"",
 							Text.of("&7-%s").format(like.description()),
 							"",
 							Text.of("&7-作成者: &a-%s").format(UUIDConverter.getNameFromUUID(like.owner())),

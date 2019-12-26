@@ -33,7 +33,7 @@ public class AdministratorUI implements InventoryUI {
 	@Override
 	public Function<Player, Layout> layout() {
 		return build(Lines.x2, (p, l) -> {
-			l.title = "Likeの情報(アドミン用)";
+			l.title = "Likeの情報(管理者用)";
 			
 			l.defaultSlot(s -> {
 				s.icon(i -> {
@@ -48,7 +48,11 @@ public class AdministratorUI implements InventoryUI {
 					UUID owner = like.owner();
 					String playerName = UUIDConverter.getNameFromUUID(owner);
 					i.displayName = Text.of("&a-%s").format(playerName);
-					i.raw = item -> ((SkullMeta) item.getItemMeta()).setOwningPlayer(Bukkit.getOfflinePlayer(owner));
+					i.raw = item -> {
+						SkullMeta meta = (SkullMeta) item.getItemMeta();
+						meta.setOwningPlayer(Bukkit.getOfflinePlayer(owner));
+						item.setItemMeta(meta);
+					};
 				});
 			}, 0);
 			
@@ -121,6 +125,7 @@ public class AdministratorUI implements InventoryUI {
 						i.material = config.material(IconType.LIKE);
 						i.displayName = Text.of("&a&l-%s").format(like.id);
 						i.lore(
+							"",
 							Text.of("&7-%s").format(like.description()),
 							"",
 							Text.of("&7-作成者: &a-%s").format(UUIDConverter.getNameFromUUID(like.owner())),
