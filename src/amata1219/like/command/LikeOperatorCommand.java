@@ -54,7 +54,7 @@ public class LikeOperatorCommand {
 			).execution(context -> sender -> {
 				Like like = context.arguments.parsed(0);
 				like.delete(true);
-				Text.of("&a-Like(ID: %s)を削除しました").apply(like.id).sendTo(sender);
+				Text.of("&c-Like(ID: %s)を削除しました").apply(like.id).sendTo(sender);
 			}).build();
 			
 	private static final MessageEffect deleteplayerdescription = () -> Text.color(
@@ -78,7 +78,7 @@ public class LikeOperatorCommand {
 				int deleted = list.size();
 				list.values().forEach(like -> like.delete(false));
 				HologramDatabase.trySaveToDisk();
-				Text.of("&a-%sが作成したLike(%s個)を全て削除しました。").apply(name, deleted).sendTo(sender);
+				Text.of("&c-%sが作成したLike(%s個)を全て削除しました。").apply(name, deleted).sendTo(sender);
 			}).build();
 	
 	private static final MessageEffect deleteworlddescription = () -> Text.color(
@@ -100,7 +100,7 @@ public class LikeOperatorCommand {
 					}
 				});
 				HologramDatabase.trySaveToDisk();
-				Text.of("&a-%sワールドに存在するLike(%s個)を全て削除しました。").apply(world.getName(), count.get()).sendTo(sender);
+				Text.of("&c-%sワールドに存在するLike(%s個)を全て削除しました。").apply(world.getName(), count.get()).sendTo(sender);
 			}).build();
 	
 	private static final MessageEffect changeownerdescription = () -> Text.color(
@@ -248,7 +248,7 @@ public class LikeOperatorCommand {
 					return;
 				}
 				bookmark.likes.add(like);
-				Text.of("&c-ブックマーク(%s)にLike(ID: %s)を追加しました。").apply(bookmark.name, like.id).sendTo(sender);
+				Text.of("&a-ブックマーク(%s)にLike(ID: %s)を追加しました。").apply(bookmark.name, like.id).sendTo(sender);
 			}).build();
 	
 	private static final ContextualExecutor booklikeremoving = ContextualExecutorBuilder.playerCommandBuilder()

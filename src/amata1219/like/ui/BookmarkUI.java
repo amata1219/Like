@@ -1,5 +1,6 @@
 package amata1219.like.ui;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -7,6 +8,7 @@ import org.bukkit.entity.Player;
 
 import amata1219.like.Like;
 import amata1219.like.bookmark.Bookmark;
+import amata1219.like.bookmark.Order;
 import amata1219.like.config.MainConfig.IconType;
 import amata1219.like.masquerade.dsl.component.Layout;
 import amata1219.like.masquerade.text.Text;
@@ -21,16 +23,17 @@ public class BookmarkUI extends AbstractMultipleUI {
 
 	@Override
 	protected List<Like> likes() {
-		return bookmark.likes();
+		List<Like> likes = bookmark.likes();
+		if(bookmark.order() == Order.NEWEST) Collections.reverse(likes);
+		return likes;
 	}
 
 	@Override
 	protected void layout(Player p, Layout l, List<Like> likes) {
 		l.title = Text.of("%s @ %s").format(bookmark.name, index + 1);
 		
-		final int start = index * 45;
-		final int remainder = likes.size() % 45;
-		IntStream.range(start, start + (remainder != 0 ? remainder : likes.isEmpty() ? 0 : 45)).forEach(slotIndex -> {
+		int remainder = likes.size() - (index * 45) >= 45 ? 45 : likes.size() % 45;
+		IntStream.range(0, remainder != 0 ? remainder : likes.isEmpty() ? 0 : 45).forEach(slotIndex -> {
 			l.put(s -> {
 				final Like like = likes.get(slotIndex);
 				s.icon(i -> {

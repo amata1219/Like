@@ -30,9 +30,8 @@ public class MyFavoriteLikeListUI extends AbstractSortableLikeListUI {
 		
 		l.title = Text.of("お気に入りのLike一覧 @ %s").format(index + 1);
 		
-		final int start = index * 45;
-		final int remainder = likes.size() % 45;
-		IntStream.range(start, start + (remainder != 0 ? remainder : likes.isEmpty() ? 0 : 45)).forEach(slotIndex -> {
+		int remainder = likes.size() - (index * 45) >= 45 ? 45 : likes.size() % 45;
+		IntStream.range(0, remainder != 0 ? remainder : likes.isEmpty() ? 0 : 45).forEach(slotIndex -> {
 			l.put(s -> {
 				final Like like = likes.get(slotIndex);
 				s.icon(i -> {
