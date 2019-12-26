@@ -38,7 +38,7 @@ public class MyFavoriteLikeListUI extends AbstractSortableLikeListUI {
 				s.icon(i -> {
 					i.material = config.material(IconType.LIKE);
 					i.displayName = Text.of("&a&l-%s").format(like.id);
-					i.amount = Math.min(like.favorites(), 64);
+					i.amount = Math.min(Math.max(like.favorites(), 1), 64);
 					i.lore(
 						"",
 						Text.of("&7-%s").format(like.description()),

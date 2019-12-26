@@ -147,7 +147,7 @@ public class Like {
 	}
 	
 	public void delete(boolean alsoSave){
-		plugin.players.get(owner).likes.remove(this);
+		plugin.players.get(owner).unregisterLike(this);
 		AsyncTask.define(() -> plugin.players.values().forEach(data -> data.unfavoriteLike(this))).execute();
 		plugin.bookmarks.values().forEach(bookmark -> bookmark.likes.remove(this));
 		plugin.likes.remove(id);

@@ -55,6 +55,7 @@ public class TeleportationConfirmationUI implements InventoryUI {
 				s.icon(i -> {
 					i.material = config.material(IconType.LIKE);
 					i.displayName = Text.of("&a&l-%s").format(like.id);
+					i.amount = Math.min(Math.max(like.favorites(), 1), 64);
 					i.lore(
 						"",
 						Text.of("&7-%s").format(like.description()),
@@ -159,6 +160,7 @@ public class TeleportationConfirmationUI implements InventoryUI {
 					s.icon(i -> {
 						i.material = config.material(IconType.LIKE);
 						i.displayName = Text.of("&a&l-%s").format(like.id);
+						i.amount = Math.min(Math.max(like.favorites(), 1), 64);
 						i.lore(
 							"",
 							Text.of("&7-%s").format(like.description()),

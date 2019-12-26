@@ -51,7 +51,7 @@ public class LikeEditingUI implements InventoryUI {
 				s.icon(i -> {
 					i.material = config.material(IconType.FAVORITES);
 					i.displayName = Text.of("&a-お気に入りの数-&7-:-&f %s").format(like.favorites());
-					i.amount = Math.min(like.favorites(), 64);
+					i.amount = Math.min(Math.max(like.favorites(), 1), 64);
 				});
 			}, 3);
 			

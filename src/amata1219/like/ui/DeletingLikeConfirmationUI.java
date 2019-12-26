@@ -39,6 +39,7 @@ public class DeletingLikeConfirmationUI implements InventoryUI {
 				s.icon(i -> {
 					i.material = config.material(IconType.LIKE);
 					i.displayName = Text.of("&a&l-%s").format(like.id);
+					i.amount = Math.min(Math.max(like.favorites(), 1), 64);
 					i.lore(
 						Text.of("&7-: &f-お気に入り数 &7-@ &a-%s").format(like.favorites()),
 						Text.of("&7-: &f-作成日時 &7-@ &a-%s").format(like.creationTimestamp())
@@ -58,6 +59,7 @@ public class DeletingLikeConfirmationUI implements InventoryUI {
 				s.onClick(e -> {
 					like.delete(true);
 					p.sendMessage(Text.of("&c-Like(%s)を完全に削除しました。").format(like.id));
+					p.closeInventory();
 				});
 			}, 4);
 			
