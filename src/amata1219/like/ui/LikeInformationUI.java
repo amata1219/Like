@@ -5,10 +5,8 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.meta.SkullMeta;
 
 import amata1219.like.Like;
 import amata1219.like.Main;
@@ -16,6 +14,7 @@ import amata1219.like.config.MainConfig;
 import amata1219.like.config.MainConfig.IconType;
 import amata1219.like.masquerade.dsl.InventoryUI;
 import amata1219.like.masquerade.dsl.component.Layout;
+import amata1219.like.masquerade.item.Skull;
 import amata1219.like.masquerade.option.Lines;
 import amata1219.like.masquerade.text.Text;
 import at.pcgamingfreaks.UUIDConverter;
@@ -44,15 +43,10 @@ public class LikeInformationUI implements InventoryUI {
 			
 			l.put(s -> {
 				s.icon(i -> {
-					i.material = Material.PLAYER_HEAD;
+					i.basedItemStack = Skull.createFrom(like.owner());
 					UUID owner = like.owner();
 					String playerName = UUIDConverter.getNameFromUUID(owner);
 					i.displayName = Text.of("&a-%s").format(playerName);
-					i.raw = item -> {
-						SkullMeta meta = (SkullMeta) item.getItemMeta();
-						meta.setOwningPlayer(Bukkit.getOfflinePlayer(owner));
-						item.setItemMeta(meta);
-					};
 				});
 			}, 0);
 			
