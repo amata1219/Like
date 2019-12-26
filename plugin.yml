@@ -16,7 +16,7 @@ commands:
   likel:
     permission: like.like
     permission-message: *denied
-  likem:
+  likes:
     permission: like.like
     permission-message: *denied
   liketoken:
