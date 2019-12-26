@@ -35,7 +35,6 @@ public class MyLikeListUI extends AbstractSortableLikeListUI {
 				final Like like = likes.get(slotIndex);
 				s.icon(i -> {
 					i.material = config.material(IconType.LIKE);
-					System.out.println(i.material.toString() + "@ material");
 					i.displayName = Text.of("&a&l-%s").format(like.id);
 					i.amount = Math.min(like.favorites(), 64);
 					i.lore(
