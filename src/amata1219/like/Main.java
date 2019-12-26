@@ -99,7 +99,7 @@ public class Main extends JavaPlugin {
 		executors.put("like", LikeCommand.executor);
 		executors.put("likec", LikeCreationCommand.executor);
 		executors.put("likel", LikeListCommand.executor);
-		executors.put("likes", LikeMovingCommand.executor);
+		executors.put("likem", LikeMovingCommand.executor);
 		executors.put("liketoken", LikeTeleportationAuthenticationCommand.executor);
 		executors.put("likeb", BookmarkCommand.executor);
 		executors.put("likeop", LikeOperatorCommand.executor);

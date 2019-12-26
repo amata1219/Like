@@ -72,7 +72,7 @@ public class InvitationConfirmationUI implements InventoryUI {
 				s.onClick(e -> {
 					double costs = config.invitationCosts();
 					if(!economy.has(p, costs)){
-						Text.of("&a-所持金が足りません。招待するには%sMP必要です。").apply(costs).sendTo(p);
+						Text.of("&c-所持金が足りません。招待するには%sMP必要です。").apply(costs).sendTo(p);
 						return;
 					}
 					
