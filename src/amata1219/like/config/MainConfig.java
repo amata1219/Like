@@ -123,7 +123,7 @@ public class MainConfig extends Config {
 	}
 	
 	public int numberOfSecondsOfLikeCreationCooldown(){
-		return numberOfSecondsOfLikeCreationCooldown;
+		return numberOfSecondsOfLikeCreationCooldown * 20;
 	}
 	
 	public double teleportationCosts(){

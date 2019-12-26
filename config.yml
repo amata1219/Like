@@ -1,35 +1,70 @@
 'Map of worlds where like creation is enabled and aliases':
+#各ワールド名とその表示上の名前を一対一で記述
 - "world:main"
+#ワールド名:エイリアス
 'Like holograms text lines':
+#Likeホログラムのテキストテンプレート
   'Favorites': "&d&l %favorites% &e&l★"
+  #お気に入り数のテンプレート
   'Description': "&6&l%owner%&r&6's Like"
+  #説明文のテンプレート
   'Usage': "&6Right click to Like!"
+  #利用法のテンプレート
 'Tip': "&a【Like】Open like list >> /like list"
+#お気に入りした時に表示されるメッセージ
 'Icon materials on inventory UI':
+#InventoryUI上のアイコン設定
   'Favorites': "SUNFLOWER"
+  #お気に入り数
   'Creation timestamp': "CLOCK"
+  #作成日時
   'ID': "NAME_TAG"
+  #ID
   'Edit description': "DIAMOND"
+  #説明文を編集する
   'Unfavorite': "DIAMOND"
+  #お気に入りを解除する
   'Go to like teleportation or like invitation confirmation page': "DIAMOND"
+  #テレポートと招待の確認画面に移動する
   'Teleport to like': "DIAMOND"
+  #Likeにテレポートする
   'Cancel like teleportation': "DIAMOND"
+  #Likeへのテレポートをキャンセルする
   'Invite to like': "DIAMOND"
+  #Likeに招待する
   'Cancel like invitation': "DIAMOND"
+  #Likeへの招待をキャンセルする
   'Go to like deletion page': "DIAMOND"
+  #Likeの削除確認画面に移動する
   'Delete like': "DIAMOND"
+  #Likeを削除する
   'Cancel like deletion': "DIAMOND"
+  #Likeの削除をキャンセルする
   'Like': "SUNFLOWER"
+  #Like自体のアイコン
   'Owners other likes': "DIAMOND"
+  #Like所有者の他のLike
   'Sort by creation date in ascending order': "DIAMOND"
+  #Likeを作成日時が古い順でソートする
   'Sort by creation date in descending order': "DIAMOND"
+  #Likeを作成日時が新しい順でソートする
   'Sort by favorites in ascending order': "DIAMOND"
+  #Likeをお気に入り数が少ない順でソートする
   'Sort by favorites in descending order': "DIAMOND"
+  #Likeをお気に入り数が多い順でソートする
 'Number of seconds of like creation cooldown': 10
+#Like作成のクールダウン秒数
 'Teleportation':
+#Likeへのテレポートについて
   'Costs': 100.0
+  #1回のテレポートで消費するMP
   'Message': "&3&l【Like TP】Teleported to Like(%description% by %owner%\n&3)"
+  #テレポート時に表示されるメッセージ
 'Invitation':
+#Likeへの招待について
   'Costs': 100.0
+  #1回の招待で消費するMP
   'Radius of scope': 32
+  #プレイヤーから半径何ブロック以内にいるプレイヤーを招待するか
   'Message': "&3&l【Like TP】%description% by %owner%\n&3 [%inviter% >> %invitee%] Click to Teleport!"
+  #招待されたプレイヤーに表示されるメッセージ
