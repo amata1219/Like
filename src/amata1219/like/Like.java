@@ -85,9 +85,14 @@ public class Like {
 	
 	public void setOwner(UUID uuid){
 		Objects.requireNonNull(uuid);
+		PlayerData newOwner = plugin.players.get(uuid);
+		if(newOwner.isFavoriteLike(this)){
+			decrementFavorites();
+			newOwner.unfavoriteLike(this);
+		}
 		plugin.players.get(owner).unregisterLike(this);
 		this.owner = uuid;
-		plugin.players.get(owner).registerLike(this);
+		newOwner.registerLike(this);
 	}
 	
 	public boolean isOwner(UUID uuid){
