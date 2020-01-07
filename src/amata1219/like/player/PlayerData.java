@@ -13,11 +13,11 @@ public class PlayerData {
 	}
 	
 	public void registerLike(Like like){
-		likes.put(like.id, like);
+		if(like != null) likes.put(like.id, like);
 	}
 	
 	public void unregisterLike(Like like){
-		likes.remove(like.id);
+		if(like != null) likes.remove(like.id);
 	}
 	
 	public boolean isFavoriteLike(Like like){
@@ -25,11 +25,11 @@ public class PlayerData {
 	}
 	
 	public void favoriteLike(Like like){
-		favoriteLikes.put(like.id, like);
+		if(like != null) favoriteLikes.put(like.id, like);
 	}
 	
 	public void unfavoriteLike(Like like){
-		favoriteLikes.remove(like.id);
+		if(like != null) favoriteLikes.remove(like.id);
 	}
 	
 }
