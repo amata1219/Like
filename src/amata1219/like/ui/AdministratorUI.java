@@ -44,9 +44,7 @@ public class AdministratorUI implements InventoryUI {
 			l.put(s -> {
 				s.icon(i -> {
 					i.basedItemStack = Skull.createFrom(like.owner());
-					UUID owner = like.owner();
-					String playerName = UUIDConverter.getNameFromUUID(owner);
-					i.displayName = Text.of("&a-%s").format(playerName);
+					i.displayName = Text.of("&a-%s").format(like.ownerName());
 				});
 			}, 0);
 			
@@ -135,7 +133,7 @@ public class AdministratorUI implements InventoryUI {
 						i.lore(
 							Text.of("&7-%s").format(like.description()),
 							"",
-							Text.of("&7-作成者: &a-%s").format(UUIDConverter.getNameFromUUID(like.owner())),
+							Text.of("&7-作成者: &a-%s").format(like.ownerName()),
 							Text.of("&7-お気に入り数: &a-%s").format(like.favorites()),
 							Text.of("&7-作成日時: &a-%s").format(like.creationTimestamp()),
 							Text.of("&7-ワールド: &a-%s").format(config.worldAlias(like.world()).or(() -> "Unknown")),

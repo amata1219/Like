@@ -40,6 +40,7 @@ import amata1219.like.player.PlayerDatabase;
 import amata1219.like.reflection.Field;
 import amata1219.like.reflection.SafeCast;
 import amata1219.like.tuplet.Tuple;
+import at.pcgamingfreaks.UUIDConverter;
 import net.milkbowl.vault.Vault;
 import net.milkbowl.vault.economy.Economy;
 
@@ -47,8 +48,22 @@ public class Main extends JavaPlugin {
 	
 	private static Main plugin;
 	
+	public static final HashMap<UUID, String> UUID_CACHE = new HashMap<>();
+	
 	public static final String INVITATION_TOKEN = UUID.randomUUID().toString();
 	public static final String OPERATOR_PERMISSION = "like.likeop";
+	
+	public static Main plugin(){
+		return plugin;
+	}
+	
+	public static String nameFrom(UUID uuid){
+		String name = UUID_CACHE.get(uuid);
+		if(name != null) return name;
+		name = UUIDConverter.getNameFromUUID(uuid);
+		UUID_CACHE.put(uuid, name);
+		return name;
+	}
 	
 	private Economy economy;
 	
@@ -134,10 +149,6 @@ public class Main extends JavaPlugin {
 		});
 
 		HandlerList.unregisterAll(this);
-	}
-	
-	public static Main plugin(){
-		return plugin;
 	}
 	
 	@Override

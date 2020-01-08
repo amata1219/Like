@@ -99,6 +99,10 @@ public class Like {
 		return owner.equals(uuid);
 	}
 	
+	public String ownerName(){
+		return Main.nameFrom(owner);
+	}
+	
 	public String description(){
 		return ((TextLine) hologram.getLine(1)).getText();
 	}

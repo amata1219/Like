@@ -1,6 +1,5 @@
 package amata1219.like.ui;
 
-import java.util.UUID;
 import java.util.function.Function;
 
 import org.bukkit.Material;
@@ -15,7 +14,6 @@ import amata1219.like.masquerade.dsl.component.Layout;
 import amata1219.like.masquerade.item.Skull;
 import amata1219.like.masquerade.option.Lines;
 import amata1219.like.masquerade.text.Text;
-import at.pcgamingfreaks.UUIDConverter;
 
 public class LikeEditingUI implements InventoryUI {
 	
@@ -41,9 +39,7 @@ public class LikeEditingUI implements InventoryUI {
 			l.put(s -> {
 				s.icon(i -> {
 					i.basedItemStack = Skull.createFrom(like.owner());
-					UUID owner = like.owner();
-					String playerName = UUIDConverter.getNameFromUUID(owner);
-					i.displayName = Text.of("&a-%s").format(playerName);
+					i.displayName = Text.of("&a-%s").format(like.ownerName());
 				});
 			}, 1);
 			

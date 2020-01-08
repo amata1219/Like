@@ -14,10 +14,10 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 
 import amata1219.like.Like;
+import amata1219.like.Main;
 import amata1219.like.masquerade.text.Text;
 import amata1219.like.monad.Maybe;
 import amata1219.like.tuplet.Tuple;
-import at.pcgamingfreaks.UUIDConverter;
 
 import static amata1219.like.config.MainConfig.IconType.*;
 
@@ -188,7 +188,7 @@ public class MainConfig extends Config {
 		}
 		
 		public String apply(UUID owner){
-			return text.replace("%owner%", UUIDConverter.getNameFromUUID(owner));
+			return text.replace("%owner%", Main.nameFrom(owner));
 		}
 		
 	}
@@ -201,7 +201,7 @@ public class MainConfig extends Config {
 		
 		public Text apply(Like to){
 			text = text.replace("%description%", to.description())
-					.replace("%owner%", UUIDConverter.getNameFromUUID(to.owner()));
+					.replace("%owner%", to.ownerName());
 			return this;
 		}
 		
@@ -215,7 +215,7 @@ public class MainConfig extends Config {
 		
 		public InvitationText apply(Player inviter, Like to){
 			text = text.replace("%description%", to.description())
-					.replace("%owner%", UUIDConverter.getNameFromUUID(to.owner()))
+					.replace("%owner%", to.ownerName())
 					.replace("%inviter%", inviter.getName());
 			return this;
 		}

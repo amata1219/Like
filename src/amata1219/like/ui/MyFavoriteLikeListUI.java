@@ -11,7 +11,6 @@ import amata1219.like.Like;
 import amata1219.like.config.MainConfig.IconType;
 import amata1219.like.masquerade.dsl.component.Layout;
 import amata1219.like.masquerade.text.Text;
-import at.pcgamingfreaks.UUIDConverter;
 
 public class MyFavoriteLikeListUI extends AbstractSortableLikeListUI {
 
@@ -41,7 +40,7 @@ public class MyFavoriteLikeListUI extends AbstractSortableLikeListUI {
 					i.lore(
 						Text.of("&7-%s").format(like.description()),
 						"",
-						Text.of("&7-作成者: &a-%s").format(UUIDConverter.getNameFromUUID(like.owner())),
+						Text.of("&7-作成者: &a-%s").format(like.ownerName()),
 						Text.of("&7-お気に入り数: &a-%s").format(like.favorites()),
 						Text.of("&7-作成日時: &a-%s").format(like.creationTimestamp()),
 						Text.of("&7-ワールド: &a-%s").format(config.worldAlias(like.world()).or(() -> "Unknown")),

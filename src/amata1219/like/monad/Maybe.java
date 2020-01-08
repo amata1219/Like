@@ -25,7 +25,7 @@ public interface Maybe<T> {
 	
 	@SuppressWarnings("unchecked")
 	default <U> Maybe<U> map(Function<T, U> mapper){
-		return (Maybe<U>) flatMap(mapper.andThen(Maybe::Some));
+		return (Maybe<U>) flatMap(mapper.andThen(Maybe::unit));
 	}
 	
 	Maybe<T> filter(Predicate<T> filter);
