@@ -16,7 +16,6 @@ import amata1219.like.masquerade.dsl.component.Layout;
 import amata1219.like.masquerade.item.Skull;
 import amata1219.like.masquerade.option.Lines;
 import amata1219.like.masquerade.text.Text;
-import at.pcgamingfreaks.UUIDConverter;
 
 public class LikeInformationUI implements InventoryUI {
 

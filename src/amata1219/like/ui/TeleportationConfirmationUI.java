@@ -20,7 +20,6 @@ import amata1219.like.masquerade.dsl.InventoryUI;
 import amata1219.like.masquerade.dsl.component.Layout;
 import amata1219.like.masquerade.option.Lines;
 import amata1219.like.masquerade.text.Text;
-import at.pcgamingfreaks.UUIDConverter;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
