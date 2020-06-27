@@ -24,7 +24,7 @@ public class LikeCreationCommand {
 			return;
 		}
 		
-		if(plugin.cooldownMap.contains(sender)){
+		if(plugin.cooldownMap.contains(sender.getUniqueId())){
 			Text.of("&c-クールダウン中であるためLikeを作成出来ません。").accept(sender::sendMessage);
 			return;
 		}
