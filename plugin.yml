@@ -1,8 +1,8 @@
 name: Like
 main: amata1219.like.Main
-version: 2.0.2
+version: 2.0.3
 depend: [HolographicDisplays, Vault, PCGF_PluginLib]
-api-version: 1.13
+api-version: 1.16
 author: amata1219(Twitter@amata1219)
 
 default-permission-message: &denied You don't have <permission>

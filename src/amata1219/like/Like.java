@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+import com.gmail.filoghost.holographicdisplays.disk.StringConverter;
+import com.gmail.filoghost.holographicdisplays.object.line.CraftTextLine;
 import org.bukkit.Location;
 import org.bukkit.World;
 import com.gmail.filoghost.holographicdisplays.api.handler.TouchHandler;
@@ -127,8 +129,8 @@ public class Like {
 	
 	private void rewriteHologramLine(int index, String text){
 		List<CraftHologramLine> lines = hologram.getLinesUnsafe();
-		((CraftHologramLine) lines.get(index)).despawn();
-		lines.set(index, HologramDatabase.readLineFromString(text, hologram));
+		lines.get(index).despawn();
+		lines.set(index, new CraftTextLine(hologram, StringConverter.toReadableFormat(text)));
 		hologram.refreshAll();
 		if(index == 0){
 			setTouchHandler(true);
