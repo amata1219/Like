@@ -32,16 +32,15 @@ public class LikeCreationCommand {
 		UUID uuid = sender.getUniqueId();
 		PlayerData data = plugin.players.get(uuid);
 		if(data.likes.size() >= plugin.likeLimitDatabase().read(uuid)){
-			Text.of("&c-作成上限に達している為これ以上Likeは作成出来ません。").accept(sender::sendMessage);
+			Text.of("&c-作成上限に達しているため、これ以上Likeは作成出来ません。").accept(sender::sendMessage);
 			return;
 		}
 		
 		NamedHologram hologram = new NamedHologram(sender.getLocation().add(0, 2, 0), String.valueOf(System.currentTimeMillis()));
+		Like like = new Like(hologram, uuid);
 		NamedHologramManager.addHologram(hologram);
 		hologram.refreshAll();
-		
-		Like like = new Like(hologram, uuid);
-		like.save(true);
+		like.save();
 		
 		plugin.likes.put(like.id, like);
 		data.registerLike(like);

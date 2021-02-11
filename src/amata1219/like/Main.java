@@ -97,7 +97,7 @@ public class Main extends JavaPlugin {
 		acceptingNew.set(null, true);
 		try{
 			Enchantment.registerEnchantment(GleamEnchantment.INSTANCE);
-		}catch(Exception e){
+		}catch(Exception ignored){
 			
 		}finally{
 			acceptingNew.set(null, false);
@@ -122,14 +122,14 @@ public class Main extends JavaPlugin {
 		getServer().getScheduler().runTaskLater(this, () -> {
 			likeDatabase = new LikeDatabase();
 			Tuple<HashMap<Long, Like>, HashMap<UUID, List<Like>>> maps = likeDatabase.readAll();
-			maps.first.forEach((id, like) -> likes.put(id, like));
+			maps.first.forEach(likes::put);
 			
 			playerDatabase = new PlayerDatabase();
-			playerDatabase.readAll(maps.second).forEach((uuid, data) -> players.put(uuid, data));
+			playerDatabase.readAll(maps.second).forEach(players::put);
 			
 			likeLimitDatabase = new LikeLimitDatabase();
 			bookmarkDatabase = new BookmarkDatabase();
-			bookmarkDatabase.readAll().forEach((name, bookmark) -> bookmarks.put(name, bookmark));
+			bookmarkDatabase.readAll().forEach(bookmarks::put);
 		}, 5);
 	}
 	
@@ -139,7 +139,7 @@ public class Main extends JavaPlugin {
 		likeLimitDatabase.update();
 		playerDatabase.writeAll();
 		likeDatabase.writeAll();
-		
+
 		getServer().getOnlinePlayers().forEach(player -> {
 			Maybe.unit(player.getOpenInventory())
 			.map(InventoryView::getTopInventory)

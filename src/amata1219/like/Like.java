@@ -58,11 +58,16 @@ public class Like {
 		this.hologram = hologram;
 		this.owner = owner;
 		
-		hologram.appendTextLine(config.likeFavoritesText().apply(favorites));
-		hologram.appendTextLine(config.likeDescription().apply(owner));
-		hologram.appendTextLine(config.likeUsage());
+		appendTextLine(config.likeFavoritesText().apply(favorites));
+		appendTextLine(config.likeDescription().apply(owner));
+		appendTextLine(config.likeUsage());
 		
 		setTouchHandler(false);
+	}
+
+	private void appendTextLine(String text) {
+		CraftTextLine line = hologram.appendTextLine(text);
+		line.setSerializedConfigValue(text);
 	}
 	
 	public World world(){
@@ -130,13 +135,16 @@ public class Like {
 	private void rewriteHologramLine(int index, String text){
 		List<CraftHologramLine> lines = hologram.getLinesUnsafe();
 		lines.get(index).despawn();
-		lines.set(index, new CraftTextLine(hologram, StringConverter.toReadableFormat(text)));
+		String formattedText = StringConverter.toReadableFormat(text);
+		CraftTextLine line = new CraftTextLine(hologram, formattedText);
+		line.setSerializedConfigValue(formattedText);
+		lines.set(index, line);
 		hologram.refreshAll();
 		if(index == 0){
 			setTouchHandler(true);
 			setTouchHandler(false);
 		}
-		save(true);
+		save();
 	}
 	
 	public String creationTimestamp(){
@@ -149,12 +157,12 @@ public class Like {
 		hologram.refreshAll();
 		setTouchHandler(true);
 		setTouchHandler(false);
-		save(true);
+		save();
 	}
 	
-	public void save(boolean alsoToDisk){
+	public void save(){
 		HologramDatabase.saveHologram(hologram);
-		if(alsoToDisk) HologramDatabase.trySaveToDisk();
+		HologramDatabase.trySaveToDisk();
 	}
 	
 	public void delete(boolean alsoSave){
