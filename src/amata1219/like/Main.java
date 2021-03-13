@@ -1,10 +1,12 @@
 package amata1219.like;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
+import amata1219.niflheimr.dsl.InventoryOperationListener;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -33,11 +35,9 @@ import amata1219.like.listener.CreatePlayerDataListener;
 import amata1219.like.listener.EditLikeDescriptionListener;
 import amata1219.like.listener.UIListener;
 import amata1219.like.masquerade.dsl.component.Layout;
-import amata1219.like.masquerade.enchantment.GleamEnchantment;
 import amata1219.like.monad.Maybe;
 import amata1219.like.player.PlayerData;
 import amata1219.like.player.PlayerDatabase;
-import amata1219.like.reflection.Field;
 import amata1219.like.reflection.SafeCast;
 import amata1219.like.tuplet.Tuple;
 import at.pcgamingfreaks.UUIDConverter;
@@ -92,19 +92,22 @@ public class Main extends JavaPlugin {
 		if(provider == null) throw new NullPointerException("Not found Vault.");
 
 		economy = provider.getProvider();
-		
-		Field<Enchantment, Boolean> acceptingNew = Field.of(Enchantment.class, "acceptingNew");
-		acceptingNew.set(null, true);
-		try{
-			Enchantment.registerEnchantment(GleamEnchantment.INSTANCE);
-		}catch(Exception ignored){
-			
-		}finally{
+
+		Field acceptingNew;
+		try {
+			acceptingNew = Enchantment.class.getDeclaredField("acceptingNew");
+			acceptingNew.setAccessible(true);
+			acceptingNew.set(null, true);
+			Enchantment.registerEnchantment(amata1219.niflheimr.enchantment.GleamEnchantment.INSTANCE);
 			acceptingNew.set(null, false);
+			acceptingNew.setAccessible(false);
+		} catch (NoSuchFieldException | IllegalAccessException ignored) {
+
 		}
-		
+
 		registerEventListeners(
 			new UIListener(),
+			new InventoryOperationListener(),
 			new CreatePlayerDataListener(),
 			new EditLikeDescriptionListener()
 		);

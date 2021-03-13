@@ -1,6 +1,5 @@
 package amata1219.niflheimr.dsl;
 
-import amata1219.niflheimr.Niflheimr;
 import amata1219.niflheimr.dsl.component.format.InventoryFormat;
 import amata1219.niflheimr.dsl.component.format.InventoryLines;
 import amata1219.niflheimr.dsl.component.format.InventoryType;
