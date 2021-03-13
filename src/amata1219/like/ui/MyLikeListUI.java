@@ -25,8 +25,8 @@ public class MyLikeListUI extends AbstractSortableLikeListUI {
 	}
 
 	@Override
-	protected void layout(Player p, Layout l, List<Like> likes) {
-		super.layout(p, l, likes);
+	protected void layout(Player player, Layout l, List<Like> likes) {
+		super.layout(player, l, likes);
 		
 		l.title = Text.of("作成したLike一覧 @ %sページ目").format(index + 1);
 		
@@ -51,7 +51,7 @@ public class MyLikeListUI extends AbstractSortableLikeListUI {
 					);
 				});
 				
-				s.onClick(e -> new InvitationConfirmationUI(like, this).open(p));
+				s.onClick(e -> new InvitationConfirmationUI(like, this).open(player));
 			}, slotIndex);
 		});
 	}

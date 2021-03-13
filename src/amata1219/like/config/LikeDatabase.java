@@ -11,7 +11,6 @@ import com.gmail.filoghost.holographicdisplays.object.NamedHologram;
 import com.gmail.filoghost.holographicdisplays.object.NamedHologramManager;
 
 import amata1219.like.Like;
-import amata1219.like.exception.NotImplementedException;
 import amata1219.like.tuplet.Tuple;
 
 public class LikeDatabase extends Config {
@@ -22,7 +21,7 @@ public class LikeDatabase extends Config {
 
 	@Override
 	public void load() {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 	
 	public Tuple<HashMap<Long, Like>, HashMap<UUID, List<Like>>> readAll(){

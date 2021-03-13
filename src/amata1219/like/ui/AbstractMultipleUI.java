@@ -81,7 +81,7 @@ public abstract class AbstractMultipleUI implements InventoryUI {
 	
 	protected abstract List<Like> likes();
 	
-	protected abstract void layout(Player p, Layout l, List<Like> likes);
+	protected abstract void layout(Player player, Layout l, List<Like> likes);
 	
 	protected enum Type {
 		

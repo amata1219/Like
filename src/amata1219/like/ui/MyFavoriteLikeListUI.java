@@ -26,8 +26,8 @@ public class MyFavoriteLikeListUI extends AbstractSortableLikeListUI {
 	}
 
 	@Override
-	protected void layout(Player p, Layout l, List<Like> likes) {
-		super.layout(p, l, likes);
+	protected void layout(Player player, Layout l, List<Like> likes) {
+		super.layout(player, l, likes);
 		
 		l.title = Text.of("お気に入りのLike一覧 @ %sページ目").format(index + 1);
 		
@@ -54,7 +54,7 @@ public class MyFavoriteLikeListUI extends AbstractSortableLikeListUI {
 					);
 				});
 				
-				s.onClick(e -> new TeleportationConfirmationUI(like, this).open(p));
+				s.onClick(e -> new TeleportationConfirmationUI(like, this).open(player));
 			}, slotIndex);
 		});
 	}

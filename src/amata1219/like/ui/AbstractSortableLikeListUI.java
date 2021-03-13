@@ -17,7 +17,7 @@ public abstract class AbstractSortableLikeListUI extends AbstractMultipleUI {
 	protected Order order = Order.CREATION_TIME_IN_DESCENDING;
 
 	@Override
-	protected void layout(Player p, Layout l, List<Like> likes) {
+	protected void layout(Player player, Layout l, List<Like> likes) {
 		likes.sort(order.comparator);
 		
 		if(order == Order.CREATION_TIME_IN_DESCENDING){
@@ -37,7 +37,7 @@ public abstract class AbstractSortableLikeListUI extends AbstractMultipleUI {
 				
 				s.onClick(e -> {
 					order = Order.CREATION_TIME_IN_DESCENDING;
-					open(p);
+					open(player);
 				});
 			}, 47);
 		}
@@ -59,7 +59,7 @@ public abstract class AbstractSortableLikeListUI extends AbstractMultipleUI {
 				
 				s.onClick(e -> {
 					order = Order.CREATION_TIME_IN_ASCENDING;
-					open(p);
+					open(player);
 				});
 			}, 48);
 		}
@@ -81,7 +81,7 @@ public abstract class AbstractSortableLikeListUI extends AbstractMultipleUI {
 				
 				s.onClick(e -> {
 					order = Order.FAVORITES_IN_DESCENDING;
-					open(p);
+					open(player);
 				});
 			}, 50);
 		}
@@ -103,7 +103,7 @@ public abstract class AbstractSortableLikeListUI extends AbstractMultipleUI {
 				
 				s.onClick(e -> {
 					order = Order.FAVORITES_IN_ASCENDING;
-					open(p);
+					open(player);
 				});
 			}, 51);
 		}

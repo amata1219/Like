@@ -29,7 +29,7 @@ public class BookmarkUI extends AbstractMultipleUI {
 	}
 
 	@Override
-	protected void layout(Player p, Layout l, List<Like> likes) {
+	protected void layout(Player player, Layout l, List<Like> likes) {
 		l.title = Text.of("%s @ %sページ目").format(bookmark.name, index + 1);
 		
 		int remainder = likes.size() - (index * 45) >= 45 ? 45 : likes.size() % 45;
@@ -54,7 +54,7 @@ public class BookmarkUI extends AbstractMultipleUI {
 					);
 				});
 				
-				s.onClick(e -> new InvitationConfirmationUI(like, this).open(p));
+				s.onClick(e -> new InvitationConfirmationUI(like, this).open(player));
 			}, slotIndex);
 		});
 	}

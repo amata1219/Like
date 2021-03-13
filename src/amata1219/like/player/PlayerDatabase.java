@@ -11,7 +11,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import amata1219.like.Like;
 import amata1219.like.config.Config;
-import amata1219.like.exception.NotImplementedException;
 
 public class PlayerDatabase extends Config {
 	
@@ -21,7 +20,7 @@ public class PlayerDatabase extends Config {
 
 	@Override
 	public void load() {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 	
 	public HashMap<UUID, PlayerData> readAll(HashMap<UUID, List<Like>> playerLikes){

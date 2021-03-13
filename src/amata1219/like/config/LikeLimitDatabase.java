@@ -4,8 +4,6 @@ import java.util.UUID;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
-import amata1219.like.exception.NotImplementedException;
-
 public class LikeLimitDatabase extends Config {
 
 	public LikeLimitDatabase() {
@@ -14,7 +12,7 @@ public class LikeLimitDatabase extends Config {
 
 	@Override
 	public void load() {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 	
 	public int read(UUID uuid){

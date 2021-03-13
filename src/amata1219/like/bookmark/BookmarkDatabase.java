@@ -7,7 +7,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import amata1219.like.Like;
 import amata1219.like.config.Config;
-import amata1219.like.exception.NotImplementedException;
 
 public class BookmarkDatabase extends Config {
 
@@ -17,7 +16,7 @@ public class BookmarkDatabase extends Config {
 
 	@Override
 	public void load() {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 	
 	public HashMap<String, Bookmark> readAll(){
