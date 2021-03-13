@@ -58,7 +58,7 @@ public class InventoryOperationListener implements Listener {
         for (AnimatedSlot slot : layout.animatedSlots.values()) slot.actionOnClose().accept(ev);
     }
 
-    private InventoryLayout tryExtractInventoryLayout(Inventory inventory) {
+    public static InventoryLayout tryExtractInventoryLayout(Inventory inventory) {
         InventoryHolder holder = inventory.getHolder();
         return holder instanceof InventoryLayout ? (InventoryLayout) holder : null;
     }
