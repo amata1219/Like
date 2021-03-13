@@ -8,7 +8,12 @@ public enum InventoryLines implements InventoryFormat {
 
     x1, x2, x3, x4, x5, x6;
 
+    private static final InventoryLines[] VALUES = values();
     private final int size = (ordinal() + 1) * 9;
+
+    public static InventoryLines from(int slotCount) {
+        return slotCount == 0 ? x1 : VALUES[(slotCount - 1) / 9];
+    }
 
     @Override
     public Inventory createInventoryWith(InventoryLayout layout) {

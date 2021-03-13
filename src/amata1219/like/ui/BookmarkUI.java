@@ -30,7 +30,7 @@ public class BookmarkUI extends AbstractMultipleUI {
 
 	@Override
 	protected void layout(Player p, Layout l, List<Like> likes) {
-		l.title = Text.of("%s @ %s").format(bookmark.name, index + 1);
+		l.title = Text.of("%s @ %sページ目").format(bookmark.name, index + 1);
 		
 		int remainder = likes.size() - (index * 45) >= 45 ? 45 : likes.size() % 45;
 		IntStream.range(0, remainder != 0 ? remainder : likes.isEmpty() ? 0 : 45).forEach(slotIndex -> {

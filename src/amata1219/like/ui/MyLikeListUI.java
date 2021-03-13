@@ -12,21 +12,23 @@ import amata1219.like.masquerade.dsl.component.Layout;
 import amata1219.like.masquerade.text.Text;
 
 public class MyLikeListUI extends AbstractSortableLikeListUI {
-	
-	public MyLikeListUI(UUID owner){
-		super(owner);
+
+	public final UUID ownerUUID;
+
+	public MyLikeListUI(UUID ownerUUID){
+		this.ownerUUID = ownerUUID;
 	}
 
 	@Override
 	protected List<Like> likes() {
-		return new ArrayList<>(plugin.players.get(owner).likes.values());
+		return new ArrayList<>(plugin.players.get(ownerUUID).likes.values());
 	}
 
 	@Override
 	protected void layout(Player p, Layout l, List<Like> likes) {
 		super.layout(p, l, likes);
 		
-		l.title = Text.of("作成したLike一覧 @ %s").format(index + 1);
+		l.title = Text.of("作成したLike一覧 @ %sページ目").format(index + 1);
 		
 		int remainder = likes.size() - (index * 45) >= 45 ? 45 : likes.size() % 45;
 		IntStream.range(0, remainder != 0 ? remainder : likes.isEmpty() ? 0 : 45).forEach(slotIndex -> {
