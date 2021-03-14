@@ -2,33 +2,33 @@ package amata1219.like.command;
 
 import java.util.Queue;
 
+import amata1219.bryionake.constant.CommandSenderCasters;
+import amata1219.bryionake.dsl.BukkitCommandExecutor;
+import amata1219.bryionake.dsl.context.CommandContext;
 import amata1219.like.masquerade.text.Text;
 import amata1219.like.slash.ContextualExecutor;
 import amata1219.like.slash.builder.ContextualExecutorBuilder;
 import amata1219.like.slash.effect.MessageEffect;
 import amata1219.like.ui.MyFavoriteLikeListUI;
 import amata1219.like.ui.MyLikeListUI;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 
-public class LikeListCommand {
+public class LikeListCommand implements BukkitCommandExecutor {
 	
-	private static final MessageEffect description = () -> Text.color(
-		"&7-不正なコマンドが入力されたため実行出来ませんでした。",
-		"&7-このコマンドは、/likel, /likel mine が有効です。"
-	);
-	
-	public static final ContextualExecutor executor = ContextualExecutorBuilder.playerCommandBuilder().execution(context -> sender -> {
-		Queue<String> args = context.arguments.unparsed;
-		switch(args.isEmpty() ? "favorite" : args.poll()){
-		case "mine":
-			new MyLikeListUI(sender.getUniqueId()).open(sender);
-			break;
-		case "favorite":
+	private final CommandContext<CommandSender> executor = define(CommandSenderCasters.casterToPlayer, (sender, unparsedArguments, parsedArguments) -> {
+		if (unparsedArguments.isEmpty() || unparsedArguments.peek().equalsIgnoreCase("favorite")) {
 			new MyFavoriteLikeListUI(sender.getUniqueId()).open(sender);
-			break;
-		default:
-			description.sendTo(sender);
-			break;
+		} else if (unparsedArguments.peek().equalsIgnoreCase("mine")) {
+			new MyLikeListUI(sender.getUniqueId()).open(sender);
+		} else {
+			sender.sendMessage(ChatColor.RED + "/likel または /likel mine を指定して下さい。");
 		}
-	}).build();
+	});
+
+	@Override
+	public CommandContext<CommandSender> executor() {
+		return executor;
+	}
 
 }
