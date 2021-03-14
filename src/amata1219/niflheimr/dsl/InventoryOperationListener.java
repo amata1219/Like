@@ -59,8 +59,7 @@ public class InventoryOperationListener implements Listener {
     }
 
     public static InventoryLayout tryExtractInventoryLayout(Inventory inventory) {
-        InventoryHolder holder = inventory.getHolder();
-        return holder instanceof InventoryLayout ? (InventoryLayout) holder : null;
+        return (InventoryLayout) inventory.getHolder();
     }
 
 }

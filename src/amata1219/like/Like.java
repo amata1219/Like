@@ -1,10 +1,13 @@
 package amata1219.like;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+import amata1219.like.masquerade.dsl.InventoryUI;
 import com.gmail.filoghost.holographicdisplays.disk.StringConverter;
 import com.gmail.filoghost.holographicdisplays.object.line.CraftTextLine;
 import org.bukkit.Location;
@@ -21,19 +24,25 @@ import amata1219.like.config.MainConfig;
 import amata1219.like.masquerade.task.AsyncTask;
 import amata1219.like.masquerade.text.Text;
 import amata1219.like.playerdata.PlayerData;
-import amata1219.like.reflection.Method;
 import amata1219.like.ui.AdministratorUI;
 import amata1219.like.ui.LikeEditingUI;
 import amata1219.like.ui.LikeInformationUI;
+import org.bukkit.entity.Player;
 
 public class Like {
 	
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy.MM.dd (E) HH:mm:ss");
-	private static final Method<CraftTouchableLine, Void> setTouchHandler = Method.of_(
-		CraftTouchableLine.class,
-		"setTouchHandler", 
-		TouchHandler.class, World.class, double.class, double.class, double.class
-	);
+	private static final Method setTouchHandler;
+
+	static {
+		Method touchHandlerSetter = null;
+		try {
+			touchHandlerSetter = CraftTouchableLine.class.getDeclaredMethod("setTouchHandler", TouchHandler.class, World.class, double.class, double.class, double.class);
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		}
+		setTouchHandler = touchHandlerSetter;
+	}
 			
 	private final Main plugin = Main.plugin();
 	private final MainConfig config = plugin.config();
@@ -49,8 +58,7 @@ public class Like {
 		this.hologram = hologram;
 		this.owner = owner;
 		this.favorites = favorites;
-		
-		setTouchHandler(false);
+		enableTouchHandler();
 	}
 	
 	public Like(NamedHologram hologram, UUID owner){
@@ -61,8 +69,8 @@ public class Like {
 		appendTextLine(config.likeFavoritesText().apply(favorites));
 		appendTextLine(config.likeDescription().apply(owner));
 		appendTextLine(config.likeUsage());
-		
-		setTouchHandler(false);
+
+		enableTouchHandler();
 	}
 
 	private void appendTextLine(String text) {
@@ -93,7 +101,7 @@ public class Like {
 	public void setOwner(UUID uuid){
 		Objects.requireNonNull(uuid);
 		PlayerData newOwner = plugin.players.get(uuid);
-		if(newOwner.isFavoriteLike(this)){
+		if (newOwner.isFavoriteLike(this)) {
 			decrementFavorites();
 			newOwner.unfavoriteLike(this);
 		}
@@ -140,9 +148,9 @@ public class Like {
 		line.setSerializedConfigValue(formattedText);
 		lines.set(index, line);
 		hologram.refreshAll();
-		if(index == 0){
-			setTouchHandler(true);
-			setTouchHandler(false);
+		if (index == 0) {
+			disableTouchHandler();
+			enableTouchHandler();
 		}
 		save();
 	}
@@ -155,8 +163,8 @@ public class Like {
 		hologram.teleport(loc.add(0, 2, 0));
 		hologram.despawnEntities();
 		hologram.refreshAll();
-		setTouchHandler(true);
-		setTouchHandler(false);
+		disableTouchHandler();
+		enableTouchHandler();
 		save();
 	}
 	
@@ -176,37 +184,55 @@ public class Like {
 		HologramDatabase.deleteHologram(hologram.getName());
 		if(alsoSave) HologramDatabase.trySaveToDisk();
 	}
-	
-	private void setTouchHandler(boolean delete){
-		TouchHandler handler = delete ? null : player -> {
-			UUID uuid = player.getUniqueId();
-			if(player.isSneaking()){
-				if(isOwner(uuid)) new LikeEditingUI(this).open(player);
-				else if(player.hasPermission(Main.OPERATOR_PERMISSION)) new AdministratorUI(this).open(player);
-				else new LikeInformationUI(this).open(player);
-			}else{
-				if(isOwner(uuid)){
-					Text.of("&c-自分のLikeはお気に入りに登録出来ません。").sendTo(player);
-					return;
-				}
-				
-				PlayerData data = plugin.players.get(uuid);
-				if(data.isFavoriteLike(this)){
-					Text.of("&c-このLikeは既にお気に入りに登録しています。").sendTo(player);
-					return;
-				}
-				
-				data.favoriteLike(this);
-				incrementFavorites();
-				Text.of("&a-このLikeをお気に入りに登録しました！", config.tip()).sendTo(player);
+
+	private void enableTouchHandler() {
+		setTouchHandler(this::touchHandler);
+	}
+
+	private void touchHandler(Player player) {
+		if (player.isSneaking()) {
+			InventoryUI ui;
+			if (isOwner(player.getUniqueId())) ui = new LikeEditingUI(this);
+			else if (player.hasPermission(Main.OPERATOR_PERMISSION)) ui = new AdministratorUI(this);
+			else ui = new LikeInformationUI(this);
+			ui.open(player);
+		}else{
+			if (isOwner(player.getUniqueId())) {
+				Text.of("&c-自分のLikeはお気に入りに登録できません。").sendTo(player);
+				return;
 			}
-		};
+
+			PlayerData data = plugin.players.get(player.getUniqueId());
+			if(data.isFavoriteLike(this)){
+				Text.of("&c-このLikeは既にお気に入りに登録しています。").sendTo(player);
+				return;
+			}
+
+			data.favoriteLike(this);
+			incrementFavorites();
+			Text.of("&a-このLikeをお気に入りに登録しました！", config.tip()).sendTo(player);
+		}
+	}
+
+	private void disableTouchHandler() {
+		setTouchHandler(null);
+	}
+
+	private void setTouchHandler(TouchHandler handler){
 		Location loc = hologram.getLocation();
 		loc.setPitch(90.0F);
 		CraftTouchableLine line = (CraftTouchableLine) hologram.getLine(0);
-		setTouchHandler.invoke(line, handler, loc.getWorld(), loc.getX(), loc.getY() - line.getHeight() * 3, loc.getZ());
+		setTouchHandler(line, handler, loc.getWorld(), loc.getX(), loc.getY() - line.getHeight() * 3, loc.getZ());
 		line = (CraftTouchableLine) hologram.getLine(2);
-		setTouchHandler.invoke(line, handler, loc.getWorld(), loc.getX(), loc.getY() - line.getHeight() * 1, loc.getZ());
+		setTouchHandler(line, handler, loc.getWorld(), loc.getX(), loc.getY() - line.getHeight() * 1, loc.getZ());
+	}
+
+	private static void setTouchHandler(CraftTouchableLine line, TouchHandler handler, World world, double x, double y, double z) {
+		try {
+			setTouchHandler.invoke(line, handler, world, x, y, z);
+		} catch (IllegalAccessException | InvocationTargetException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Override

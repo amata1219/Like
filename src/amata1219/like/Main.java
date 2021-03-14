@@ -6,12 +6,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
+import amata1219.niflheimr.dsl.InventoryLayout;
 import amata1219.niflheimr.dsl.InventoryOperationListener;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
@@ -39,7 +39,6 @@ import amata1219.like.masquerade.dsl.component.Layout;
 import amata1219.like.monad.Maybe;
 import amata1219.like.playerdata.PlayerData;
 import amata1219.like.playerdata.PlayerDatabase;
-import amata1219.like.reflection.SafeCast;
 import amata1219.like.tuplet.Tuple;
 import at.pcgamingfreaks.UUIDConverter;
 import net.milkbowl.vault.Vault;
@@ -144,18 +143,11 @@ public class Main extends JavaPlugin {
 		playerDatabase.writeAll();
 		likeDatabase.writeAll();
 
-		getServer().getOnlinePlayers().forEach(player -> {
-			Maybe.unit(player.getOpenInventory())
-			.map(InventoryView::getTopInventory)
-			.map(Inventory::getHolder)
-			.flatMap(x -> SafeCast.cast(x, Layout.class))
-			.apply(x -> player.closeInventory());
-		});
-
-		for (Player player : getServer().getOnlinePlayers()) {
-			if (InventoryOperationListener.tryExtractInventoryLayout(player.getInventory()) != null)
-				player.closeInventory();
-		}
+		getServer().getOnlinePlayers().forEach(player -> Maybe.unit(player.getOpenInventory())
+		.map(InventoryView::getTopInventory)
+		.map(Inventory::getHolder)
+		.filter(holder -> holder instanceof Layout || holder instanceof InventoryLayout)
+		.apply(x -> player.closeInventory()));
 
 		HandlerList.unregisterAll(this);
 	}
