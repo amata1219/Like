@@ -35,7 +35,8 @@ public class MainConfig extends Config {
 	private double invitationCosts;
 	private int radiusOfInvitationScope;
 	private String invitationMessage;
-	private long randomTeleportDelayedTicks;
+	private String randomTeleportationMessage;
+	private long randomTeleportationDelayedTicks;
 	
 	public MainConfig(){
 		super("config.yml");
@@ -94,7 +95,9 @@ public class MainConfig extends Config {
 		radiusOfInvitationScope = invitation.getInt("Radius of scope");
 		invitationMessage = color(invitation.getString("Message"));
 
-		randomTeleportDelayedTicks = config.getInt("RandomTeleportation.DelayedTicks");
+		ConfigurationSection randomTeleportation = config.getConfigurationSection("Random teleportation");
+		randomTeleportationMessage = color(randomTeleportation.getString("Message"));
+		randomTeleportationDelayedTicks = randomTeleportation.getLong("Delayed ticks");
 	}
 	
 	public boolean canLikesBeCreatedIn(World world){
@@ -149,8 +152,12 @@ public class MainConfig extends Config {
 		return new InvitationText(invitationMessage);
 	}
 
+	public String randomTeleportationMessage() {
+		return randomTeleportationMessage;
+	}
+
 	public long randomTeleportationDelayedTicks() {
-		return randomTeleportationDelayedTicks();
+		return randomTeleportationDelayedTicks;
 	}
 	
 	public enum IconType {
@@ -177,7 +184,7 @@ public class MainConfig extends Config {
 		
 	}
 	
-	public class LikeFavoritesText extends Text {
+	public static class LikeFavoritesText extends Text {
 		
 		private LikeFavoritesText(String text){
 			super(text);
@@ -188,7 +195,7 @@ public class MainConfig extends Config {
 		}
 	}
 	
-	public class LikeDescriptionText extends Text {
+	public static class LikeDescriptionText extends Text {
 		
 		private LikeDescriptionText(String text){
 			super(text);
@@ -200,7 +207,7 @@ public class MainConfig extends Config {
 		
 	}
 	
-	public class TeleportationText extends Text {
+	public static class TeleportationText extends Text {
 		
 		private TeleportationText(String text){
 			super(text);
@@ -214,7 +221,7 @@ public class MainConfig extends Config {
 		
 	}
 	
-	public class InvitationText extends Text {
+	public static class InvitationText extends Text {
 		
 		private InvitationText(String text){
 			super(text);

@@ -69,7 +69,8 @@
   #プレイヤーから半径何ブロック以内にいるプレイヤーを招待するか
   'Message': "&3&l【Like TP】%description% by %owner%\n&3 [%inviter% >> %invitee%] Click to Teleport!"
   #招待されたプレイヤーに表示されるメッセージ
-'Random Teleport':
+'Random Teleportation':
+#/likerandomコマンドについて
   'Message': "&aThe following items have been selected!"
   #コマンド実行後、Likeがランダムに選ばれた時に表示されるメッセージ
   'Delayed ticks': 160
