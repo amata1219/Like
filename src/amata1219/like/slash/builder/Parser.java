@@ -10,7 +10,7 @@ import amata1219.like.monad.Either;
 public interface Parser<T>{
 	
 	static Parser<String> identity(){
-		return x -> Success(x);
+		return Either::Success;
 	}
 	
 	static Parser<Boolean> bool(MessageEffect error){

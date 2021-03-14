@@ -43,7 +43,7 @@ public class Parsers {
         return offlinePlayer;
     }, () -> "指定されたプレイヤはこのサーバーに一度もログインした事がありません。");
 
-    public static final FailableParser<Player> onlinePlayer = player.append(player -> player.isOnline() ? success(player.getPlayer()) : failure("指定されたプレイヤーはオンラインではありません。"));
+    public static final FailableParser<Player> onlinePlayer = player.append(player -> player.isOnline() ? success(player.getPlayer()) : error("指定されたプレイヤーはオンラインではありません。"));
 
     public static final FailableParser<World> world = define(defineFailableMapper(Bukkit::getWorld), () -> "指定されたワールドは存在しません。");
 
@@ -52,13 +52,13 @@ public class Parsers {
             try {
                 return success(mapper.apply(arg));
             } catch (Exception e) {
-                return failure(Constants.ERROR_MESSAGE_PREFIX + "引数のパース処理に失敗しました。" + errorMessage.get());
+                return error("引数のパース処理に失敗しました。" + errorMessage.get());
             }
         };
     }
 
     public static <N extends Number & Comparable<N>> FailableParser<N> define(FailableParser<N> baseParser, Interval<N> restriction, Supplier<String> errorMessage) {
-        return baseParser.append(n -> restriction.contains(n) ? success(n) : failure(Constants.ERROR_MESSAGE_PREFIX + "引数のパース処理に失敗しました。" + errorMessage.get()));
+        return baseParser.append(n -> restriction.contains(n) ? success(n) : error("引数のパース処理に失敗しました。" + errorMessage.get()));
     }
 
     public static <T> Function<String, T> defineFailableMapper(Function<String, T> pureGetter) {
@@ -66,6 +66,10 @@ public class Parsers {
             if (v == null) throw new IllegalArgumentException();
             return v;
         });
+    }
+
+    public static <T> Either<String, T> error(String errorMessage) {
+        return failure(Constants.ERROR_MESSAGE_PREFIX + errorMessage);
     }
 
 }
