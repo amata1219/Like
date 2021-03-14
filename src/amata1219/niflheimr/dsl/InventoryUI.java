@@ -1,5 +1,6 @@
 package amata1219.niflheimr.dsl;
 
+import amata1219.like.task.TaskRunner;
 import amata1219.niflheimr.dsl.component.format.InventoryFormat;
 import amata1219.niflheimr.dsl.component.format.InventoryLines;
 import amata1219.niflheimr.dsl.component.format.InventoryType;
@@ -30,8 +31,7 @@ public interface InventoryUI {
     }
 
     default void openInventoryAsynchronously(Player player) {
-        Niflheimr plugin = Niflheimr.instance();
-        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> openInventory(player));
+        TaskRunner.runTaskAsynchronously(task -> openInventory(player));
     }
 
 }
