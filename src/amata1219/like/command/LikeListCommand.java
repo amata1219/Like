@@ -1,20 +1,16 @@
 package amata1219.like.command;
 
-import java.util.Queue;
-
 import amata1219.bryionake.constant.CommandSenderCasters;
 import amata1219.bryionake.dsl.BukkitCommandExecutor;
 import amata1219.bryionake.dsl.context.CommandContext;
-import amata1219.like.masquerade.text.Text;
-import amata1219.like.slash.ContextualExecutor;
-import amata1219.like.slash.builder.ContextualExecutorBuilder;
-import amata1219.like.slash.effect.MessageEffect;
 import amata1219.like.ui.MyFavoriteLikeListUI;
 import amata1219.like.ui.MyLikeListUI;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public class LikeListCommand implements BukkitCommandExecutor {
+
+	public static final LikeListCommand INSTANCE = new LikeListCommand();
 	
 	private final CommandContext<CommandSender> executor = define(CommandSenderCasters.casterToPlayer, (sender, unparsedArguments, parsedArguments) -> {
 		if (unparsedArguments.isEmpty() || unparsedArguments.peek().equalsIgnoreCase("favorite")) {

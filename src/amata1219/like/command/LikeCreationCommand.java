@@ -12,16 +12,14 @@ import com.gmail.filoghost.holographicdisplays.object.NamedHologramManager;
 import amata1219.like.Like;
 import amata1219.like.Main;
 import amata1219.like.config.MainConfig;
-import amata1219.like.masquerade.task.SyncTask;
-import amata1219.like.masquerade.text.Text;
 import amata1219.like.playerdata.PlayerData;
-import amata1219.like.slash.ContextualExecutor;
-import amata1219.like.slash.builder.ContextualExecutorBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public class LikeCreationCommand implements BukkitCommandExecutor {
-	
+
+	public static final LikeCreationCommand INSTANCE = new LikeCreationCommand();
+
 	private final CommandContext<CommandSender> executor = define(CommandSenderCasters.casterToPlayer, (sender, unparsedArguments, parsedArguments) -> {
 		Main plugin = Main.plugin();
 		MainConfig config = plugin.config();
