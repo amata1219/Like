@@ -10,7 +10,7 @@ import amata1219.like.Main;
 import amata1219.like.config.MainConfig;
 import amata1219.like.masquerade.task.SyncTask;
 import amata1219.like.masquerade.text.Text;
-import amata1219.like.player.PlayerData;
+import amata1219.like.playerdata.PlayerData;
 import amata1219.like.slash.ContextualExecutor;
 import amata1219.like.slash.builder.ContextualExecutorBuilder;
 

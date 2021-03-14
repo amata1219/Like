@@ -20,7 +20,7 @@ import com.gmail.filoghost.holographicdisplays.object.line.CraftTouchableLine;
 import amata1219.like.config.MainConfig;
 import amata1219.like.masquerade.task.AsyncTask;
 import amata1219.like.masquerade.text.Text;
-import amata1219.like.player.PlayerData;
+import amata1219.like.playerdata.PlayerData;
 import amata1219.like.reflection.Method;
 import amata1219.like.ui.AdministratorUI;
 import amata1219.like.ui.LikeEditingUI;

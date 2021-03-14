@@ -7,7 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import amata1219.like.Main;
-import amata1219.like.player.PlayerData;
+import amata1219.like.playerdata.PlayerData;
 
 public class CreatePlayerDataListener implements Listener {
 	

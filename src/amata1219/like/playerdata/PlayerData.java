@@ -1,4 +1,4 @@
-package amata1219.like.player;
+package amata1219.like.playerdata;
 
 import java.util.HashMap;
 
