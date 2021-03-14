@@ -2,6 +2,10 @@ package amata1219.like.command;
 
 import java.util.UUID;
 
+import amata1219.bryionake.constant.CommandSenderCasters;
+import amata1219.bryionake.dsl.BukkitCommandExecutor;
+import amata1219.bryionake.dsl.context.CommandContext;
+import amata1219.like.TaskRunner;
 import com.gmail.filoghost.holographicdisplays.object.NamedHologram;
 import com.gmail.filoghost.holographicdisplays.object.NamedHologramManager;
 
@@ -13,42 +17,49 @@ import amata1219.like.masquerade.text.Text;
 import amata1219.like.playerdata.PlayerData;
 import amata1219.like.slash.ContextualExecutor;
 import amata1219.like.slash.builder.ContextualExecutorBuilder;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 
-public class LikeCreationCommand {
+public class LikeCreationCommand implements BukkitCommandExecutor {
 	
-	public static final ContextualExecutor executor = ContextualExecutorBuilder.playerCommandBuilder().execution(context -> sender -> {
+	private final CommandContext<CommandSender> executor = define(CommandSenderCasters.casterToPlayer, (sender, unparsedArguments, parsedArguments) -> {
 		Main plugin = Main.plugin();
 		MainConfig config = plugin.config();
-		if(!config.canLikesBeCreatedIn(sender.getWorld())){
-			Text.of("&c-このワールドではLikeを作成出来ません。").accept(sender::sendMessage);
+
+		if (!config.canLikesBeCreatedIn(sender.getWorld())) {
+			sender.sendMessage(ChatColor.RED + "このワールドではLikeを作成できません。");
 			return;
 		}
-		
-		if(plugin.cooldownMap.contains(sender.getUniqueId())){
-			Text.of("&c-クールダウン中であるためLikeを作成出来ません。").accept(sender::sendMessage);
+
+		if (plugin.cooldownMap.contains(sender.getUniqueId())) {
+			sender.sendMessage(ChatColor.RED + "クールダウン中であるためLikeを作成できません。");
 			return;
 		}
-		
-		UUID uuid = sender.getUniqueId();
-		PlayerData data = plugin.players.get(uuid);
-		if(data.likes.size() >= plugin.likeLimitDatabase().read(uuid)){
-			Text.of("&c-作成上限に達しているため、これ以上Likeは作成出来ません。").accept(sender::sendMessage);
+
+		UUID uniqueId = sender.getUniqueId();
+		PlayerData playerdata = plugin.players.get(uniqueId);
+		if (playerdata.likes.size() >= plugin.likeLimitDatabase().read(uniqueId)) {
+			sender.sendMessage(ChatColor.RED + "Likeの作成上限に達しているため、これ以上Likeを作成できません。");
 			return;
 		}
-		
+
 		NamedHologram hologram = new NamedHologram(sender.getLocation().add(0, 2, 0), String.valueOf(System.currentTimeMillis()));
-		Like like = new Like(hologram, uuid);
+		Like like = new Like(hologram, uniqueId);
 		NamedHologramManager.addHologram(hologram);
 		hologram.refreshAll();
 		like.save();
-		
+
 		plugin.likes.put(like.id, like);
-		data.registerLike(like);
-		
-		Text.of("&a-Like(ID: %s)を作成しました。").apply(like.id).accept(sender::sendMessage);
-		
-		SyncTask.define(() -> plugin.cooldownMap.remove(uuid))
-		.executeLater(plugin.config().numberOfSecondsOfLikeCreationCooldown());
-	}).build();
+		playerdata.registerLike(like);
+
+		sender.sendMessage(ChatColor.GREEN + "Like(ID: " + like.id + ")を作成しました。");
+
+		TaskRunner.runTaskLaterSynchronously(task -> plugin.cooldownMap.remove(uniqueId), config.numberOfSecondsOfLikeCreationCooldown());
+	});
+
+	@Override
+	public CommandContext<CommandSender> executor() {
+		return executor;
+	}
 
 }
