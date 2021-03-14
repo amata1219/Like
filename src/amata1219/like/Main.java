@@ -114,12 +114,12 @@ public class Main extends JavaPlugin {
 		
 		config = new MainConfig();
 		
-		executors.put("like", LikeCommand.executor);
-		executors.put("likec", LikeCreationCommand.executor);
-		executors.put("likel", LikeListCommand.executor);
+		executors.put("like", new LikeCommand());
+		executors.put("likec", LikeCreationCommand.INSTANCE);
+		executors.put("likel", LikeListCommand.INSTANCE);
 		executors.put("likes", LikeStatusCommand.executor);
 		executors.put("liketoken", LikeTeleportationAuthenticationCommand.executor);
-		executors.put("likeb", BookmarkCommand.executor);
+		executors.put("likeb", new BookmarkCommand());
 		executors.put("likeop", LikeOperatorCommand.executor);
 		
 		getServer().getScheduler().runTaskLater(this, () -> {

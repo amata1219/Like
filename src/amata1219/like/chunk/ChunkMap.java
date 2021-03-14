@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
-import static amata1219.like.chunk.ChunkHashCalculator.*;
-
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 
@@ -64,6 +62,10 @@ public class ChunkMap<V> {
 		List<V> list = map.get(hash);
 		list.remove(value);
 		if(list.isEmpty()) map.remove(hash);
+	}
+
+	private static long calculate(long x, long z){
+		return ((x >> 4) << 32) ^ (z >> 4);
 	}
 
 }
