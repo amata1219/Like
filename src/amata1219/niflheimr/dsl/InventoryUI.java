@@ -1,6 +1,6 @@
 package amata1219.niflheimr.dsl;
 
-import amata1219.like.task.TaskRunner;
+import amata1219.like.TaskRunner;
 import amata1219.niflheimr.dsl.component.format.InventoryFormat;
 import amata1219.niflheimr.dsl.component.format.InventoryLines;
 import amata1219.niflheimr.dsl.component.format.InventoryType;
