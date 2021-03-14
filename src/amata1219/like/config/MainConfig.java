@@ -35,6 +35,7 @@ public class MainConfig extends Config {
 	private double invitationCosts;
 	private int radiusOfInvitationScope;
 	private String invitationMessage;
+	private long randomTeleportDelayedTicks;
 	
 	public MainConfig(){
 		super("config.yml");
@@ -92,6 +93,8 @@ public class MainConfig extends Config {
 		invitationCosts = invitation.getDouble("Costs");
 		radiusOfInvitationScope = invitation.getInt("Radius of scope");
 		invitationMessage = color(invitation.getString("Message"));
+
+		randomTeleportDelayedTicks = config.getInt("RandomTeleportation.DelayedTicks");
 	}
 	
 	public boolean canLikesBeCreatedIn(World world){
@@ -144,6 +147,10 @@ public class MainConfig extends Config {
 	
 	public InvitationText invitationText(){
 		return new InvitationText(invitationMessage);
+	}
+
+	public long randomTeleportationDelayedTicks() {
+		return randomTeleportationDelayedTicks();
 	}
 	
 	public enum IconType {
