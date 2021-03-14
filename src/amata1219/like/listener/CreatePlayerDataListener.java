@@ -16,7 +16,7 @@ public class CreatePlayerDataListener implements Listener {
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e){
 		UUID uuid = e.getPlayer().getUniqueId();
-		if(!plugin.players.containsKey(uuid)) plugin.players.put(uuid, new PlayerData());
+		if (!plugin.players.containsKey(uuid)) plugin.players.put(uuid, new PlayerData());
 	}
 
 }

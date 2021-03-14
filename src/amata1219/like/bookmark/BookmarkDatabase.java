@@ -22,7 +22,7 @@ public class BookmarkDatabase extends Config {
 	public HashMap<String, Bookmark> readAll(){
 		FileConfiguration config = config();
 		HashMap<String, Bookmark> bookmarks = new HashMap<>();
-		for(String path : config.getKeys(false)){
+		for (String path : config.getKeys(false)) {
 			String data = config.getString(path);
 			String[] parts = data.split(":");
 			Order order = Order.values()[Integer.parseInt(parts[0])];

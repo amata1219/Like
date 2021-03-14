@@ -1,52 +1,51 @@
 package amata1219.like.listener;
 
-import java.util.UUID;
-
-import org.bukkit.Bukkit;
+import amata1219.like.Main;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import amata1219.like.Main;
-import amata1219.like.masquerade.text.Text;
-import amata1219.like.monad.Either;
-import net.md_5.bungee.api.ChatColor;
+import java.util.HashMap;
+import java.util.UUID;
 
 public class EditLikeDescriptionListener implements Listener {
 	
 	private final Main plugin = Main.plugin();
 	
 	@EventHandler(ignoreCancelled = true)
-	public void onChat(AsyncPlayerChatEvent e){
-		Player player = e.getPlayer();
-		UUID uuid = player.getUniqueId();
+	public void onChat(AsyncPlayerChatEvent event){
+		Player player = event.getPlayer();
+		UUID uniqueId = player.getUniqueId();
+
+		HashMap<UUID, Long> descriptionEditors = plugin.descriptionEditors;
+		if (!descriptionEditors.containsKey(uniqueId)) return;
 		
-		if(!plugin.descriptionEditors.containsKey(uuid)) return;
-		
-		e.setCancelled(true);
-		
-		Bukkit.getScheduler().runTask(plugin, () -> {
-			Either.<String, Long>unit(plugin.descriptionEditors.get(uuid), Text.color("&c-編集対象のLikeは削除されています。"))
-			.flatMap(id -> plugin.likes.containsKey(id) ? Either.Success(plugin.likes.get(id)) : Either.Failure(Text.color("&c-編集対象のLikeは削除されています。")))
-			.onSuccess(like -> {
-				String message = e.getMessage();
-				if(message.equals("cancel")){
-					Text.of("&c-Like(%s)の表示内容の編集をキャンセルしました。").apply(like.id).sendTo(player);
-				}else{
-					like.setDescription(ChatColor.translateAlternateColorCodes('&', message));
-					Text.of("&a-Like(%s)の表示内容を編集しました。").apply(like.id).sendTo(player);
-				}
-				plugin.descriptionEditors.remove(uuid);
-			})
-			.onFailure(player::sendMessage);
-		});
+		event.setCancelled(true);
+
+		Long targetLikeId = descriptionEditors.get(uniqueId);
+		descriptionEditors.remove(uniqueId);
+
+		if (targetLikeId == null || !plugin.likes.containsKey(targetLikeId)) {
+			player.sendMessage(ChatColor.RED + "編集対象のLikeが削除されているため、編集をキャンセルしました。");
+			return;
+		}
+
+		if (event.getMessage().equalsIgnoreCase("cancel")) {
+			player.sendMessage(ChatColor.RED + "Like(ID: " + targetLikeId + ")の表示内容の編集をキャンセルしました。");
+			return;
+		}
+
+		plugin.likes.get(targetLikeId).setDescription(ChatColor.translateAlternateColorCodes('&', event.getMessage()));
+
+		player.sendMessage(ChatColor.GREEN + "Like(ID: " + targetLikeId + ")の表示内容を編集しました。");
 	}
 	
 	@EventHandler
-	public void onQuit(PlayerQuitEvent e){
-		plugin.descriptionEditors.remove(e.getPlayer().getUniqueId());
+	public void onQuit(PlayerQuitEvent event){
+		plugin.descriptionEditors.remove(event.getPlayer().getUniqueId());
 	}
 
 }
