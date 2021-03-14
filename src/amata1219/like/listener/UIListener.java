@@ -11,35 +11,35 @@ import amata1219.like.masquerade.dsl.component.Layout;
 import amata1219.like.masquerade.event.ClickEvent;
 import amata1219.like.masquerade.event.CloseEvent;
 import amata1219.like.masquerade.event.OpenEvent;
-import amata1219.like.monad.Maybe;
-import amata1219.like.reflection.SafeCast;
 
 public class UIListener implements Listener {
 
 	@EventHandler
 	public void onOpen(InventoryOpenEvent event){
-		extractLayout(event.getInventory()).apply(l -> l.fire(new OpenEvent(event)));
+		Layout layout = tryExtractLayout(event.getInventory());
+		if (layout != null) layout.fire(new OpenEvent(event));
 	}
 
 	@EventHandler
 	public void onClick(InventoryClickEvent event){
-		extractLayout(event.getInventory()).apply(l -> {
-			event.setCancelled(true);
-			ClickEvent e = new ClickEvent(event);
-			l.fire(e);
-			l.slotAt(event.getSlot()).fire(e);
-		});
+		Layout layout = tryExtractLayout(event.getInventory());
+		if (layout == null) return;
+
+		ClickEvent clickEvent = new ClickEvent(event);
+		layout.fire(clickEvent);
+		layout.slotAt(event.getSlot()).fire(clickEvent);
+
+		event.setCancelled(true);
 	}
 
 	@EventHandler
 	public void onOpen(InventoryCloseEvent event){
-		extractLayout(event.getInventory()).apply(l -> l.fire(new CloseEvent(event)));
+		Layout layout = tryExtractLayout(event.getInventory());
+		if (layout != null) layout.fire(new CloseEvent(event));
 	}
 
-	private Maybe<Layout> extractLayout(Inventory inventory){
-		return Maybe.unit(inventory)
-				.map(Inventory::getHolder)
-				.flatMap(x -> SafeCast.cast(x, Layout.class));
+	private Layout tryExtractLayout(Inventory inventory) {
+		return (Layout) inventory.getHolder();
 	}
 
 }
