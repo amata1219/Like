@@ -65,14 +65,6 @@ public abstract class Config {
 		return Material.valueOf(s);
 	}
 	
-	/*protected Material material(String s){
-		try{
-			return Material.valueOf(s);
-		}catch(Exception e){
-			return Material.GRASS_BLOCK;
-		}
-	}*/
-	
 	public abstract void load();
 
 }
