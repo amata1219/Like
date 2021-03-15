@@ -1,5 +1,6 @@
-package amata1219.like;
+package amata1219.task;
 
+import amata1219.like.Main;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;

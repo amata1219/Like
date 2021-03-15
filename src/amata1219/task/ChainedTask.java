@@ -1,5 +1,6 @@
-package amata1219.like;
+package amata1219.task;
 
+import amata1219.like.Main;
 import org.bukkit.Bukkit;
 
 import java.util.function.BiConsumer;
