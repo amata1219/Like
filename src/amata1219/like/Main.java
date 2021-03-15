@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.UUID;
 
 import amata1219.like.command.*;
-import amata1219.niflheimr.dsl.InventoryLayout;
-import amata1219.niflheimr.dsl.InventoryOperationListener;
+import amata1219.like.config.TourConfig;
+import amata1219.like.masquerade.enchantment.GleamEnchantment;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -68,6 +68,7 @@ public class Main extends JavaPlugin {
 	private PlayerDatabase playerDatabase;
 	private LikeLimitDatabase likeLimitDatabase;
 	private BookmarkDatabase bookmarkDatabase;
+	private TourConfig tourConfig;
 	
 	public final HashMap<Long, Like> likes = new HashMap<>();
 	public final HashMap<UUID, PlayerData> players = new HashMap<>();
@@ -92,7 +93,7 @@ public class Main extends JavaPlugin {
 			acceptingNew = Enchantment.class.getDeclaredField("acceptingNew");
 			acceptingNew.setAccessible(true);
 			acceptingNew.set(null, true);
-			Enchantment.registerEnchantment(amata1219.niflheimr.enchantment.GleamEnchantment.INSTANCE);
+			Enchantment.registerEnchantment(GleamEnchantment.INSTANCE);
 			acceptingNew.set(null, false);
 			acceptingNew.setAccessible(false);
 		} catch (NoSuchFieldException | IllegalAccessException ignored) {
@@ -101,7 +102,6 @@ public class Main extends JavaPlugin {
 
 		registerEventListeners(
 			new UIListener(),
-			new InventoryOperationListener(),
 			new CreatePlayerDataListener(),
 			new EditingLikeDescriptionListener()
 		);
@@ -128,7 +128,9 @@ public class Main extends JavaPlugin {
 			likeLimitDatabase = new LikeLimitDatabase();
 			bookmarkDatabase = new BookmarkDatabase();
 			bookmarkDatabase.readAll().forEach(bookmarks::put);
-		}, 5);
+
+			tourConfig = new TourConfig();
+		}, 15);
 	}
 	
 	@Override
@@ -141,7 +143,7 @@ public class Main extends JavaPlugin {
 		getServer().getOnlinePlayers().forEach(player -> Maybe.unit(player.getOpenInventory())
 		.map(InventoryView::getTopInventory)
 		.map(Inventory::getHolder)
-		.filter(holder -> holder instanceof Layout || holder instanceof InventoryLayout)
+		.filter(holder -> holder instanceof Layout)
 		.apply(x -> player.closeInventory()));
 
 		HandlerList.unregisterAll(this);

@@ -31,7 +31,7 @@ public class PlayerDatabase extends Config {
 			UUID uuid = UUID.fromString(path);
 			playerLikes.getOrDefault(uuid, Collections.emptyList()).forEach(data::registerLike);
 			String[] likes = config.getString(uuid.toString()).split(",");
-			if(!(likes.length == 1 && likes[0].isEmpty()) || likes.length > 1){
+			if(!(likes.length == 1 && likes[0].isEmpty())){
 				Arrays.stream(likes)
 				.map(Long::valueOf)
 				.map(plugin.likes::get)
