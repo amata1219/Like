@@ -1,4 +1,4 @@
-package amata1219.bryionake.constant;
+package amata1219.like.bryionake.constant;
 
 import static org.bukkit.ChatColor.*;
 

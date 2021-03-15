@@ -1,6 +1,6 @@
 package amata1219.like.command;
 
-import amata1219.bryionake.dsl.parser.FailableParser;
+import amata1219.like.bryionake.dsl.parser.FailableParser;
 import amata1219.like.Like;
 import amata1219.like.Main;
 import amata1219.like.bookmark.Bookmark;
@@ -12,8 +12,8 @@ import org.bukkit.OfflinePlayer;
 import java.util.HashMap;
 import java.util.UUID;
 
-import static amata1219.bryionake.adt.Either.success;
-import static amata1219.bryionake.constant.Parsers.*;
+import static amata1219.like.bryionake.adt.Either.success;
+import static amata1219.like.bryionake.constant.Parsers.*;
 
 public class ParserTemplates {
 

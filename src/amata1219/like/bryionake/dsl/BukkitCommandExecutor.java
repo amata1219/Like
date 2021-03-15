@@ -1,14 +1,14 @@
-package amata1219.bryionake.dsl;
+package amata1219.like.bryionake.dsl;
 
-import amata1219.bryionake.adt.Pair;
-import amata1219.bryionake.constant.Constants;
-import amata1219.bryionake.dsl.argument.ParsedArgumentQueue;
-import amata1219.bryionake.dsl.caster.SafeCaster;
-import amata1219.bryionake.dsl.context.BranchContext;
-import amata1219.bryionake.dsl.context.CastingCommandSenderContext;
-import amata1219.bryionake.dsl.context.CommandContext;
-import amata1219.bryionake.dsl.context.ExecutionContext;
-import amata1219.bryionake.dsl.parser.FailableParser;
+import amata1219.like.bryionake.adt.Pair;
+import amata1219.like.bryionake.constant.Constants;
+import amata1219.like.bryionake.dsl.argument.ParsedArgumentQueue;
+import amata1219.like.bryionake.dsl.caster.SafeCaster;
+import amata1219.like.bryionake.dsl.context.BranchContext;
+import amata1219.like.bryionake.dsl.context.CastingCommandSenderContext;
+import amata1219.like.bryionake.dsl.context.CommandContext;
+import amata1219.like.bryionake.dsl.context.ExecutionContext;
+import amata1219.like.bryionake.dsl.parser.FailableParser;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

@@ -1,6 +1,6 @@
-package amata1219.bryionake.dsl.caster;
+package amata1219.like.bryionake.dsl.caster;
 
-import amata1219.bryionake.adt.Either;
+import amata1219.like.bryionake.adt.Either;
 
 import java.util.function.Supplier;
 

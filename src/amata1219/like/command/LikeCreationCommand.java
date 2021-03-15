@@ -2,10 +2,10 @@ package amata1219.like.command;
 
 import java.util.UUID;
 
-import amata1219.bryionake.constant.CommandSenderCasters;
-import amata1219.bryionake.dsl.BukkitCommandExecutor;
-import amata1219.bryionake.dsl.context.CommandContext;
-import amata1219.task.TaskRunner;
+import amata1219.like.bryionake.constant.CommandSenderCasters;
+import amata1219.like.bryionake.dsl.BukkitCommandExecutor;
+import amata1219.like.bryionake.dsl.context.CommandContext;
+import amata1219.like.task.TaskRunner;
 import com.gmail.filoghost.holographicdisplays.object.NamedHologram;
 import com.gmail.filoghost.holographicdisplays.object.NamedHologramManager;
 

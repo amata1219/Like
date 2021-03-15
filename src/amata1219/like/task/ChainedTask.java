@@ -1,4 +1,4 @@
-package amata1219.task;
+package amata1219.like.task;
 
 import amata1219.like.Main;
 import org.bukkit.Bukkit;

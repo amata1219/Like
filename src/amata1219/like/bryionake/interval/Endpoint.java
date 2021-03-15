@@ -1,4 +1,4 @@
-package amata1219.bryionake.interval;
+package amata1219.like.bryionake.interval;
 
 import java.util.function.Supplier;
 

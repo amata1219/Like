@@ -1,4 +1,4 @@
-package amata1219.bryionake.adt;
+package amata1219.like.bryionake.adt;
 
 public class Pair<L, R> {
 

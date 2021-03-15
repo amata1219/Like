@@ -1,6 +1,6 @@
-package amata1219.bryionake.constant;
+package amata1219.like.bryionake.constant;
 
-import amata1219.bryionake.dsl.caster.SafeCaster;
+import amata1219.like.bryionake.dsl.caster.SafeCaster;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

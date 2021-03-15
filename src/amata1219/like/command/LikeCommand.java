@@ -1,8 +1,8 @@
 package amata1219.like.command;
 
-import amata1219.bryionake.constant.CommandSenderCasters;
-import amata1219.bryionake.dsl.BukkitCommandExecutor;
-import amata1219.bryionake.dsl.context.CommandContext;
+import amata1219.like.bryionake.constant.CommandSenderCasters;
+import amata1219.like.bryionake.dsl.BukkitCommandExecutor;
+import amata1219.like.bryionake.dsl.context.CommandContext;
 import amata1219.like.ui.MyLikeListUI;
 import com.google.common.base.Joiner;
 import org.bukkit.command.CommandSender;

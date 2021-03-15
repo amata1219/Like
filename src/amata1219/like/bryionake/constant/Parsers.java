@@ -1,8 +1,8 @@
-package amata1219.bryionake.constant;
+package amata1219.like.bryionake.constant;
 
-import amata1219.bryionake.adt.Either;
-import amata1219.bryionake.dsl.parser.FailableParser;
-import amata1219.bryionake.interval.Interval;
+import amata1219.like.bryionake.adt.Either;
+import amata1219.like.bryionake.dsl.parser.FailableParser;
+import amata1219.like.bryionake.interval.Interval;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
@@ -11,9 +11,9 @@ import org.bukkit.entity.Player;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static amata1219.bryionake.adt.Either.failure;
-import static amata1219.bryionake.adt.Either.success;
-import static amata1219.bryionake.interval.Endpoint.closedEndpoint;
+import static amata1219.like.bryionake.adt.Either.failure;
+import static amata1219.like.bryionake.adt.Either.success;
+import static amata1219.like.bryionake.interval.Endpoint.closedEndpoint;
 
 public class Parsers {
 
