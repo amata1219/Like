@@ -6,7 +6,6 @@ import amata1219.bryionake.dsl.BukkitCommandExecutor;
 import amata1219.bryionake.dsl.context.BranchContext;
 import amata1219.bryionake.dsl.context.CommandContext;
 import amata1219.like.Like;
-import amata1219.like.masquerade.text.Text;
 import com.google.common.base.Joiner;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -28,9 +27,7 @@ public class LikeStatusCommand implements BukkitCommandExecutor {
 						return;
 					}
 					like.setDescription(desc);
-					Text.of("&a-Like(ID: %s)の説明文を-&r-%s-&r&a-に設定しました。")
-							.apply(like.id, like.description())
-							.sendTo(sender);
+					sender.sendMessage(ChatColor.GREEN + "Like(ID: " + like.id + ")の説明文を[" + ChatColor.RESET + like.description() + "]" + ChatColor.RESET + "に設定しました。");
 				},
 				ParserTemplates.like,
 				Parsers.str
@@ -46,7 +43,7 @@ public class LikeStatusCommand implements BukkitCommandExecutor {
 					}
 
 					like.teleportTo(sender.getLocation());
-					Text.of("&a-Like(ID: %s)を現在地に移動しました。").apply(like.id).sendTo(sender);
+					sender.sendMessage(ChatColor.GREEN + "Like(ID: " + like.id + ")を現在の位置に移動しました。");
 				},
 				ParserTemplates.like
 		);

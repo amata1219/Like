@@ -3,6 +3,13 @@ package amata1219.like.command;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import amata1219.bryionake.constant.CommandSenderCasters;
+import amata1219.bryionake.constant.Parsers;
+import amata1219.bryionake.dsl.BukkitCommandExecutor;
+import amata1219.bryionake.dsl.context.CommandContext;
+import com.google.common.base.Joiner;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.command.CommandExecutor;
@@ -24,118 +31,113 @@ import amata1219.like.slash.executor.EchoExecutor;
 import amata1219.like.tuplet.Tuple;
 import amata1219.like.masquerade.text.Text;
 import amata1219.like.monad.Maybe;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
-public class LikeOperatorCommand {
-	
-	private static final MessageEffect movedescription = () -> Text.color(
-			"&7-不正なコマンドが入力されたため実行出来ませんでした。",
-			"&7-Likeを現在地に移動する: /likeop move [like_id]"
-			);
-	
-	private static final ContextualExecutor move = ContextualExecutorBuilder.playerCommandBuilder()
-			.parsers(
-				movedescription,
-				ParserTemplates.like()
-			).execution(context -> sender -> {
-				Like like = context.arguments.parsed(0);
-				like.teleportTo(sender.getLocation());
-				Text.of("&a-Like(ID: %s)を現在地に移動しました。").apply(like.id).sendTo(sender);
-			}).build();
-	
-	private static final MessageEffect deletedescription = () -> Text.color(
-			"&7-不正なコマンドが入力されたため実行出来ませんでした。",
-			"&7-Likeを削除する: /likeop delete [like_id]"
-			);
-	
-	private static final ContextualExecutor delete = ContextualExecutorBuilder.playerCommandBuilder()
-			.parsers(
-				deletedescription,
-				ParserTemplates.like()
-			).execution(context -> sender -> {
-				Like like = context.arguments.parsed(0);
-				like.delete(true);
-				Text.of("&c-Like(ID: %s)を削除しました").apply(like.id).sendTo(sender);
-			}).build();
-			
-	private static final MessageEffect deleteplayerdescription = () -> Text.color(
-			"&7-不正なコマンドが入力されたため実行出来ませんでした。",
-			"&7-プレイヤーが作成したLikeを全削除する: /likeop deleteplayer [player_name]"
-			);
-	
-	private static final ContextualExecutor deleteplayer = ContextualExecutorBuilder.playerCommandBuilder()
-			.parsers(
-				deleteplayerdescription,
-				ParserTemplates.player()
-			).execution(context -> sender -> {
-				OfflinePlayer player = context.arguments.parsed(0);
-				String name = player.getName();
-				UUID uuid = player.getUniqueId();
-				HashMap<Long, Like> list = Main.plugin().players.get(uuid).likes;
-				if(list.isEmpty()){
-					Text.of("&c-%sはLikeを作成していません。").apply(name).sendTo(sender);
-					return;
-				}
-				int deleted = list.size();
-				list.values().forEach(like -> like.delete(false));
-				HologramDatabase.trySaveToDisk();
-				Text.of("&c-%sが作成したLike(%s個)を全て削除しました。").apply(name, deleted).sendTo(sender);
-			}).build();
-	
-	private static final MessageEffect deleteworlddescription = () -> Text.color(
-			"&7-不正なコマンドが入力されたため実行出来ませんでした。",
-			"&7-ワールド内のLikeを全削除する: /likeop deleteworld [world_name]"
-			);
-	
-	private static final ContextualExecutor deleteworld = ContextualExecutorBuilder.playerCommandBuilder()
-			.parsers(
-				deleteworlddescription,
-				ParserTemplates.world()
-			).execution(context -> sender -> {
-				World world = context.arguments.parsed(0);
-				AtomicInteger count = new AtomicInteger();
-				new HashMap<>(Main.plugin().likes).values().forEach(like -> {
-					if(like.world().equals(world)){
+public class LikeOperatorCommand implements BukkitCommandExecutor {
+
+	private final CommandContext<CommandSender> executor;
+
+	private static String join(String... strs) {
+		return Joiner.on('\n').join(strs);
+	}
+
+	{
+		CommandContext<CommandSender> move = define(CommandSenderCasters.casterToPlayer, define(
+				() -> join(
+						ChatColor.RED + "正しいコマンドが入力されなかったため実行できませんでした。。",
+						ChatColor.GRAY + "Likeを現在地に移動する: /likeop move [LikeのID]"
+				),
+				(sender, unparsedArguments, parsedArguments) -> {
+					Like like = parsedArguments.poll();
+					like.teleportTo(sender.getLocation());
+					sender.sendMessage(ChatColor.GREEN + "Like(ID: " + like.id + ")を現在の位置に移動しました。");
+				},
+				ParserTemplates.like
+		));
+
+		CommandContext<CommandSender> delete = define(
+				() -> join(
+						ChatColor.RED + "正しいコマンドが入力されなかったため実行できませんでした。。",
+					ChatColor.GRAY + "Likeを削除する：/likeop delete [LikeのID]"
+				),
+				(sender, unparsedArguments, parsedArguments) -> {
+					Like like = parsedArguments.poll();
+					like.delete(true);
+					sender.sendMessage(ChatColor.RED + "Like(ID: " + like.id + ")を削除しました。");
+				},
+				ParserTemplates.like
+		);
+
+		CommandContext<CommandSender> deletePlayer = define(
+				() -> join(
+						ChatColor.RED + "正しいコマンドが入力されなかったため実行できませんでした。。",
+						ChatColor.DARK_RED + "プレイヤーが作成したLikeを全削除する：/likeop deleteplayer [プレイヤー名]"
+				),
+				(sender, unparsedArguments, parsedArguments) -> {
+					OfflinePlayer player = parsedArguments.poll();
+
+					HashMap<Long, Like> playerLikes = Main.plugin().players.get(player.getUniqueId()).likes;
+					if (playerLikes.isEmpty()) {
+						sender.sendMessage(ChatColor.RED + player.getName() + "はLikeを作成していません。");
+						return;
+					}
+
+					int deletedLikesCount = playerLikes.size();
+					playerLikes.values().forEach(like -> like.delete(false));
+					HologramDatabase.trySaveToDisk();
+
+					sender.sendMessage(ChatColor.DARK_RED + player.getName() + "が作成したLike(" + deletedLikesCount + ")を全て削除しました。");
+				},
+				ParserTemplates.player
+		);
+
+		CommandContext<CommandSender> deleteWorld = define(
+				() -> join(
+						ChatColor.RED + "正しいコマンドが入力されなかったため実行できませんでした。。",
+						ChatColor.DARK_RED + "ワールド内の全Likeを削除する：/likeop deleteworld [ワールド名]"
+				),
+				(sender, unparsedArguments, parsedArguments) -> {
+					World world = parsedArguments.poll();
+					AtomicInteger count = new AtomicInteger();
+					for (Like like : new HashMap<>(Main.plugin().likes).values()) if (like.world().equals(world)) {
 						like.delete(false);
 						count.incrementAndGet();
 					}
-				});
-				HologramDatabase.trySaveToDisk();
-				Text.of("&c-%sワールドに存在するLike(%s個)を全て削除しました。").apply(world.getName(), count.get()).sendTo(sender);
-			}).build();
-	
-	private static final MessageEffect changeownerdescription = () -> Text.color(
-			"&7-不正なコマンドが入力されたため実行出来ませんでした。",
-			"&7-Likeの所有者を変更する: /likeop changeowner [like_id] [new_owner_name]"
-			);
-	
-	private static final ContextualExecutor changeowner = ContextualExecutorBuilder.playerCommandBuilder()
-			.parsers(
-				changeownerdescription,
-				ParserTemplates.like(),
-				ParserTemplates.player()
-			).execution(context -> sender -> {
-				Like like = context.arguments.parsed(0);
-				OfflinePlayer player = context.arguments.parsed(1);
-				String name = player.getName();
-				UUID uuid = player.getUniqueId();
-				if(like.isOwner(uuid)){
-					Text.of("&c-%sは指定されたLike(ID: %s)の所有者です。").apply(name, like.id).sendTo(sender);
-					return;
-				}
-				like.setOwner(uuid);
-				Text.of("&a-Like(ID: %s)のオーナーを%sに変更しました。").apply(like.id, name).sendTo(sender);
-			}).build();
-	
-	private static final MessageEffect changedatadescription = () -> Text.color(
-			"&7-不正なコマンドが入力されたため実行出来ませんでした。",
-			"&7-プレイヤーの作成したLikeを新しいプレイヤーに引き継ぐ: /likeop changedata [old_owner_name] [new_owner_name]"
-			);
-	
+					HologramDatabase.trySaveToDisk();
+					sender.sendMessage(ChatColor.DARK_RED + world.getName() + "ワールドに存在する全Like(" + count.get() + ")を削除しました。");
+				},
+				Parsers.world
+		);
+
+		CommandContext<CommandSender> changeOwner = define(
+				() -> join(
+						ChatColor.RED + "正しいコマンドが入力されなかったため実行できませんでした。。",
+						ChatColor.GRAY + "Likeの所有者を変更する：/likeop changeowner [LikeのID] [新しい所有者のプレイヤー名]"
+				),
+				(sender, unparsedArguments, parsedArguments) -> {
+					Like like = parsedArguments.poll();
+					OfflinePlayer player = parsedArguments.poll();
+					if (like.isOwner(player.getUniqueId())) {
+						sender.sendMessage(ChatColor.RED + player.getName() + "は指定されたLike(ID: " + like.id + ")の所有者です。");
+						return;
+					}
+					like.setOwner(player.getUniqueId());
+					sender.sendMessage(ChatColor.GREEN + "Like(ID: " + like.id + ")の所有者を" + player.getName() + "に変更しました。");
+				},
+				ParserTemplates.like,
+				ParserTemplates.player
+		);
+	}
+
 	private static final ContextualExecutor changedata = ContextualExecutorBuilder.playerCommandBuilder()
 			.parsers(
-				changedatadescription,
-				ParserTemplates.player(),
-				ParserTemplates.player()
+					() -> Text.color(
+							"&7-不正なコマンドが入力されたため実行出来ませんでした。",
+							"&7-プレイヤーの作成したLikeを新しいプレイヤーに引き継ぐ: /likeop changedata [old_owner_name] [new_owner_name]"
+					),
+				ParserTemps.player(),
+				ParserTemps.player()
 			).execution(context -> sender -> {
 				OfflinePlayer old = context.arguments.parsed(0);
 				OfflinePlayer player = context.arguments.parsed(1);
@@ -160,11 +162,11 @@ public class LikeOperatorCommand {
 			"&7-プレイヤーのLike作成上限数を指定値だけ引き上げる: /likeop limit [player] add [amount_to_add]",
 			"&7-プレイヤーのLike作成上限数を指定値だけ引き下げる: /likeop limit [player] sub [amount_to_sub]"
 			);
-	
+
 	private static final ContextualExecutor limit = ContextualExecutorBuilder.playerCommandBuilder()
 			.parsers(
 				limitdescription,
-				ParserTemplates.player(),
+				ParserTemps.player(),
 				Parser.identity(),
 				Parser.u32(limitdescription)
 			).execution(context -> sender -> {
@@ -225,7 +227,7 @@ public class LikeOperatorCommand {
 					"&7-不正なコマンドが入力されたため実行出来ませんでした。",
 					"&7-ブックマークを削除する: /likeop book delete [book_name]"
 				), 
-				ParserTemplates.bookmark()
+				ParserTemps.bookmark()
 			).execution(context -> sender -> {
 				Bookmark bookmark = context.arguments.parsed(0);
 				Main.plugin().bookmarkDatabase().remove(bookmark);
@@ -238,8 +240,8 @@ public class LikeOperatorCommand {
 					"&7-不正なコマンドが入力されたため実行出来ませんでした。",
 					"&7-ブックマークにLikeを追加する: /likeop book add [book_name] [like_id]"
 				), 
-				ParserTemplates.bookmark(),
-				ParserTemplates.like()
+				ParserTemps.bookmark(),
+				ParserTemps.like()
 			).execution(context -> sender -> {
 				Bookmark bookmark = context.arguments.parsed(0);
 				Like like = context.arguments.parsed(1);
@@ -257,8 +259,8 @@ public class LikeOperatorCommand {
 					"&7-不正なコマンドが入力されたため実行出来ませんでした。",
 					"&7-ブックマークにLikeを追加する: /likeop book remove [book_name] [like_id]"
 				), 
-				ParserTemplates.bookmark(),
-				ParserTemplates.like()
+				ParserTemps.bookmark(),
+				ParserTemps.like()
 			).execution(context -> sender -> {
 				Bookmark bookmark = context.arguments.parsed(0);
 				Like like = context.arguments.parsed(1);
@@ -276,8 +278,8 @@ public class LikeOperatorCommand {
 					"&7-不正なコマンドが入力されたため実行出来ませんでした。",
 					"&7-ブックマークにLikeを追加する: /likeop book sort [book_name] [newest/oldest]"
 				), 
-				ParserTemplates.bookmark(),
-				ParserTemplates.order()
+				ParserTemps.bookmark(),
+				ParserTemps.order()
 			).execution(context -> sender -> {
 				Bookmark bookmark = context.arguments.parsed(0);
 				Order order = context.arguments.parsed(1);
@@ -325,5 +327,9 @@ public class LikeOperatorCommand {
 				Tuple.of("limit", limit),
 				Tuple.of("book", book)
 			);
-	
+
+	@Override
+	public CommandContext<CommandSender> executor() {
+		return null;
+	}
 }
