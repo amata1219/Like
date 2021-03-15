@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
+import amata1219.like.command.*;
 import amata1219.niflheimr.dsl.InventoryLayout;
 import amata1219.niflheimr.dsl.InventoryOperationListener;
 import org.bukkit.command.Command;
@@ -22,18 +23,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import amata1219.like.bookmark.Bookmark;
 import amata1219.like.bookmark.BookmarkDatabase;
-import amata1219.like.command.BookmarkCommand;
-import amata1219.like.command.LikeCommand;
-import amata1219.like.command.LikeCreationCommand;
-import amata1219.like.command.LikeListCommand;
-import amata1219.like.command.LikeStatusCommand;
-import amata1219.like.command.LikeOperatorCommand;
-import amata1219.like.command.LikeTeleportationAuthenticationCommand;
 import amata1219.like.config.LikeDatabase;
 import amata1219.like.config.LikeLimitDatabase;
 import amata1219.like.config.MainConfig;
 import amata1219.like.listener.CreatePlayerDataListener;
-import amata1219.like.listener.EditLikeDescriptionListener;
+import amata1219.like.listener.EditingLikeDescriptionListener;
 import amata1219.like.listener.UIListener;
 import amata1219.like.masquerade.dsl.component.Layout;
 import amata1219.like.monad.Maybe;
@@ -109,7 +103,7 @@ public class Main extends JavaPlugin {
 			new UIListener(),
 			new InventoryOperationListener(),
 			new CreatePlayerDataListener(),
-			new EditLikeDescriptionListener()
+			new EditingLikeDescriptionListener()
 		);
 		
 		config = new MainConfig();
@@ -121,6 +115,7 @@ public class Main extends JavaPlugin {
 		executors.put("liketoken", LikeTeleportationAuthenticationCommand.executor);
 		executors.put("likeb", new BookmarkCommand());
 		executors.put("likeop", LikeOperatorCommand.executor);
+		executors.put("likerandom", new LikeRandomCommand());
 		
 		getServer().getScheduler().runTaskLater(this, () -> {
 			likeDatabase = new LikeDatabase();

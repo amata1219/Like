@@ -25,6 +25,10 @@ commands:
   likeb:
     permission: like.like
     permission-message: *denied
+  likerandom:
+    permission: like.like
+    permission-message: *denied
+    aliases: [likerd]
   likeop:
     permission: like.likeop
     permission-message: *denied
