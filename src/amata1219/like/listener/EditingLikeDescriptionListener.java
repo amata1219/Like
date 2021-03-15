@@ -11,7 +11,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class EditLikeDescriptionListener implements Listener {
+public class EditingLikeDescriptionListener implements Listener {
 	
 	private final Main plugin = Main.plugin();
 	
