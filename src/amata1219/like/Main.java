@@ -111,8 +111,8 @@ public class Main extends JavaPlugin {
 		executors.put("like", new LikeCommand());
 		executors.put("likec", LikeCreationCommand.INSTANCE);
 		executors.put("likel", LikeListCommand.INSTANCE);
-		executors.put("likes", LikeStatusCommand.executor);
-		executors.put("liketoken", LikeTeleportationAuthenticationCommand.executor);
+		executors.put("likes", new LikeStatusCommand());
+		executors.put("liketoken", new LikeTeleportationAuthenticationCommand());
 		executors.put("likeb", new BookmarkCommand());
 		executors.put("likeop", LikeOperatorCommand.executor);
 		executors.put("likerandom", new LikeRandomCommand());
