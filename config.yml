@@ -71,7 +71,7 @@
   #招待されたプレイヤーに表示されるメッセージ
 'Random Teleportation':
 #/likerandomコマンドについて
-  'Message': "&aThe following items have been selected!"
+  'Message': "&a行き先に次のLikeが選ばれました！"
   #コマンド実行後、Likeがランダムに選ばれた時に表示されるメッセージ
   'Delayed ticks': 160
   #何tick後にテレポートするか
