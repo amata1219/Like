@@ -53,7 +53,7 @@ public abstract class ChainedTask implements Runnable {
 
     public abstract void process();
 
-    public ChainedTask append(long delay, Runnable processing, BiConsumer<ChainedTask, Long> runTask) {
+    private ChainedTask append(long delay, Runnable processing, BiConsumer<ChainedTask, Long> runTask) {
         ChainedTask next = new ChainedTask(runTask) {
             @Override
             public void process() {
@@ -64,6 +64,14 @@ public abstract class ChainedTask implements Runnable {
         this.next = next;
         this.delay = delay;
         return next;
+    }
+
+    public ChainedTask runTaskLaterSynchronously(long delay, Runnable processing) {
+        return append(delay, processing, runTaskSynchronously);
+    }
+
+    public ChainedTask runTaskLaterAsynchronously(long delay, Runnable processing) {
+        return append(delay, processing, runTaskAsynchronously);
     }
 
     public void runTaskLater() {
