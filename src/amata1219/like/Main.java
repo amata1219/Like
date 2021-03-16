@@ -9,6 +9,8 @@ import java.util.UUID;
 import amata1219.like.command.*;
 import amata1219.like.config.TourConfig;
 import amata1219.like.masquerade.enchantment.GleamEnchantment;
+import amata1219.like.task.TaskRunner;
+import amata1219.like.task.TourRegularNotificationTask;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -37,6 +39,7 @@ import amata1219.like.tuplet.Tuple;
 import at.pcgamingfreaks.UUIDConverter;
 import net.milkbowl.vault.Vault;
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.scheduler.BukkitTask;
 
 public class Main extends JavaPlugin {
 	
@@ -75,6 +78,8 @@ public class Main extends JavaPlugin {
 	public final HashMap<String, Bookmark> bookmarks = new HashMap<>();
 	public final HashMap<UUID, Long> descriptionEditors = new HashMap<>();
 	public final HashSet<UUID> cooldownMap = new HashSet<>();
+
+	private BukkitTask tourRegularNotificationTask;
 	
 	@Override
 	public void onEnable(){
@@ -130,11 +135,14 @@ public class Main extends JavaPlugin {
 			bookmarkDatabase.readAll().forEach(bookmarks::put);
 
 			tourConfig = new TourConfig();
+			if (tourConfig.notificationIsEnabled()) tourRegularNotificationTask = getServer().getScheduler().runTaskTimerAsynchronously(this, new TourRegularNotificationTask(tourConfig), tourConfig.notificationIntervalTicks(), tourConfig.notificationIntervalTicks());
 		}, 15);
 	}
 	
 	@Override
 	public void onDisable(){
+		tourRegularNotificationTask.cancel();
+
 		bookmarkDatabase.writeAll();
 		likeLimitDatabase.update();
 		playerDatabase.writeAll();
