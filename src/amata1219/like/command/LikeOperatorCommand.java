@@ -9,16 +9,25 @@ import amata1219.like.Like;
 import amata1219.like.Main;
 import amata1219.like.bookmark.Bookmark;
 import amata1219.like.bookmark.Order;
+import amata1219.like.bryionake.dsl.parser.FailableParser;
+import amata1219.like.bryionake.interval.Endpoint;
+import amata1219.like.bryionake.interval.Interval;
 import amata1219.like.config.LikeLimitDatabase;
 import amata1219.like.config.MainConfig;
+import amata1219.like.config.TourConfig;
+import amata1219.like.task.TourRegularNotificationTask;
 import com.gmail.filoghost.holographicdisplays.disk.HologramDatabase;
 import com.google.common.base.Joiner;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
@@ -279,6 +288,105 @@ public class LikeOperatorCommand implements BukkitCommandExecutor {
 				bind("sort", sortBookmarkLikes)
 		);
 
+		CommandContext<CommandSender> reloadTourConfig = (sender, unparsedArguments, parsedArguments) -> {
+			Main plugin = Main.plugin();
+			if (plugin.tourRegularNotificationTask != null) plugin.tourRegularNotificationTask.cancel();
+
+			TourConfig config = plugin.tourConfig();
+			config.reload();
+			config.load();
+
+			plugin.tourRegularNotificationTask = Bukkit.getScheduler().runTaskTimerAsynchronously(
+					plugin,
+					new TourRegularNotificationTask(config),
+					0,
+					config.notificationIntervalTicks()
+			);
+		};
+
+		FailableParser<Integer> tourLikesCount = Parsers.define(
+				Parsers.u32,
+				new Interval<>(Endpoint.openEndpoint(0), Endpoint.closedEndpoint((Supplier<Integer>) Main.plugin().likes::size)),
+				() -> ChatColor.RED + "ピックアップするLikeの数Lは、0 < L ≦ " + Main.plugin().likes.size() + "(現在のLikeの合計数) の間で指定して下さい。"
+		);
+
+		CommandContext<CommandSender> shuffle = define(
+				() -> join(
+						ChatColor.RED + "正しいコマンドが入力されなかったため実行できませんでした。",
+						ChatColor.GRAY + "ツアー用のLikeを指定数分ランダムにピックアップする：/likeop tour shuffle [ピックアップする個数]"
+				),
+				(sender, unparsedArguments, parsedArguments) -> {
+					int count = parsedArguments.poll();
+					List<Like> likes = new ArrayList<>(Main.plugin().likes.values());
+					Collections.shuffle(likes);
+					likes = likes.subList(0, count);
+					Main.plugin().tourConfig().setLikes(likes);
+					sender.sendMessage(ChatColor.GREEN + "ツアー用のLikeを" + count + "個ランダムにピックアップしました！");
+					for (Like like : likes) {
+						sender.sendMessage(ChatColor.GRAY + "・" + like.id);
+						sender.sendMessage("- " + like.description());
+					}
+				},
+				tourLikesCount
+		);
+
+		CommandContext<CommandSender> startNoticing = (sender, unparsedArguments, parsedArguments) -> {
+			Main plugin = Main.plugin();
+			TourConfig config = plugin.tourConfig();
+			if (config.notificationIsEnabled()) {
+				sender.sendMessage(ChatColor.RED + "定期告知は既に有効化されています。");
+				return;
+			}
+
+			config.setNotificationIsEnabled(true);
+
+			plugin.tourRegularNotificationTask = Bukkit.getScheduler().runTaskTimerAsynchronously(
+					plugin,
+					new TourRegularNotificationTask(config),
+					0,
+					config.notificationIntervalTicks()
+			);
+
+			sender.sendMessage(ChatColor.GREEN + "ツアーの定期告知を有効化しました。");
+		};
+
+		CommandContext<CommandSender> stopNoticing = (sender, unparsedArguments, parsedArguments) -> {
+			Main plugin = Main.plugin();
+			TourConfig config = plugin.tourConfig();
+			if (!config.notificationIsEnabled()) {
+				sender.sendMessage(ChatColor.RED + "定期告知は既に無効化されています。");
+				return;
+			}
+
+			config.setNotificationIsEnabled(false);
+			plugin.tourRegularNotificationTask.cancel();
+			plugin.tourRegularNotificationTask = null;
+
+			sender.sendMessage(ChatColor.GREEN + "ツアーの定期告知を無効化しました。");
+		};
+
+		BranchContext<CommandSender> noticeBranches = define(
+				() -> join(
+						ChatColor.RED + "正しいコマンドが入力されなかったため実行できませんでした。",
+						ChatColor.GRAY + "ツアーの定期告知を開始する：/likeop tour notice start",
+						ChatColor.GRAY + "ツアーの定期告知を停止する：/likeop tour notice stop"
+				),
+				bind("start", startNoticing),
+				bind("stop", stopNoticing)
+		);
+
+		BranchContext<CommandSender> tourBranches = define(
+				() -> join(
+						ChatColor.RED + "正しいコマンドが入力されなかったため実行できませんでした。",
+						ChatColor.GRAY + "tour.ymlを再読み込みする：/likeop tour reload",
+						ChatColor.GRAY + "ツアー用のLikeを指定数分ランダムにピックアップする：/likeop tour shuffle [ピックアップする個数]",
+						ChatColor.GRAY + "ツアーの定期告知を停止する：/likeop tour notice stop"
+				),
+				bind("reload", reloadTourConfig),
+				bind("shuffle", shuffle),
+				bind("notice", noticeBranches)
+		);
+
 		executor = define(
 				() -> join(
 						ChatColor.GRAY + "Likeを現在地に移動する: /likeop move [like_id]",
@@ -293,7 +401,10 @@ public class LikeOperatorCommand implements BukkitCommandExecutor {
 						ChatColor.GRAY + "コンフィグをリロードする: /likeop reload",
 						ChatColor.GRAY + "ブックマークを作成・削除する: /likeop book [create/delete] [book_name]",
 						ChatColor.GRAY + "ブックマークに対してLikeを追加・削除する: /likeop book [add/remove] [book_name] [like_id]",
-						ChatColor.GRAY + "ブックマークをソートする: /likeop book sort [book_name] [newest/oldest]"
+						ChatColor.GRAY + "ブックマークをソートする: /likeop book sort [book_name] [newest/oldest]",
+						ChatColor.GRAY + "tour.ymlを再読み込みする：/likeop tour reload",
+						ChatColor.GRAY + "ツアー用のLikeを指定数分ランダムにピックアップする：/likeop tour shuffle [ピックアップする個数]",
+						ChatColor.GRAY + "ツアーの定期告知を停止する：/likeop tour notice stop"
 				),
 				bind("move", move),
 				bind("delete", delete),
@@ -303,7 +414,8 @@ public class LikeOperatorCommand implements BukkitCommandExecutor {
 				bind("changedata", changePlayerData),
 				bind("reload", reload),
 				bind("limit", limit),
-				bind("book", bookmarkCommandsBranches)
+				bind("book", bookmarkCommandsBranches),
+				bind("tour", tourBranches)
 		);
 	}
 

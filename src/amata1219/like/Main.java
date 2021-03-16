@@ -79,7 +79,7 @@ public class Main extends JavaPlugin {
 	public final HashMap<UUID, Long> descriptionEditors = new HashMap<>();
 	public final HashSet<UUID> cooldownMap = new HashSet<>();
 
-	private BukkitTask tourRegularNotificationTask;
+	public BukkitTask tourRegularNotificationTask;
 	
 	@Override
 	public void onEnable(){
