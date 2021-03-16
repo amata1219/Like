@@ -35,7 +35,7 @@ public class LikeRandomCommand implements BukkitCommandExecutor {
                 ChatColor.GRAY + "・ID：" + like.id,
                 ChatColor.GRAY + "・お気に入り数：" + like.favorites(),
                 ChatColor.GRAY + "・作成日時：" + like.creationTimestamp(),
-                ChatColor.GRAY + "・座標：" + config.worldAlias(like.world()).or(() -> "Unknown") + ", " + like.x() + ", " + like.y() + ", " + like.z()
+                ChatColor.GRAY + "・座標：" + config.worldAlias(like.world()) + ", " + like.x() + ", " + like.y() + ", " + like.z()
         });
 
         ChainedTask.asynchronously(10, () -> {

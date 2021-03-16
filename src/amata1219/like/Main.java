@@ -1,45 +1,41 @@
 package amata1219.like;
 
+import amata1219.like.bookmark.Bookmark;
+import amata1219.like.bookmark.BookmarkDatabase;
+import amata1219.like.command.*;
+import amata1219.like.config.LikeDatabase;
+import amata1219.like.config.LikeLimitDatabase;
+import amata1219.like.config.MainConfig;
+import amata1219.like.config.TourConfig;
+import amata1219.like.listener.CreatePlayerDataListener;
+import amata1219.like.listener.EditingLikeDescriptionListener;
+import amata1219.like.listener.UIListener;
+import amata1219.like.masquerade.dsl.component.Layout;
+import amata1219.like.masquerade.enchantment.GleamEnchantment;
+import amata1219.like.playerdata.PlayerData;
+import amata1219.like.playerdata.PlayerDatabase;
+import amata1219.like.task.TourRegularNotificationTask;
+import amata1219.like.tuplet.Tuple;
+import at.pcgamingfreaks.UUIDConverter;
+import net.milkbowl.vault.Vault;
+import net.milkbowl.vault.economy.Economy;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.RegisteredServiceProvider;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
+
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
-
-import amata1219.like.command.*;
-import amata1219.like.config.TourConfig;
-import amata1219.like.masquerade.enchantment.GleamEnchantment;
-import amata1219.like.task.TaskRunner;
-import amata1219.like.task.TourRegularNotificationTask;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryView;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.plugin.java.JavaPlugin;
-
-import amata1219.like.bookmark.Bookmark;
-import amata1219.like.bookmark.BookmarkDatabase;
-import amata1219.like.config.LikeDatabase;
-import amata1219.like.config.LikeLimitDatabase;
-import amata1219.like.config.MainConfig;
-import amata1219.like.listener.CreatePlayerDataListener;
-import amata1219.like.listener.EditingLikeDescriptionListener;
-import amata1219.like.listener.UIListener;
-import amata1219.like.masquerade.dsl.component.Layout;
-import amata1219.like.monad.Maybe;
-import amata1219.like.playerdata.PlayerData;
-import amata1219.like.playerdata.PlayerDatabase;
-import amata1219.like.tuplet.Tuple;
-import at.pcgamingfreaks.UUIDConverter;
-import net.milkbowl.vault.Vault;
-import net.milkbowl.vault.economy.Economy;
-import org.bukkit.scheduler.BukkitTask;
 
 public class Main extends JavaPlugin {
 	
@@ -148,11 +144,9 @@ public class Main extends JavaPlugin {
 		playerDatabase.writeAll();
 		likeDatabase.writeAll();
 
-		getServer().getOnlinePlayers().forEach(player -> Maybe.unit(player.getOpenInventory())
-		.map(InventoryView::getTopInventory)
-		.map(Inventory::getHolder)
-		.filter(holder -> holder instanceof Layout)
-		.apply(x -> player.closeInventory()));
+		for (Player player : getServer().getOnlinePlayers()) {
+			if (player.getOpenInventory().getTopInventory().getHolder() instanceof Layout) player.closeInventory();
+		}
 
 		HandlerList.unregisterAll(this);
 	}

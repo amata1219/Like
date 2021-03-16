@@ -45,7 +45,7 @@ public class MyFavoriteLikeListUI extends AbstractSortableLikeListUI {
 						Text.of("&7-作成者: &a-%s").format(like.ownerName()),
 						Text.of("&7-お気に入り数: &a-%s").format(like.favorites()),
 						Text.of("&7-作成日時: &a-%s").format(like.creationTimestamp()),
-						Text.of("&7-ワールド: &a-%s").format(config.worldAlias(like.world()).or(() -> "Unknown")),
+						Text.of("&7-ワールド: &a-%s").format(config.worldAlias(like.world())),
 						Text.of("&7-座標: &a-X-&7-: &a-%s Y-&7-: &a-%s Z-&7-: &a-%s").format(like.x(), like.y(), like.z()),
 						"",
 						Text.color("&7-クリック: 下記機能の実行確認画面に移行します！"),
