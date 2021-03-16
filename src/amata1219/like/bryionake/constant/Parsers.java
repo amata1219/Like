@@ -41,7 +41,7 @@ public class Parsers {
         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(arg);
         if (!offlinePlayer.hasPlayedBefore()) throw new IllegalArgumentException();
         return offlinePlayer;
-    }, () -> "指定されたプレイヤはこのサーバーに一度もログインした事がありません。");
+    }, () -> "指定されたプレイヤーはこのサーバーに一度もログインしたことがありません。");
 
     public static final FailableParser<Player> onlinePlayer = player.append(player -> player.isOnline() ? success(player.getPlayer()) : error("指定されたプレイヤーはオンラインではありません。"));
 
