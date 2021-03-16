@@ -182,4 +182,8 @@ public class Main extends JavaPlugin {
 		return bookmarkDatabase;
 	}
 
+	public TourConfig tourConfig() {
+		return tourConfig;
+	}
+
 }

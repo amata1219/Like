@@ -1,1 +1,9 @@
+'Notification':
+  'Enabled': false
+  #定期告知を有効にするかどうか(※変更する場合は /likeop tour notice [start/stop] コマンドの方を推奨)
+  'Message': "&a[Like]: Likeツアー開催中！ このテキストをクリックで専用GUIが開きます！"
+  #表示するメッセージ
+  'Interval': 36000
+  #メッセージを表示する間隔(単位: tick)
 'Likes ids': []
+  #ピックアップされたLikeのID一覧
