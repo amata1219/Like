@@ -7,6 +7,7 @@ import amata1219.like.config.LikeDatabase;
 import amata1219.like.config.LikeLimitDatabase;
 import amata1219.like.config.MainConfig;
 import amata1219.like.config.TourConfig;
+import amata1219.like.listener.ControlLikeViewListener;
 import amata1219.like.listener.CreatePlayerDataListener;
 import amata1219.like.listener.EditingLikeDescriptionListener;
 import amata1219.like.listener.UIListener;
@@ -75,8 +76,10 @@ public class Main extends JavaPlugin {
 	public final HashMap<UUID, Long> descriptionEditors = new HashMap<>();
 	public final HashSet<UUID> cooldownMap = new HashSet<>();
 
+	public ControlLikeViewListener controlLikeViewListener;
+
 	public BukkitTask tourRegularNotificationTask;
-	
+
 	@Override
 	public void onEnable(){
 		plugin = this;
@@ -104,7 +107,8 @@ public class Main extends JavaPlugin {
 		registerEventListeners(
 			new UIListener(),
 			new CreatePlayerDataListener(),
-			new EditingLikeDescriptionListener()
+			new EditingLikeDescriptionListener(),
+			controlLikeViewListener = new ControlLikeViewListener()
 		);
 		
 		config = new MainConfig();
