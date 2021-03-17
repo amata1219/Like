@@ -46,8 +46,7 @@ public class MyLikeListUI extends AbstractSortableLikeListUI {
 						Text.of("&7-ワールド: &a-%s").format(config.worldAlias(like.world())),
 						Text.of("&7-座標: &a-X-&7-: &a-%s Y-&7-: &a-%s Z-&7-: &a-%s").format(like.x(), like.y(), like.z()),
 						"",
-						Text.color("&7-クリック: 下記機能の実行確認画面に移行します！"),
-						Text.of("&7-: &a-半径%sm以内にいるプレイヤーをこのLikeに招待する！ (%sMP)").format(config.radiusOfInvitationScope(), config.invitationCosts())
+						Text.of("&7-: &a-このLikeにテレポートする！ (%sMP)").format(config.teleportationCosts())
 					);
 				});
 				

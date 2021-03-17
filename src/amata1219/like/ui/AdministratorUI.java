@@ -143,7 +143,7 @@ public class AdministratorUI implements InventoryUI {
 						);
 					});
 					
-					s.onClick(e -> new TeleportationConfirmationUI(like, this).open(p));
+					s.onClick(e -> new TpInvConfirmationUI(like, this).open(p));
 				}, slotIndex.getAndIncrement());
 			});
 		});

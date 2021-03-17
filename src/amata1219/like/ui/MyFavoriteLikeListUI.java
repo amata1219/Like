@@ -54,7 +54,7 @@ public class MyFavoriteLikeListUI extends AbstractSortableLikeListUI {
 					);
 				});
 				
-				s.onClick(e -> new TeleportationConfirmationUI(like, this).open(player));
+				s.onClick(e -> new TpInvConfirmationUI(like, this).open(player));
 			}, slotIndex);
 		});
 	}
