@@ -18,7 +18,7 @@ public class TourRegularNotificationTask implements Runnable {
         this.config = config;
         this.message = new TextComponent(config.notificationMessage());
         message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/like tour"));
-        message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(ChatColor.GREEN + "クリックで /like tour コマンドを実行します。")));
+        message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(ChatColor.GREEN + "クリックで /like tour コマンドを実行しツアー専用UIを開きます！")));
 
     }
 
