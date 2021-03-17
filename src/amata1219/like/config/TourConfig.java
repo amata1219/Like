@@ -13,6 +13,10 @@ public class TourConfig extends Config {
     private boolean notificationIsEnabled;
     private String notificationMessage;
     private long notificationIntervalTicks;
+
+    private String guideMessage;
+    private long guideDelayTicks;
+
     private List<Like> likes;
 
     public TourConfig() {
@@ -28,6 +32,10 @@ public class TourConfig extends Config {
         notificationIsEnabled = notification.getBoolean("Enabled");
         notificationMessage = color(notification.getString("Message"));
         notificationIntervalTicks = config.getLong("Interval");
+
+        ConfigurationSection guide = config.getConfigurationSection("Guide");
+        guideMessage = color(guide.getString("Message"));
+        guideDelayTicks = guide.getLong("Delay");
 
         likes = config.getStringList("Likes ids")
                 .stream()
@@ -53,6 +61,14 @@ public class TourConfig extends Config {
         this.notificationIsEnabled = notificationIsEnabled;
         config().set("Notification", notificationIsEnabled);
         update();
+    }
+
+    public String guideMessage() {
+        return guideMessage;
+    }
+
+    public long guideDelayTicks() {
+        return guideDelayTicks;
     }
 
     public List<Like> likes() {
