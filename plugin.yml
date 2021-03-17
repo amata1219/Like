@@ -29,6 +29,9 @@ commands:
     permission: like.like
     permission-message: *denied
     aliases: [likerd]
+  liket:
+    permission: like.like
+    permission-message: *denied
   likeop:
     permission: like.likeop
     permission-message: *denied

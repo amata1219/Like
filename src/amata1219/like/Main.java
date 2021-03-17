@@ -117,6 +117,7 @@ public class Main extends JavaPlugin {
 		executors.put("likeb", new BookmarkCommand());
 		executors.put("likeop", new LikeOperatorCommand());
 		executors.put("likerandom", new LikeRandomCommand());
+		executors.put("liket", LikeTourCommand.INSTANCE);
 		
 		getServer().getScheduler().runTaskLater(this, () -> {
 			likeDatabase = new LikeDatabase();
