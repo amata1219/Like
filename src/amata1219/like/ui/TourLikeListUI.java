@@ -47,7 +47,7 @@ public class TourLikeListUI extends AbstractSortableLikeListUI {
                     );
                 });
 
-                s.onClick(e -> new TeleportationConfirmationUI(like, this).open(player));
+                s.onClick(e -> new LikeTourTpConfirmationUI(like, this).open(player));
             }, slotIndex);
         });
     }
