@@ -36,6 +36,10 @@ commands:
     permission: like.like
     permission-message: *denied
     aliases: [likesc]
+  likeorscu:
+    description: "orscu = Open Range Search Confirmation UI"
+    permission: like.like
+    permission-message: *denied
   likeop:
     permission: like.likeop
     permission-message: *denied
