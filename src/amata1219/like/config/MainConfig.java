@@ -16,7 +16,6 @@ import com.google.common.collect.Maps;
 import amata1219.like.Like;
 import amata1219.like.Main;
 import amata1219.like.masquerade.text.Text;
-import amata1219.like.tuplet.Tuple;
 
 import static amata1219.like.config.MainConfig.IconType.*;
 
@@ -34,6 +33,7 @@ public class MainConfig extends Config {
 	private double invitationCosts;
 	private int radiusOfInvitationScope;
 	private String invitationMessage;
+	private int rangeSearchRadiusLimit;
 	private String randomTeleportationMessage;
 	private long randomTeleportationDelayedTicks;
 	
@@ -95,6 +95,9 @@ public class MainConfig extends Config {
 		radiusOfInvitationScope = invitation.getInt("Radius of scope");
 		invitationMessage = color(invitation.getString("Message"));
 
+		ConfigurationSection rangeSearch = config.getConfigurationSection("Range search");
+		rangeSearchRadiusLimit = rangeSearch.getInt("Radius limit");
+
 		ConfigurationSection randomTeleportation = config.getConfigurationSection("Random teleportation");
 		randomTeleportationMessage = color(randomTeleportation.getString("Message"));
 		randomTeleportationDelayedTicks = randomTeleportation.getLong("Delayed ticks");
@@ -150,6 +153,10 @@ public class MainConfig extends Config {
 	
 	public InvitationText invitationText(){
 		return new InvitationText(invitationMessage);
+	}
+
+	public int rangeSearchRadiusLimit() {
+		return rangeSearchRadiusLimit;
 	}
 
 	public String randomTeleportationMessage() {

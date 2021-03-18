@@ -69,6 +69,10 @@
   #プレイヤーから半径何ブロック以内にいるプレイヤーを招待するか
   'Message': "&3&l【Like TP】%description% by %owner%\n&3 [%inviter% >> %invitee%] Click to Teleport!"
   #招待されたプレイヤーに表示されるメッセージ
+'Range search':
+#/likesearchコマンドについて
+  'Radius limit': 16
+  #半径何ブロックの範囲を検索するか
 'Random Teleportation':
 #/likerandomコマンドについて
   'Message': "&a行き先に次のLikeが選ばれました！"
