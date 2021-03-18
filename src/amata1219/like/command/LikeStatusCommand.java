@@ -1,11 +1,13 @@
 package amata1219.like.command;
 
+import amata1219.like.Main;
 import amata1219.like.bryionake.constant.CommandSenderCasters;
 import amata1219.like.bryionake.constant.Parsers;
 import amata1219.like.bryionake.dsl.BukkitCommandExecutor;
 import amata1219.like.bryionake.dsl.context.BranchContext;
 import amata1219.like.bryionake.dsl.context.CommandContext;
 import amata1219.like.Like;
+import amata1219.like.chunk.LikeMap;
 import com.google.common.base.Joiner;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -42,7 +44,10 @@ public class LikeStatusCommand implements BukkitCommandExecutor {
 						return;
 					}
 
+					LikeMap likeMap = Main.plugin().likeMap;
+					likeMap.remove(like);
 					like.teleportTo(sender.getLocation());
+					likeMap.put(like);
 					sender.sendMessage(ChatColor.GREEN + "Like(ID: " + like.id + ")を現在の位置に移動しました。");
 				},
 				ParserTemplates.like

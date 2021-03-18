@@ -1,9 +1,6 @@
 package amata1219.like.chunk;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.HashMap;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.bukkit.Chunk;
@@ -54,7 +51,7 @@ public class ChunkMap<V> {
 	public void put(int x, int z, V value){
 		final long hash = calculate(x, z);
 		if(containsHash(hash)) map.get(hash).add(value);
-		else map.put(hash, new ArrayList<>(Arrays.asList(value)));
+		else map.put(hash, new ArrayList<>(Collections.singletonList(value)));
 	}
 
 	public void remove(int x, int z, V value){

@@ -2,6 +2,7 @@ package amata1219.like;
 
 import amata1219.like.bookmark.Bookmark;
 import amata1219.like.bookmark.BookmarkDatabase;
+import amata1219.like.chunk.LikeMap;
 import amata1219.like.command.*;
 import amata1219.like.config.LikeDatabase;
 import amata1219.like.config.LikeLimitDatabase;
@@ -71,6 +72,7 @@ public class Main extends JavaPlugin {
 	private TourConfig tourConfig;
 	
 	public final HashMap<Long, Like> likes = new HashMap<>();
+	public final LikeMap likeMap = new LikeMap();
 	public final HashMap<UUID, PlayerData> players = new HashMap<>();
 	public final HashMap<String, Bookmark> bookmarks = new HashMap<>();
 	public final HashMap<UUID, Long> descriptionEditors = new HashMap<>();
@@ -127,6 +129,8 @@ public class Main extends JavaPlugin {
 			likeDatabase = new LikeDatabase();
 			Tuple<HashMap<Long, Like>, HashMap<UUID, List<Like>>> maps = likeDatabase.readAll();
 			maps.first.forEach(likes::put);
+
+			for (Like like : likes.values()) likeMap.put(like);
 			
 			playerDatabase = new PlayerDatabase();
 			playerDatabase.readAll(maps.second).forEach(players::put);

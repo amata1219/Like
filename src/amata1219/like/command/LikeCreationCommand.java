@@ -48,6 +48,7 @@ public class LikeCreationCommand implements BukkitCommandExecutor {
 		like.save();
 
 		plugin.likes.put(like.id, like);
+		plugin.likeMap.put(like);
 		playerdata.registerLike(like);
 
 		sender.sendMessage(ChatColor.GREEN + "Like(ID: " + like.id + ")を作成しました。");

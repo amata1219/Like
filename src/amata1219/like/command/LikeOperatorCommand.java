@@ -12,6 +12,7 @@ import amata1219.like.bookmark.Order;
 import amata1219.like.bryionake.dsl.parser.FailableParser;
 import amata1219.like.bryionake.interval.Endpoint;
 import amata1219.like.bryionake.interval.Interval;
+import amata1219.like.chunk.LikeMap;
 import amata1219.like.config.LikeLimitDatabase;
 import amata1219.like.config.MainConfig;
 import amata1219.like.config.TourConfig;
@@ -47,7 +48,10 @@ public class LikeOperatorCommand implements BukkitCommandExecutor {
 				),
 				(sender, unparsedArguments, parsedArguments) -> {
 					Like like = parsedArguments.poll();
+					LikeMap likeMap = Main.plugin().likeMap;
+					likeMap.remove(like);
 					like.teleportTo(sender.getLocation());
+					likeMap.put(like);
 					sender.sendMessage(ChatColor.GREEN + "Like(ID: " + like.id + ")を現在の位置に移動しました。");
 				},
 				ParserTemplates.like
@@ -60,6 +64,7 @@ public class LikeOperatorCommand implements BukkitCommandExecutor {
 				),
 				(sender, unparsedArguments, parsedArguments) -> {
 					Like like = parsedArguments.poll();
+					Main.plugin().likeMap.remove(like);
 					like.delete(true);
 					sender.sendMessage(ChatColor.RED + "Like(ID: " + like.id + ")を削除しました。");
 				},
@@ -74,14 +79,18 @@ public class LikeOperatorCommand implements BukkitCommandExecutor {
 				(sender, unparsedArguments, parsedArguments) -> {
 					OfflinePlayer player = parsedArguments.poll();
 
-					HashMap<Long, Like> playerLikes = Main.plugin().players.get(player.getUniqueId()).likes;
+					Main plugin = Main.plugin();
+					HashMap<Long, Like> playerLikes = plugin.players.get(player.getUniqueId()).likes;
 					if (playerLikes.isEmpty()) {
 						sender.sendMessage(ChatColor.RED + player.getName() + "はLikeを作成していません。");
 						return;
 					}
 
 					int deletedLikesCount = playerLikes.size();
-					playerLikes.values().forEach(like -> like.delete(false));
+					for (Like like : playerLikes.values()) {
+						plugin.likeMap.remove(like);
+						like.delete(false);
+					}
 					HologramDatabase.trySaveToDisk();
 
 					sender.sendMessage(ChatColor.DARK_RED + player.getName() + "が作成したLike(" + deletedLikesCount + ")を全て削除しました。");
@@ -97,9 +106,13 @@ public class LikeOperatorCommand implements BukkitCommandExecutor {
 				(sender, unparsedArguments, parsedArguments) -> {
 					World world = parsedArguments.poll();
 					AtomicInteger count = new AtomicInteger();
-					for (Like like : new HashMap<>(Main.plugin().likes).values()) if (like.world().equals(world)) {
-						like.delete(false);
-						count.incrementAndGet();
+					Main plugin = Main.plugin();
+					for (Like like : new HashMap<>(plugin.likes).values()) {
+						if (like.world().equals(world)) {
+							plugin.likeMap.remove(like);
+							like.delete(false);
+							count.incrementAndGet();
+						}
 					}
 					HologramDatabase.trySaveToDisk();
 					sender.sendMessage(ChatColor.DARK_RED + world.getName() + "ワールドに存在する全Like(" + count.get() + ")を削除しました。");
