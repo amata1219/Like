@@ -18,7 +18,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
-import java.awt.*;
 import java.util.Comparator;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
@@ -41,12 +40,10 @@ public class LikeTourTpConfirmationUI implements InventoryUI {
         return build(Lines.x3, (p, l) -> {
             l.title = "テレポートの実行確認画面";
 
-            l.defaultSlot(s -> {
-                s.icon(i -> {
-                    i.material = Material.LIGHT_GRAY_STAINED_GLASS_PANE;
-                    i.displayName = " ";
-                });
-            });
+            l.defaultSlot(s -> s.icon(i -> {
+                i.material = Material.LIGHT_GRAY_STAINED_GLASS_PANE;
+                i.displayName = " ";
+            }));
 
             l.put(s -> {
                 s.icon(i -> {

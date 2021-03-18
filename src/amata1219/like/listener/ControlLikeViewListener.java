@@ -53,7 +53,7 @@ public class ControlLikeViewListener implements Listener {
         disableViewingMode(player);
     }
 
-    private void disableViewingMode(Player viewer) {
+    public void disableViewingMode(Player viewer) {
         viewersToLikesViewed.remove(viewer);
         viewersToUIs.remove(viewer);
     }
