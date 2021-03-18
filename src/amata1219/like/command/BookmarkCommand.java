@@ -35,7 +35,6 @@ public class BookmarkCommand implements BukkitCommandExecutor {
 				(sender, unparsedArguments, parsedArguments) -> {
 					Bookmark bookmark = parsedArguments.poll();
 					new BookmarkUI(bookmark).open(sender);
-					SoundEffects.OPEN_BOOKMARK_UI.play(sender);
 				},
 				ParserTemplates.bookmark
 		);
