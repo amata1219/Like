@@ -1,5 +1,8 @@
 package amata1219.like.listener;
 
+import amata1219.like.Like;
+import amata1219.like.ui.LikeRangeSearchingUI;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,10 +16,24 @@ import java.util.HashMap;
 public class ControlLikeViewListener implements Listener {
 
     public final HashMap<Player, Location> viewersToRespawnPoints = new HashMap<>();
+    public final HashMap<Player, Like> viewersToLikesViewed = new HashMap<>();
+    public final HashMap<Player, LikeRangeSearchingUI> viewersToUIs = new HashMap<>();
 
     @EventHandler(ignoreCancelled = true)
     public void onTeleport(PlayerTeleportEvent event) {
-        if (viewersToRespawnPoints.containsKey(event.getPlayer())) event.setCancelled(true);
+        Player player = event.getPlayer();
+        if (viewersToRespawnPoints.containsKey(player)) return;
+
+        switch (event.getCause()) {
+            case PLUGIN:
+            case COMMAND:
+                player.sendMessage(ChatColor.RED + "Likeの確認モードが解除されました。");
+                return;
+            default:
+                event.setCancelled(true);
+                disableViewingMode(player);
+                return;
+        }
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -30,7 +47,15 @@ public class ControlLikeViewListener implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        if (viewersToRespawnPoints.containsKey(player)) player.teleport(viewersToRespawnPoints.remove(player));
+        if (!viewersToRespawnPoints.containsKey(player)) return;
+
+        player.teleport(viewersToRespawnPoints.remove(player));
+        disableViewingMode(player);
+    }
+
+    private void disableViewingMode(Player viewer) {
+        viewersToLikesViewed.remove(viewer);
+        viewersToUIs.remove(viewer);
     }
 
 }
