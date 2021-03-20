@@ -38,6 +38,7 @@ public class Like {
 		Method touchHandlerSetter = null;
 		try {
 			touchHandlerSetter = CraftTouchableLine.class.getDeclaredMethod("setTouchHandler", TouchHandler.class, World.class, double.class, double.class, double.class);
+			touchHandlerSetter.setAccessible(true);
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
 		}
