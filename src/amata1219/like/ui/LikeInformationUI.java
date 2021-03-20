@@ -4,6 +4,11 @@ import java.util.Comparator;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
+import amata1219.like.sound.SoundEffects;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
@@ -42,7 +47,7 @@ public class LikeInformationUI implements InventoryUI {
 			l.put(s -> {
 				s.icon(i -> {
 					i.basedItemStack = Skull.createFrom(like.owner());
-					i.displayName = Text.of("&a-%s").format(like.ownerName());
+					i.displayName = Text.of("&a-作成者-&7-:-&f %s").format(like.ownerName());
 				});
 			}, 1);
 			
@@ -65,10 +70,22 @@ public class LikeInformationUI implements InventoryUI {
 				s.icon(i -> {
 					i.material = config.material(IconType.ID);
 					i.displayName = Text.of("&a-ID-&7-:-&f %s").format(like.id);
-					i.lore(Text.color("&7-クリックするとチャット欄にIDを表示します。"));
+					i.lore(
+							ChatColor.GRAY + "クリックでチャット欄にこのLikeのIDを出力します。",
+							ChatColor.GRAY + "左クリックの場合は出力と同時にインベントリを閉じます。",
+							ChatColor.GRAY + "右クリックの場合はインベントリは閉じません。",
+							ChatColor.GRAY + "出力されたIDはクリックでクリップボードにコピーすることができます。"
+					);
 				});
-				
-				s.onClick(e -> Text.of("&7-ID > %s").apply(like.id).sendTo(p));
+
+				s.onClick(e -> {
+					TextComponent component = new TextComponent(ChatColor.GREEN + "[Like]: このLikeのIDは " + like.id + " です。クリックでIDをコピーできます。");
+					component.setClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, String.valueOf(like.id)));
+					component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new net.md_5.bungee.api.chat.hover.content.Text(ChatColor.GRAY + "Click to copy the ID!")));
+					p.spigot().sendMessage(component);
+					if (e.clickType.isLeftClick()) p.closeInventory();
+					SoundEffects.CLICK_ON_INVENTORY.play(p);
+				});
 			}, 5);
 			
 			l.put(s -> {
