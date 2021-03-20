@@ -6,17 +6,17 @@ import amata1219.like.bryionake.dsl.argument.ParsedArgumentQueue;
 import amata1219.like.bryionake.dsl.parser.FailableParser;
 import org.bukkit.command.CommandSender;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
 import java.util.function.Supplier;
 
 public class ExecutionContext<S extends CommandSender> implements CommandContext<S> {
 
     private final Supplier<String> argumentNotFoundErrorMessage;
-    private final ArrayList<FailableParser<?>> parsers;
+    private final List<FailableParser<?>> parsers;
     private final CommandContext<S> context;
 
-    public ExecutionContext(Supplier<String> argumentNotFoundErrorMessage, ArrayList<FailableParser<?>> parsers, CommandContext<S> context) {
+    public ExecutionContext(Supplier<String> argumentNotFoundErrorMessage, List<FailableParser<?>> parsers, CommandContext<S> context) {
         this.argumentNotFoundErrorMessage = argumentNotFoundErrorMessage;
         this.parsers = parsers;
         this.context = context;

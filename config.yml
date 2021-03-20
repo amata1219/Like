@@ -73,7 +73,7 @@
 #/likesearchコマンドについて
   'Radius limit': 16
   #半径何ブロックの範囲を検索するか
-'Random Teleportation':
+'Random teleportation':
 #/likerandomコマンドについて
   'Message': "&a行き先に次のLikeが選ばれました！"
   #コマンド実行後、Likeがランダムに選ばれた時に表示されるメッセージ

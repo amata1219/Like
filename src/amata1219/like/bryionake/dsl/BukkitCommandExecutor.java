@@ -28,7 +28,7 @@ public interface BukkitCommandExecutor extends CommandExecutor {
     }
 
     default <S extends CommandSender> ExecutionContext<S> define(Supplier<String> argumentNotFoundErrorMessage, CommandContext<S> context, FailableParser<?>... parsers) {
-        return new ExecutionContext<>(() -> prefixErrorMessage(argumentNotFoundErrorMessage), (ArrayList<FailableParser<?>>) Arrays.asList(parsers), context);
+        return new ExecutionContext<>(() -> prefixErrorMessage(argumentNotFoundErrorMessage), Arrays.asList(parsers), context);
     }
 
     default <S extends CommandSender> BranchContext<S> define(Supplier<String> argumentNotFoundErrorMessage, Pair<String, CommandContext<S>>... branches) {

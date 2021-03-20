@@ -102,7 +102,7 @@ public class Main extends JavaPlugin {
 			Enchantment.registerEnchantment(GleamEnchantment.INSTANCE);
 			acceptingNew.set(null, false);
 			acceptingNew.setAccessible(false);
-		} catch (NoSuchFieldException | IllegalAccessException ignored) {
+		} catch (NoSuchFieldException | IllegalAccessException | IllegalArgumentException ignored) {
 
 		}
 
@@ -148,7 +148,7 @@ public class Main extends JavaPlugin {
 	
 	@Override
 	public void onDisable(){
-		tourRegularNotificationTask.cancel();
+		if (tourRegularNotificationTask != null) tourRegularNotificationTask.cancel();
 
 		bookmarkDatabase.writeAll();
 		likeLimitDatabase.update();
