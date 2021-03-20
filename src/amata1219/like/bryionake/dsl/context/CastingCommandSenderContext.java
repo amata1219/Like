@@ -27,7 +27,7 @@ public class CastingCommandSenderContext<S extends CommandSender, T extends S> i
             return;
         }
 
-        T castedSender = ((Success<String, T>) sender).value;
+        T castedSender = ((Success<String, T>) result).value;
         context.execute(castedSender, unparsedArguments, parsedArguments);
     }
 
