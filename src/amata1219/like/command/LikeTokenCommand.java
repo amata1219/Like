@@ -9,7 +9,7 @@ import amata1219.like.Main;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class LikeTpAuthCommand implements BukkitCommandExecutor {
+public class LikeTokenCommand implements BukkitCommandExecutor {
 
 	private final CommandContext<CommandSender> executor;
 
