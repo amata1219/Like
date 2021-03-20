@@ -39,7 +39,7 @@ public class UIListener implements Listener {
 	}
 
 	private Layout tryExtractLayout(Inventory inventory) {
-		return (Layout) inventory.getHolder();
+		return inventory.getHolder() instanceof Layout ?  (Layout) inventory.getHolder() : null;
 	}
 
 }
