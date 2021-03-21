@@ -51,6 +51,8 @@ public class LikeSearchCommand implements BukkitCommandExecutor {
                     for (int x = origin.getBlockX() - scopeRadius; x <= origin.getBlockX() + scopeRadius; x = (x / 16 + 1) * 16) {
                         for (int z = origin.getBlockZ() - scopeRadius; z <= origin.getBlockZ() + scopeRadius; z = (z / 16 + 1) * 16) {
                             for (Like like : plugin.likeMap.get(x, z)) {
+                                if (like.owner().equals(sender.getUniqueId())) continue;
+
                                 Location loc  = like.hologram.getLocation();
                                 double distance2d = Math.sqrt(Math.pow(origin.getX() - loc.getX(), 2) + Math.pow(origin.getZ() - loc.getZ(), 2));
                                 if (distance2d <= scopeRadius) likesInRange.add(like);
