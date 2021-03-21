@@ -41,7 +41,7 @@ public class ControlLikeViewListener implements Listener {
         if (!viewersToRespawnPoints.containsKey(event.getPlayer())) return;
 
         Location from = event.getFrom(), to = event.getTo();
-        if (to != null && (from.getX() != to.getX() || from.getY() != to.getY() || from.getZ() != to.getZ())) event.setCancelled(true);
+        if (to != null && (from.getX() != to.getX() || from.getZ() != to.getZ())) event.setCancelled(true);
     }
 
     @EventHandler
@@ -56,6 +56,7 @@ public class ControlLikeViewListener implements Listener {
     public void disableViewingMode(Player viewer) {
         viewersToLikesViewed.remove(viewer);
         viewersToUIs.remove(viewer);
+
     }
 
 }
