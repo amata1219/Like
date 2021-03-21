@@ -31,11 +31,13 @@ public class TourConfig extends Config {
         ConfigurationSection notification = config.getConfigurationSection("Notification");
         notificationIsEnabled = notification.getBoolean("Enabled");
         notificationMessage = color(notification.getString("Message"));
-        notificationIntervalTicks = config.getLong("Interval");
+        notificationIntervalTicks = notification.getInt("Interval") * 60 * 20;
+        System.out.println("interval: " + notificationIntervalTicks);
 
         ConfigurationSection guide = config.getConfigurationSection("Guide");
         guideMessage = color(guide.getString("Message"));
-        guideDelayTicks = guide.getLong("Delay");
+        guideDelayTicks = guide.getLong("Delay") * 20;
+        System.out.println("Delay: " + guideDelayTicks);
 
         likes = config.getStringList("Likes ids")
                 .stream()
@@ -59,7 +61,7 @@ public class TourConfig extends Config {
 
     public void setNotificationIsEnabled(boolean notificationIsEnabled) {
         this.notificationIsEnabled = notificationIsEnabled;
-        config().set("Notification", notificationIsEnabled);
+        config().set("Notification.Enabled", notificationIsEnabled);
         update();
     }
 
