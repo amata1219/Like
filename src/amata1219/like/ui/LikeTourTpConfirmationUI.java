@@ -18,8 +18,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
-import java.util.Comparator;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
 public class LikeTourTpConfirmationUI implements InventoryUI {
@@ -37,7 +35,7 @@ public class LikeTourTpConfirmationUI implements InventoryUI {
 
     @Override
     public Function<Player, Layout> layout() {
-        return build(Lines.x3, (p, l) -> {
+        return build(Lines.x1, (p, l) -> {
             l.title = "テレポートの実行確認画面";
 
             l.defaultSlot(s -> s.icon(i -> {
@@ -98,41 +96,6 @@ public class LikeTourTpConfirmationUI implements InventoryUI {
                 s.onClick(e -> previous.open(p));
             }, 7);
 
-            l.put(s -> {
-                s.icon(i -> {
-                    i.material = config.material(MainConfig.IconType.OWNERS_OTHER_LIKES);
-                    i.displayName = Text.color("&a-この作者の他のLike情報");
-                });
-            }, 18);
-
-            AtomicInteger slotIndex = new AtomicInteger(19);
-            plugin.players.get(like.owner()).likes.values().stream()
-                .filter(like -> like != this.like)
-                .sorted(Comparator.comparing(Like::favorites).reversed())
-                .limit(8)
-                .forEach(like -> l.put(s -> {
-                    s.icon(i -> {
-                        i.material = config.material(MainConfig.IconType.LIKE);
-                        i.displayName = Text.of("&a&l-%s").format(like.id);
-                        i.amount = Math.min(Math.max(like.favorites(), 1), 64);
-                        i.lore(
-                            "",
-                            Text.of("&7-%s").format(like.description()),
-                            "",
-                            Text.of("&7-作成者: &a-%s").format(like.ownerName()),
-                            Text.of("&7-お気に入り数: &a-%s").format(like.favorites()),
-                            Text.of("&7-作成日時: &a-%s").format(like.creationTimestamp()),
-                            Text.of("&7-ワールド: &a-%s").format(config.worldAlias(like.world())),
-                            Text.of("&7-座標: &a-X-&7-: &a-%s Y-&7-: &a-%s Z-&7-: &a-%s").format(like.x(), like.y(), like.z()),
-                            "",
-                            Text.color("&7-クリック: 下記機能の実行確認画面に移行します！"),
-                            Text.of("&7-: &a-このLikeにテレポートする！ (%sMP)").format(config.teleportationCosts()),
-                            Text.of("&7-: &a-半径%sm以内にいるプレイヤーをこのLikeに招待する！ (%sMP)").format(config.radiusOfInvitationScope(), config.invitationCosts())
-                        );
-                    });
-
-                    s.onClick(e -> new TpInvConfirmationUI(like, this).open(p));
-                }, slotIndex.getAndIncrement()));
         });
     }
 
