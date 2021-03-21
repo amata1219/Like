@@ -11,6 +11,7 @@ import amata1219.like.bryionake.interval.Endpoint;
 import amata1219.like.bryionake.interval.Interval;
 import amata1219.like.config.MainConfig;
 import amata1219.like.ui.LikeRangeSearchingUI;
+import com.google.common.base.Joiner;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -34,7 +35,7 @@ public class LikeSearchCommand implements BukkitCommandExecutor {
         );
 
         CommandContext<Player> search = define(
-                () -> "",
+                () -> ChatColor.GRAY + "指定範囲内のLike一覧を表示する: /likesearch [半径] (/likesc [半径])",
                 (sender, unparsedArguments, parsedArguments) -> {
                     int scopeRadius = parsedArguments.poll();
                     Location origin = sender.getLocation();
