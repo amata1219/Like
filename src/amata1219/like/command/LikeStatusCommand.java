@@ -29,7 +29,7 @@ public class LikeStatusCommand implements BukkitCommandExecutor {
 						return;
 					}
 					like.setDescription(desc);
-					sender.sendMessage(ChatColor.GREEN + "Like(ID: " + like.id + ")の説明文を[" + ChatColor.RESET + like.description() + "]" + ChatColor.RESET + "に設定しました。");
+					sender.sendMessage(ChatColor.GREEN + "Like(ID: " + like.id + ")の説明文を[" + ChatColor.RESET + like.description() + ChatColor.GREEN + "]に設定しました。");
 				},
 				ParserTemplates.like,
 				Parsers.str
