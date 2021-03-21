@@ -24,7 +24,7 @@ public class OpenRangeSearchConfirmationUICommand implements BukkitCommandExecut
 
     @Override
     public CommandContext<CommandSender> executor() {
-        return null;
+        return executor;
     }
 
 }
