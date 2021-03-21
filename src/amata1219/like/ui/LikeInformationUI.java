@@ -84,7 +84,7 @@ public class LikeInformationUI implements InventoryUI {
 					component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new net.md_5.bungee.api.chat.hover.content.Text(ChatColor.GRAY + "Click to copy the ID!")));
 					p.spigot().sendMessage(component);
 					if (e.clickType.isLeftClick()) p.closeInventory();
-					SoundEffects.CLICK_ON_INVENTORY.play(p);
+					SoundEffects.OPERATED.play(p);
 				});
 			}, 5);
 			
@@ -99,45 +99,45 @@ public class LikeInformationUI implements InventoryUI {
 					plugin.players.get(p.getUniqueId()).unfavoriteLike(like);
 					p.closeInventory();
 					Text.of("&c-お気に入りを解除しました。").sendTo(p);
+					SoundEffects.CANCEL.play(p);
 				});
 			}, 6);
 			
-			l.put(s -> {
-				s.icon(i -> {
-					i.material = config.material(IconType.OWNERS_OTHER_LIKES);
-					i.displayName = Text.color("&a-この作者の他のLike情報");
-				});
-			}, 18);
+			l.put(s -> s.icon(i -> {
+				i.material = config.material(IconType.OWNERS_OTHER_LIKES);
+				i.displayName = Text.color("&a-この作者の他のLike情報");
+			}), 18);
 			
 			AtomicInteger slotIndex = new AtomicInteger(19);
 			plugin.players.get(like.owner()).likes.values().stream()
 			.filter(like -> like != this.like)
 			.sorted(Comparator.comparing(Like::favorites).reversed())
 			.limit(8)
-			.forEach(like -> {
-				l.put(s -> {
-					s.icon(i -> {
-						i.material = config.material(IconType.LIKE);
-						i.displayName = Text.of("&a&l-%s").format(like.id);
-						i.amount = Math.min(Math.max(like.favorites(), 1), 64);
-						i.lore(
-							Text.of("&7-%s").format(like.description()),
-							"",
-							Text.of("&7-作成者: &a-%s").format(like.ownerName()),
-							Text.of("&7-お気に入り数: &a-%s").format(like.favorites()),
-							Text.of("&7-作成日時: &a-%s").format(like.creationTimestamp()),
-							Text.of("&7-ワールド: &a-%s").format(config.worldAlias(like.world())),
-							Text.of("&7-座標: &a-X-&7-: &a-%s Y-&7-: &a-%s Z-&7-: &a-%s").format(like.x(), like.y(), like.z()),
-							"",
-							Text.color("&7-クリック: &a-下記機能の実行確認画面に移行します！"),
-							Text.of("&7-: &a-このLikeにテレポートする！ (%sMP)").format(config.teleportationCosts()),
-							Text.of("&7-: &a-半径%sm以内にいるプレイヤーをこのLikeに招待する！ (%sMP)").format(config.radiusOfInvitationScope(), config.invitationCosts())
-						);
-					});
-					
-					s.onClick(e -> new TpInvConfirmationUI(like, this).open(p));
-				}, slotIndex.getAndIncrement());
-			});
+			.forEach(like -> l.put(s -> {
+				s.icon(i -> {
+					i.material = config.material(IconType.LIKE);
+					i.displayName = Text.of("&a&l-%s").format(like.id);
+					i.amount = Math.min(Math.max(like.favorites(), 1), 64);
+					i.lore(
+						Text.of("&7-%s").format(like.description()),
+						"",
+						Text.of("&7-作成者: &a-%s").format(like.ownerName()),
+						Text.of("&7-お気に入り数: &a-%s").format(like.favorites()),
+						Text.of("&7-作成日時: &a-%s").format(like.creationTimestamp()),
+						Text.of("&7-ワールド: &a-%s").format(config.worldAlias(like.world())),
+						Text.of("&7-座標: &a-X-&7-: &a-%s Y-&7-: &a-%s Z-&7-: &a-%s").format(like.x(), like.y(), like.z()),
+						"",
+						Text.color("&7-クリック: &a-下記機能の実行確認画面に移行します！"),
+						Text.of("&7-: &a-このLikeにテレポートする！ (%sMP)").format(config.teleportationCosts()),
+						Text.of("&7-: &a-半径%sm以内にいるプレイヤーをこのLikeに招待する！ (%sMP)").format(config.radiusOfInvitationScope(), config.invitationCosts())
+					);
+				});
+
+				s.onClick(e -> {
+					new TpInvConfirmationUI(like, this).open(p);
+					SoundEffects.OPERATED.play(p);
+				});
+			}, slotIndex.getAndIncrement()));
 		});
 	}
 
