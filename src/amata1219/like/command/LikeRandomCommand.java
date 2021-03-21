@@ -48,6 +48,7 @@ public class LikeRandomCommand implements BukkitCommandExecutor {
                 config.randomTeleportationMessage(),
                 ChatColor.GRAY + "・説明文: " + ChatColor.RESET + like.description(),
                 ChatColor.GRAY + "・ID: " + ChatColor.GREEN + like.id,
+                ChatColor.GRAY + "・作成者: " + ChatColor.GREEN + like.ownerName(),
                 ChatColor.GRAY + "・お気に入り数: " + ChatColor.GREEN + like.favorites(),
                 ChatColor.GRAY + "・作成日時: " + ChatColor.GREEN + like.creationTimestamp(),
                 ChatColor.GRAY + "・座標: " + ChatColor.GREEN + config.worldAlias(like.world()) + ", " + like.x() + ", " + like.y() + ", " + like.z(),
