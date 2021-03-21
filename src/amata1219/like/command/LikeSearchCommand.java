@@ -10,6 +10,7 @@ import amata1219.like.bryionake.dsl.parser.FailableParser;
 import amata1219.like.bryionake.interval.Endpoint;
 import amata1219.like.bryionake.interval.Interval;
 import amata1219.like.config.MainConfig;
+import amata1219.like.sound.SoundEffects;
 import amata1219.like.ui.LikeRangeSearchingUI;
 import com.google.common.base.Joiner;
 import org.bukkit.ChatColor;
@@ -37,6 +38,12 @@ public class LikeSearchCommand implements BukkitCommandExecutor {
         CommandContext<Player> search = define(
                 () -> ChatColor.GRAY + "指定範囲内のLike一覧を表示する: /likesearch [半径] (/likesc [半径])",
                 (sender, unparsedArguments, parsedArguments) -> {
+                    if (Main.plugin().controlLikeViewListener.viewersToRespawnPoints.containsKey(sender)) {
+                        sender.sendMessage(ChatColor.RED + "視点移動中にこのコマンドを実行することはできません。");
+                        SoundEffects.FAILED.play(sender);
+                        return;
+                    }
+
                     int scopeRadius = parsedArguments.poll();
                     Location origin = sender.getLocation();
                     List<Like> likesInRange = new ArrayList<>();
