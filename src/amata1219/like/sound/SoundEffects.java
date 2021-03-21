@@ -8,8 +8,8 @@ public class SoundEffects {
 
     public static final SoundEffect SELECT_RANDOM_LIKE = new SoundEffect(ENTITY_PLAYER_LEVELUP, 1f, 1.2f);
 
-    public static final SoundEffect TELEPORTED_TO_LIKE = new SoundEffect(ENTITY_PLAYER_LEVELUP, 1f, 1.8f);
+    public static final SoundEffect SUCCEEDED = new SoundEffect(ENTITY_PLAYER_LEVELUP, 1f, 1.8f);
 
-    public static final SoundEffect CLICK_ON_INVENTORY = new SoundEffect(ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 2.0f);
+    public static final SoundEffect OPERATION = new SoundEffect(ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 2.0f);
 
 }
