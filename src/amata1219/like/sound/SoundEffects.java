@@ -12,6 +12,8 @@ public class SoundEffects {
 
     public static final SoundEffect SUCCEEDED = new SoundEffect(ENTITY_PLAYER_LEVELUP, 1f, 1.8f);
 
-    public static final SoundEffect FAILED = new SoundEffect(BLOCK_CHAIN_BREAK, 1f, 1.8f);
+    public static final SoundEffect CANCEL = new SoundEffect(BLOCK_CHAIN_BREAK, 1f, 1.8f);
+
+    public static final SoundEffect FAILED = new SoundEffect(BLOCK_ANVIL_DESTROY, 1f, 1f);
 
 }
