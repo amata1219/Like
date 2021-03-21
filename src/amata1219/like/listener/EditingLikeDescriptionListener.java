@@ -37,6 +37,7 @@ public class EditingLikeDescriptionListener implements Listener {
 
 		if (event.getMessage().equalsIgnoreCase("cancel")) {
 			player.sendMessage(ChatColor.RED + "Like(ID: " + targetLikeId + ")の表示内容の編集をキャンセルしました。");
+			SoundEffects.CANCEL.play(player);
 			return;
 		}
 
