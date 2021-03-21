@@ -81,7 +81,7 @@ public class LikeEditingUI implements InventoryUI {
 					component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new net.md_5.bungee.api.chat.hover.content.Text(ChatColor.GRAY + "Click to copy the ID!")));
 					p.spigot().sendMessage(component);
 					if (e.clickType.isLeftClick()) p.closeInventory();
-					SoundEffects.CLICK_ON_INVENTORY.play(p);
+					SoundEffects.OPERATED.play(p);
 				});
 			}, 5);
 			
@@ -98,6 +98,7 @@ public class LikeEditingUI implements InventoryUI {
 						"&a-新しい表示内容をチャット欄に入力して下さい。",
 						"cancelと入力した場合はキャンセルされます。"
 					).sendTo(p);
+					SoundEffects.OPERATED.play(p);
 				});
 			}, 6);
 			
@@ -107,7 +108,10 @@ public class LikeEditingUI implements InventoryUI {
 					i.displayName = Text.color("&c-Likeの削除");
 				});
 				
-				s.onClick(e -> new DeletingLikeConfirmationUI(like).open(p));
+				s.onClick(e -> {
+					new DeletingLikeConfirmationUI(like).open(p);
+					SoundEffects.OPERATED.play(p);
+				});
 			}, 7);
 		});
 	}
