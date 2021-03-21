@@ -1,6 +1,8 @@
 package amata1219.like.listener;
 
 import amata1219.like.Main;
+import amata1219.like.sound.SoundEffects;
+import amata1219.like.task.TaskRunner;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -38,9 +40,13 @@ public class EditingLikeDescriptionListener implements Listener {
 			return;
 		}
 
-		plugin.likes.get(targetLikeId).setDescription(ChatColor.translateAlternateColorCodes('&', event.getMessage()));
+		String coloredMessage = ChatColor.translateAlternateColorCodes('&', event.getMessage());
+		TaskRunner.runTaskSynchronously(task -> plugin.likes.get(targetLikeId).setDescription(coloredMessage));
 
-		player.sendMessage(ChatColor.GREEN + "Like(ID: " + targetLikeId + ")の表示内容を編集しました。");
+		player.sendMessage(ChatColor.GREEN + "[Like]: Like(ID: " + targetLikeId + ")の表示内容を編集しました。");
+		player.sendMessage(ChatColor.GREEN + "[Like]: 表示内容 > " + ChatColor.RESET + coloredMessage);
+
+		SoundEffects.SUCCEEDED.play(player);
 	}
 	
 	@EventHandler
