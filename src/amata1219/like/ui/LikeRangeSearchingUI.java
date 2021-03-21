@@ -5,10 +5,12 @@ import amata1219.like.config.MainConfig;
 import amata1219.like.listener.ControlLikeViewListener;
 import amata1219.like.masquerade.dsl.component.Layout;
 import amata1219.like.masquerade.text.Text;
+import amata1219.like.sound.SoundEffects;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -54,13 +56,16 @@ public class LikeRangeSearchingUI extends AbstractSortableLikeListUI {
                 });
 
                 s.onClick(e -> {
+                    Location respawnPoint = player.getLocation();
                     player.teleport(like.hologram.getLocation());
                     ControlLikeViewListener listener = plugin.controlLikeViewListener;
-                    listener.viewersToRespawnPoints.put(player, player.getLocation());
+                    listener.viewersToRespawnPoints.put(player, respawnPoint);
                     listener.viewersToLikesViewed.put(player, like);
                     listener.viewersToUIs.put(player, this);
 
-                    TextComponent component = new TextComponent(ChatColor.GREEN + "[Like]: テレポートの確定・キャンセルはこちらをクリック！ 専用GUIが開きます！");
+                    SoundEffects.OPERATED.play(player);
+
+                    TextComponent component = new TextComponent(ChatColor.GREEN + "[Like]: " + ChatColor.GRAY + "テレポートの確定・キャンセルはこちらを" + ChatColor.GREEN + "クリック" + ChatColor.GRAY + "！  " + ChatColor.GREEN + "専用GUI" + ChatColor.GRAY + "が開きます！");
                     component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/likeorscu"));
                     component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new net.md_5.bungee.api.chat.hover.content.Text("左クリックで専用GUIを表示")));
                     player.spigot().sendMessage(component);
