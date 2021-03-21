@@ -16,6 +16,7 @@ import amata1219.like.chunk.LikeMap;
 import amata1219.like.config.LikeLimitDatabase;
 import amata1219.like.config.MainConfig;
 import amata1219.like.config.TourConfig;
+import amata1219.like.sound.SoundEffects;
 import amata1219.like.task.TourRegularNotificationTask;
 import com.gmail.filoghost.holographicdisplays.disk.HologramDatabase;
 import com.google.common.base.Joiner;
@@ -24,6 +25,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -339,6 +341,7 @@ public class LikeOperatorCommand implements BukkitCommandExecutor {
 						sender.sendMessage(ChatColor.GRAY + "・" + like.id);
 						sender.sendMessage("- " + like.description());
 					}
+					if (sender instanceof Player) SoundEffects.SUCCEEDED.play((Player) sender);
 				},
 				tourLikesCount
 		);
