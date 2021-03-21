@@ -75,7 +75,7 @@
   #半径何ブロックの範囲を検索するか
 'Random teleportation':
 #/likerandomコマンドについて
-  'Message': "&a行き先に次のLikeが選ばれました！"
+  'Message': "&3&l【Like TP】行き先に次のLikeが選ばれました！"
   #コマンド実行後、Likeがランダムに選ばれた時に表示されるメッセージ
   'Delayed ticks': 160
   #何tick後にテレポートするか
