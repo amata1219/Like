@@ -22,7 +22,7 @@ public class ControlLikeViewListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onTeleport(PlayerTeleportEvent event) {
         Player player = event.getPlayer();
-        if (viewersToRespawnPoints.containsKey(player)) return;
+        if (!viewersToRespawnPoints.containsKey(player)) return;
 
         switch (event.getCause()) {
             case PLUGIN:
