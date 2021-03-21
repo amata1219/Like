@@ -8,6 +8,7 @@ import amata1219.like.Like;
 import amata1219.like.Main;
 import amata1219.like.config.MainConfig;
 import amata1219.like.sound.SoundEffects;
+import amata1219.like.task.TaskRunner;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -25,27 +26,27 @@ public class LikeRandomCommand implements BukkitCommandExecutor {
             return;
         }
 
-        SoundEffects.SELECT_RANDOM_LIKE.play(sender);
+        SoundEffects.PREPARED.play(sender);
 
         MainConfig config = Main.plugin().config();
 
         sender.sendMessage(new String[]{
                 config.randomTeleportationMessage(),
-                ChatColor.GRAY + like.description(),
-                ChatColor.GRAY + "・ID：" + like.id,
-                ChatColor.GRAY + "・お気に入り数：" + like.favorites(),
-                ChatColor.GRAY + "・作成日時：" + like.creationTimestamp(),
-                ChatColor.GRAY + "・座標：" + config.worldAlias(like.world()) + ", " + like.x() + ", " + like.y() + ", " + like.z()
+                ChatColor.GRAY + "・説明文: " + ChatColor.RESET + like.description(),
+                ChatColor.GRAY + "・ID: " + ChatColor.GREEN + like.id,
+                ChatColor.GRAY + "・お気に入り数: " + ChatColor.GREEN + like.favorites(),
+                ChatColor.GRAY + "・作成日時: " + ChatColor.GREEN + like.creationTimestamp(),
+                ChatColor.GRAY + "・座標: " + ChatColor.GREEN + config.worldAlias(like.world()) + ", " + like.x() + ", " + like.y() + ", " + like.z()
         });
 
-        ChainedTask.asynchronously(10, () -> {
-            String remainingSeconds = String.format("%.2f", config.randomTeleportationDelayedTicks() / 20.0f);
-            sender.sendMessage(ChatColor.GREEN + "" + remainingSeconds + "秒後にテレポートします！");
-        }).runTaskLaterSynchronously(config.randomTeleportationDelayedTicks(), () -> {
+        String remainingSeconds = String.format("%.1f", config.randomTeleportationDelayedTicks() / 20.0f);
+        sender.sendMessage(ChatColor.GREEN + "" + remainingSeconds + "秒後にテレポートします！");
+
+        TaskRunner.runTaskLaterSynchronously(task -> {
             sender.teleport(like.hologram.getLocation());
-            SoundEffects.TELEPORTED_TO_LIKE.play(sender);
+            SoundEffects.SUCCEEDED.play(sender);
             sender.sendMessage(ChatColor.GREEN + "Like(ID: " + like.id + ")にテレポートしました！");
-        });
+        }, config.randomTeleportationDelayedTicks());
     });
 
     private static Like selectLikeRandomly() {
