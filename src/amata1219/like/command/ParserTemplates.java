@@ -27,7 +27,10 @@ public class ParserTemplates {
         return Main.plugin().players.containsKey(uuid) ? success(Bukkit.getOfflinePlayer(uuid)) : error("指定されたプレイヤーは存在しません。");
     });
 
-    public static final FailableParser<Bookmark> bookmark = define(Main.plugin().bookmarks::get, () -> "指定されたブックマークは存在しません。");
+    public static final FailableParser<Bookmark> bookmark = arg -> {
+        HashMap<String, Bookmark> bookmarks = Main.plugin().bookmarks;
+        return bookmarks.containsKey(arg) ? success(bookmarks.get(arg)) : error("指定されたブックマークは存在しません。");
+    };
 
     public static final FailableParser<Order> order = define(arg -> Order.valueOf(arg.toUpperCase()), () -> "ソート順は newest か oldest を指定して下さい");
 
