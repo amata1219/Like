@@ -11,6 +11,7 @@ import amata1219.like.masquerade.text.Text;
 import amata1219.like.sound.SoundEffects;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -63,8 +64,9 @@ public class LikeRangeSearchTpConfirmationUI implements InventoryUI {
 
                 s.onClick(e -> {
                     double costs = config.teleportationCosts();
-                    if(!economy.has(player, costs)){
+                    if (!economy.has(player, costs)) {
                         Text.of("&c-所持金が足りません。テレポートするには%sMP必要です。").apply(costs).sendTo(player);
+                        SoundEffects.FAILED.play(player);
                         return;
                     }
                     economy.withdrawPlayer(player, costs);
@@ -76,7 +78,7 @@ public class LikeRangeSearchTpConfirmationUI implements InventoryUI {
 
                     player.closeInventory();
 
-                    SoundEffects.TELEPORTED_TO_LIKE.play(player);
+                    SoundEffects.SUCCEEDED.play(player);
                     config.teleportationText().apply(like).accept(player::sendMessage);
                 });
             }, 6);
@@ -96,6 +98,9 @@ public class LikeRangeSearchTpConfirmationUI implements InventoryUI {
                     player.teleport(respawnPoint);
 
                     previous.open(player);
+
+                    player.sendMessage(ChatColor.RED + "元の場所に戻りました。");
+                    SoundEffects.CANCEL.play(player);
                 });
             }, 7);
 
