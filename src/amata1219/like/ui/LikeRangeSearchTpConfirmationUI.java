@@ -70,7 +70,7 @@ public class LikeRangeSearchTpConfirmationUI implements InventoryUI {
                         return;
                     }
                     economy.withdrawPlayer(player, costs);
-                    economy.depositPlayer(Bukkit.getOfflinePlayer(like.owner()), config.teleportationCosts());
+                    economy.depositPlayer(Bukkit.getOfflinePlayer(like.owner()), costs);
 
                     ControlLikeViewListener listener = plugin.controlLikeViewListener;
                     listener.viewersToRespawnPoints.remove(player);

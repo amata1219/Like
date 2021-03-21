@@ -8,6 +8,8 @@ import amata1219.like.Main;
 import amata1219.like.config.MainConfig;
 import amata1219.like.sound.SoundEffects;
 import amata1219.like.task.TaskRunner;
+import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -20,9 +22,10 @@ public class LikeRandomCommand implements BukkitCommandExecutor {
 
     private final CommandContext<CommandSender> executor = define(CommandSenderCasters.casterToPlayer, (sender, unparsedArguments, parsedArguments) -> {
         Main plugin = Main.plugin();
+        Economy economy = plugin.economy();
         MainConfig config = Main.plugin().config();
         double costs = config.randomTeleportationCosts();
-        if (!plugin.economy().has(sender, costs)) {
+        if (!economy.has(sender, costs)) {
             sender.sendMessage(ChatColor.RED + "所持金が足りません。テレポートするには" + costs + "MP必要です。");
             SoundEffects.FAILED.play(sender);
             return;
@@ -35,6 +38,9 @@ public class LikeRandomCommand implements BukkitCommandExecutor {
             return;
         }
 
+        economy.withdrawPlayer(sender, costs);
+        economy.depositPlayer(Bukkit.getOfflinePlayer(like.owner()), costs);
+
         SoundEffects.PREPARED.play(sender);
 
         String remainingSeconds = String.format("%.1f", config.randomTeleportationDelayedTicks() / 20.0f);
@@ -46,9 +52,8 @@ public class LikeRandomCommand implements BukkitCommandExecutor {
                 ChatColor.GRAY + "・お気に入り数: " + ChatColor.GREEN + like.favorites(),
                 ChatColor.GRAY + "・作成日時: " + ChatColor.GREEN + like.creationTimestamp(),
                 ChatColor.GRAY + "・座標: " + ChatColor.GREEN + config.worldAlias(like.world()) + ", " + like.x() + ", " + like.y() + ", " + like.z(),
-                ChatColor.GREEN + "消費MPは" + costs + "MPです。",
+                ChatColor.RED + "" + costs + "MPを消費しました。",
                 ChatColor.GREEN + "" + remainingSeconds + "秒後にテレポートします！"
-
         });
 
         TaskRunner.runTaskLaterSynchronously(task -> {
