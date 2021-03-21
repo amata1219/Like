@@ -5,6 +5,7 @@ import amata1219.like.Main;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -72,6 +73,9 @@ public class TourConfig extends Config {
     }
 
     public List<Like> likes() {
+        int before = likes.size();
+        likes.removeIf(like -> !Main.plugin().likes.containsKey(like.id));
+        if (before > likes.size()) setLikes(likes);
         return likes;
     }
 
