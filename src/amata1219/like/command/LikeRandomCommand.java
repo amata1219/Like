@@ -45,7 +45,6 @@ public class LikeRandomCommand implements BukkitCommandExecutor {
 
         String remainingSeconds = String.format("%.1f", config.randomTeleportationDelayedTicks() / 20.0f);
         sender.sendMessage(new String[]{
-                ChatColor.GREEN + "次のLikeが選ばれました！",
                 config.randomTeleportationMessage(),
                 ChatColor.GRAY + "・説明文: " + ChatColor.RESET + like.description(),
                 ChatColor.GRAY + "・ID: " + ChatColor.GREEN + like.id,
