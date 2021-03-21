@@ -45,7 +45,7 @@ public class ChunkMap<V> {
 	}
 
 	public List<V> get(long hash){
-		return map.get(hash);
+		return map.getOrDefault(hash, Collections.emptyList());
 	}
 	
 	public void put(int x, int z, V value){
