@@ -32,12 +32,10 @@ public class TourConfig extends Config {
         notificationIsEnabled = notification.getBoolean("Enabled");
         notificationMessage = color(notification.getString("Message"));
         notificationIntervalTicks = notification.getInt("Interval") * 60 * 20;
-        System.out.println("interval: " + notificationIntervalTicks);
 
         ConfigurationSection guide = config.getConfigurationSection("Guide");
         guideMessage = color(guide.getString("Message"));
         guideDelayTicks = guide.getLong("Delay") * 20;
-        System.out.println("Delay: " + guideDelayTicks);
 
         likes = config.getStringList("Likes ids")
                 .stream()
