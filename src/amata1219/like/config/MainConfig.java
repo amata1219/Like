@@ -34,8 +34,10 @@ public class MainConfig extends Config {
 	private int radiusOfInvitationScope;
 	private String invitationMessage;
 	private int rangeSearchRadiusLimit;
+	private double rangeSearchTeleportationCosts;
 	private String randomTeleportationMessage;
 	private long randomTeleportationDelayedTicks;
+	private double randomTeleportationCosts;
 	
 	public MainConfig(){
 		super("config.yml");
@@ -97,10 +99,12 @@ public class MainConfig extends Config {
 
 		ConfigurationSection rangeSearch = config.getConfigurationSection("Range search");
 		rangeSearchRadiusLimit = rangeSearch.getInt("Radius limit");
+		rangeSearchTeleportationCosts = rangeSearch.getDouble("Teleportation costs");
 
 		ConfigurationSection randomTeleportation = config.getConfigurationSection("Random teleportation");
 		randomTeleportationMessage = color(randomTeleportation.getString("Message"));
 		randomTeleportationDelayedTicks = randomTeleportation.getLong("Delayed ticks");
+		randomTeleportationCosts = randomTeleportation.getDouble("Costs");
 	}
 	
 	public boolean canLikesBeCreatedIn(World world){
@@ -159,6 +163,10 @@ public class MainConfig extends Config {
 		return rangeSearchRadiusLimit;
 	}
 
+	public double rangeSearchTeleportationCosts() {
+		return rangeSearchTeleportationCosts;
+	}
+
 	public String randomTeleportationMessage() {
 		return randomTeleportationMessage;
 	}
@@ -166,7 +174,11 @@ public class MainConfig extends Config {
 	public long randomTeleportationDelayedTicks() {
 		return randomTeleportationDelayedTicks;
 	}
-	
+
+	public double randomTeleportationCosts() {
+		return randomTeleportationCosts;
+	}
+
 	public enum IconType {
 		
 		FAVORITES,
