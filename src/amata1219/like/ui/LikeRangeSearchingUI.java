@@ -65,13 +65,13 @@ public class LikeRangeSearchingUI extends AbstractSortableLikeListUI {
 
                     SoundEffects.OPERATED.play(player);
 
-                    TextComponent component = new TextComponent(ChatColor.GREEN + "[Like]: " + ChatColor.GRAY + "テレポートの確定・キャンセルはこのテキストを" + ChatColor.GREEN + "クリック" + ChatColor.GRAY + "！  " + ChatColor.GREEN + "専用GUI" + ChatColor.GRAY + "が開きます！");
+                    TextComponent component = new TextComponent(ChatColor.GREEN + "[Like]: " + ChatColor.GRAY + "テレポートの確定・キャンセルはこちらを" + ChatColor.GREEN + "クリック" + ChatColor.GRAY + "！  " + ChatColor.GREEN + "専用GUI" + ChatColor.GRAY + "が開きます！");
                     component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/likeorscu"));
                     component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new net.md_5.bungee.api.chat.hover.content.Text("左クリックで専用GUIを表示")));
 
-                    player.sendMessage(ChatColor.GREEN + "------------------------------------------------------------");
+                    player.sendMessage("----------------------------------------------------------------------");
                     player.spigot().sendMessage(component);
-                    player.sendMessage(ChatColor.GREEN + "------------------------------------------------------------");
+                    player.sendMessage("----------------------------------------------------------------------");
                 });
             }, slotIndex);
         });
