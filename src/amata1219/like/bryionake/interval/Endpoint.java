@@ -30,12 +30,12 @@ public class Endpoint<N extends Number & Comparable<N>> {
 
     public boolean hasBoundaryValueAbove(N value) {
         int result = value.compareTo(boundaryValue.get());
-        return containsEqualElement ?  result >= 0 : result > 0;
+        return containsEqualElement ?  result <= 0 : result < 0;
     }
 
     public boolean hasBoundaryValueBelow(N value) {
         int result = value.compareTo(boundaryValue.get());
-        return containsEqualElement ? result <= 0 : result < 0;
+        return containsEqualElement ? result >= 0 : result > 0;
     }
 
 }
