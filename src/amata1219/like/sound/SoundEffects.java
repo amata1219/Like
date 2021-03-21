@@ -14,6 +14,6 @@ public class SoundEffects {
 
     public static final SoundEffect CANCEL = new SoundEffect(BLOCK_CHAIN_BREAK, 1f, 1.8f);
 
-    public static final SoundEffect FAILED = new SoundEffect(BLOCK_ANVIL_DESTROY, 1f, 1f);
+    public static final SoundEffect FAILED = new SoundEffect(BLOCK_ANVIL_PLACE, 0.7f, 1f);
 
 }
