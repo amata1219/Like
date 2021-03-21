@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import amata1219.like.sound.SoundEffects;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -101,11 +102,15 @@ public class InvitationConfirmationUI implements InventoryUI {
 						component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponent[] {description}));
 						
 						invitee.spigot().sendMessage(component);
+
+						SoundEffects.OPERATED.play(invitee);
 					}));
 					
 					economy.withdrawPlayer(p, costs);
 					
 					Text.of("&a-%s人のプレイヤーを招待しました。").apply(playersNearby.size()).accept(p::sendMessage);
+
+					SoundEffects.SUCCEEDED.play(p);
 				});
 			}, 5);
 			

@@ -8,6 +8,7 @@ import amata1219.like.masquerade.dsl.InventoryUI;
 import amata1219.like.masquerade.dsl.component.Layout;
 import amata1219.like.masquerade.option.Lines;
 import amata1219.like.masquerade.text.Text;
+import amata1219.like.sound.SoundEffects;
 import amata1219.like.task.TaskRunner;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -43,22 +44,20 @@ public class LikeTourTpConfirmationUI implements InventoryUI {
                 i.displayName = " ";
             }));
 
-            l.put(s -> {
-                s.icon(i -> {
-                    i.material = config.material(MainConfig.IconType.LIKE);
-                    i.displayName = Text.of("&a&l-%s").format(like.id);
-                    i.amount = Math.min(Math.max(like.favorites(), 1), 64);
-                    i.lore(
-                            Text.of("&7-%s").format(like.description()),
-                            "",
-                            Text.of("&7-作成者: &a-%s").format(like.ownerName()),
-                            Text.of("&7-お気に入り数: &a-%s").format(like.favorites()),
-                            Text.of("&7-作成日時: &a-%s").format(like.creationTimestamp()),
-                            Text.of("&7-ワールド: &a-%s").format(config.worldAlias(like.world())),
-                            Text.of("&7-座標: &a-X-&7-: &a-%s Y-&7-: &a-%s Z-&7-: &a-%s").format(like.x(), like.y(), like.z())
-                    );
-                });
-            }, 1);
+            l.put(s -> s.icon(i -> {
+                i.material = config.material(MainConfig.IconType.LIKE);
+                i.displayName = Text.of("&a&l-%s").format(like.id);
+                i.amount = Math.min(Math.max(like.favorites(), 1), 64);
+                i.lore(
+                        Text.of("&7-%s").format(like.description()),
+                        "",
+                        Text.of("&7-作成者: &a-%s").format(like.ownerName()),
+                        Text.of("&7-お気に入り数: &a-%s").format(like.favorites()),
+                        Text.of("&7-作成日時: &a-%s").format(like.creationTimestamp()),
+                        Text.of("&7-ワールド: &a-%s").format(config.worldAlias(like.world())),
+                        Text.of("&7-座標: &a-X-&7-: &a-%s Y-&7-: &a-%s Z-&7-: &a-%s").format(like.x(), like.y(), like.z())
+                );
+            }), 1);
 
             l.put(s -> {
                 s.icon(i -> {
@@ -77,12 +76,15 @@ public class LikeTourTpConfirmationUI implements InventoryUI {
                     p.teleport(like.hologram.getLocation());
                     config.teleportationText().apply(like).accept(p::sendMessage);
 
+                    SoundEffects.SUCCEEDED.play(p);
+
                     TourConfig config = Main.plugin().tourConfig();
                     TaskRunner.runTaskLaterAsynchronously(task -> {
                         TextComponent message = new TextComponent(config.guideMessage());
                         message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/like tour"));
                         message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new net.md_5.bungee.api.chat.hover.content.Text(ChatColor.GREEN + "クリックで /like tour コマンドを実行しツアー専用UIを開きます！")));
                         p.spigot().sendMessage(message);
+                        SoundEffects.OPERATED.play(p);
                     }, config.guideDelayTicks());
                 });
             }, 4);
