@@ -19,32 +19,42 @@ public class LikeRandomCommand implements BukkitCommandExecutor {
     private static final Random RANDOM = new Random();
 
     private final CommandContext<CommandSender> executor = define(CommandSenderCasters.casterToPlayer, (sender, unparsedArguments, parsedArguments) -> {
+        Main plugin = Main.plugin();
+        MainConfig config = Main.plugin().config();
+        double costs = config.randomTeleportationCosts();
+        if (!plugin.economy().has(sender, costs)) {
+            sender.sendMessage(ChatColor.RED + "所持金が足りません。テレポートするには" + costs + "MP必要です。");
+            SoundEffects.FAILED.play(sender);
+            return;
+        }
+
         Like like = selectLikeRandomly();
         if (like == null) {
             sender.sendMessage(ChatColor.RED + "このサーバーにLikeが1つも存在しないため実行出来ません。");
+            sender.sendMessage(ChatColor.RED + "※MPは消費されていません。");
             return;
         }
 
         SoundEffects.PREPARED.play(sender);
 
-        MainConfig config = Main.plugin().config();
-
+        String remainingSeconds = String.format("%.1f", config.randomTeleportationDelayedTicks() / 20.0f);
         sender.sendMessage(new String[]{
+                ChatColor.GREEN + "次のLikeが選ばれました！",
                 config.randomTeleportationMessage(),
                 ChatColor.GRAY + "・説明文: " + ChatColor.RESET + like.description(),
                 ChatColor.GRAY + "・ID: " + ChatColor.GREEN + like.id,
                 ChatColor.GRAY + "・お気に入り数: " + ChatColor.GREEN + like.favorites(),
                 ChatColor.GRAY + "・作成日時: " + ChatColor.GREEN + like.creationTimestamp(),
-                ChatColor.GRAY + "・座標: " + ChatColor.GREEN + config.worldAlias(like.world()) + ", " + like.x() + ", " + like.y() + ", " + like.z()
-        });
+                ChatColor.GRAY + "・座標: " + ChatColor.GREEN + config.worldAlias(like.world()) + ", " + like.x() + ", " + like.y() + ", " + like.z(),
+                ChatColor.GREEN + "消費MPは" + costs + "MPです。",
+                ChatColor.GREEN + "" + remainingSeconds + "秒後にテレポートします！"
 
-        String remainingSeconds = String.format("%.1f", config.randomTeleportationDelayedTicks() / 20.0f);
-        sender.sendMessage(ChatColor.GREEN + "" + remainingSeconds + "秒後にテレポートします！");
+        });
 
         TaskRunner.runTaskLaterSynchronously(task -> {
             sender.teleport(like.hologram.getLocation());
             SoundEffects.SUCCEEDED.play(sender);
-            sender.sendMessage(ChatColor.GREEN + "Like(ID: " + like.id + ")にテレポートしました！");
+            sender.sendMessage(ChatColor.GREEN + "Like (ID: " + like.id + ") にテレポートしました！");
         }, config.randomTeleportationDelayedTicks());
     });
 
