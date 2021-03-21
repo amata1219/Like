@@ -329,8 +329,8 @@ public class LikeOperatorCommand implements BukkitCommandExecutor {
 						ChatColor.GRAY + "ツアー用のLikeを指定数分ランダムにピックアップする：/likeop tour shuffle [ピックアップする個数]"
 				),
 				(sender, unparsedArguments, parsedArguments) -> {
-					int count = parsedArguments.poll();
 					List<Like> likes = new ArrayList<>(Main.plugin().likes.values());
+					int count = Math.min(parsedArguments.poll(), likes.size());
 					Collections.shuffle(likes);
 					likes = likes.subList(0, count);
 					Main.plugin().tourConfig().setLikes(likes);
