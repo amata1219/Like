@@ -3,7 +3,7 @@ main: amata1219.like.Main
 version: 3.0.1
 depend: [HolographicDisplays, Vault, PCGF_PluginLib]
 api-version: 1.16
-author: amata1219(Twitter@amata1219)
+author: '@amata1219'
 
 default-permission-message: &denied You don't have <permission>
 commands:
