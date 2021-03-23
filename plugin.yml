@@ -1,6 +1,6 @@
 name: Like
 main: amata1219.like.Main
-version: 3.0.0
+version: 3.0.1
 depend: [HolographicDisplays, Vault, PCGF_PluginLib]
 api-version: 1.16
 author: amata1219(Twitter@amata1219)

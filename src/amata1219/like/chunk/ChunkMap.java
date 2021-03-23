@@ -10,15 +10,7 @@ public class ChunkMap<V> {
 	
 	private final HashMap<Long, List<V>> map = new HashMap<>();
 	
-	public boolean containsHash(Chunk chunk){
-		return containsHash(chunk.getX(), chunk.getZ());
-	}
-
-	public boolean containsHash(Location location){
-		return containsHash(location.getBlockX(), location.getBlockZ());
-	}
-
-	public boolean containsHash(int x, int z){
+	public boolean containsHash(long x, long z){
 		return containsHash(calculate(x, z));
 	}
 
@@ -40,7 +32,7 @@ public class ChunkMap<V> {
 		return get(location.getBlockX(), location.getBlockZ());
 	}
 
-	public List<V> get(int x, int z){
+	public List<V> get(long x, long z){
 		return get(calculate(x, z));
 	}
 
@@ -48,13 +40,13 @@ public class ChunkMap<V> {
 		return map.getOrDefault(hash, Collections.emptyList());
 	}
 	
-	public void put(int x, int z, V value){
+	public void put(long x, long z, V value){
 		final long hash = calculate(x, z);
 		if(containsHash(hash)) map.get(hash).add(value);
 		else map.put(hash, new ArrayList<>(Collections.singletonList(value)));
 	}
 
-	public void remove(int x, int z, V value){
+	public void remove(long x, long z, V value){
 		final long hash = calculate(x, z);
 		List<V> list = map.get(hash);
 		list.remove(value);
