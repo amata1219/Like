@@ -10,14 +10,6 @@ public class ChunkMap<V> {
 	
 	private final HashMap<Long, List<V>> map = new HashMap<>();
 	
-	public boolean containsHash(long x, long z){
-		return containsHash(calculate(x, z));
-	}
-
-	public boolean containsHash(long chunkHash){
-		return map.containsKey(chunkHash);
-	}
-	
 	public List<V> values(){
 		return map.values().stream()
 				.flatMap(List::stream)
@@ -33,7 +25,7 @@ public class ChunkMap<V> {
 	}
 
 	public List<V> get(long x, long z){
-		return get(calculate(x, z));
+		return get(hash(x, z));
 	}
 
 	public List<V> get(long hash){
@@ -41,19 +33,20 @@ public class ChunkMap<V> {
 	}
 	
 	public void put(long x, long z, V value){
-		final long hash = calculate(x, z);
-		if(containsHash(hash)) map.get(hash).add(value);
-		else map.put(hash, new ArrayList<>(Collections.singletonList(value)));
+		long hash = hash(x, z);
+		List<V> list = map.computeIfAbsent(hash, k -> new ArrayList<>());
+		list.add(value);
 	}
 
 	public void remove(long x, long z, V value){
-		final long hash = calculate(x, z);
+		long hash = hash(x, z);
+		if (!map.containsKey(hash)) return;
 		List<V> list = map.get(hash);
 		list.remove(value);
 		if(list.isEmpty()) map.remove(hash);
 	}
 
-	private static long calculate(long x, long z){
+	private static long hash(long x, long z) {
 		return ((x >> 4) << 32) ^ (z >> 4);
 	}
 
