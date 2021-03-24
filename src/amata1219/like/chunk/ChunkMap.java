@@ -15,7 +15,7 @@ public class ChunkMap<V> {
 				.flatMap(List::stream)
 				.collect(Collectors.toList());
 	}
-	
+
 	public List<V> get(Chunk chunk){
 		return get(chunk.getX(), chunk.getZ());
 	}
@@ -34,8 +34,7 @@ public class ChunkMap<V> {
 	
 	public void put(long x, long z, V value){
 		long hash = hash(x, z);
-		List<V> list = map.computeIfAbsent(hash, k -> new ArrayList<>());
-		list.add(value);
+		map.computeIfAbsent(hash, k -> new ArrayList<>()).add(value);
 	}
 
 	public void remove(long x, long z, V value){
@@ -48,7 +47,7 @@ public class ChunkMap<V> {
 		if(list.isEmpty()) map.remove(hash);
 	}
 
-	private static long hash(long x, long z) {
+	public static long hash(long x, long z) {
 		long chunkX = x >> 4, chunkZ = z >> 4;
 		return (chunkX << 32) ^ chunkZ;
 	}

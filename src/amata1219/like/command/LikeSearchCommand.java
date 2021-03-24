@@ -9,6 +9,7 @@ import amata1219.like.bryionake.dsl.context.CommandContext;
 import amata1219.like.bryionake.dsl.parser.FailableParser;
 import amata1219.like.bryionake.interval.Endpoint;
 import amata1219.like.bryionake.interval.Interval;
+import amata1219.like.chunk.ChunkMap;
 import amata1219.like.config.MainConfig;
 import amata1219.like.sound.SoundEffects;
 import amata1219.like.ui.LikeRangeSearchingUI;
@@ -45,16 +46,16 @@ public class LikeSearchCommand implements BukkitCommandExecutor {
                     }
 
                     int scopeRadius = parsedArguments.poll();
+
                     Location origin = sender.getLocation();
                     List<Like> likesInRange = new ArrayList<>();
                     Main plugin = Main.plugin();
-                    for (int x = origin.getBlockX() - scopeRadius; x <= origin.getBlockX() + scopeRadius; x = (x / 16 + 1) * 16) {
-                        for (int z = origin.getBlockZ() - scopeRadius; z <= origin.getBlockZ() + scopeRadius; z = (z / 16 + 1) * 16) {
-                            for (Like like : plugin.likeMap.get(x, z)) {
+                    for (int chunkX = (origin.getBlockX() - scopeRadius) >> 4; chunkX <= (origin.getBlockX() + scopeRadius) >> 4; chunkX++) {
+                        for (int chunkZ = (origin.getBlockZ() - scopeRadius) >> 4; chunkZ <= (origin.getBlockZ() + scopeRadius) >> 4; chunkZ++) {
+                            for (Like like : plugin.likeMap.get(ChunkMap.hash(chunkX << 4, chunkZ << 4))) {
                                 if (like.owner().equals(sender.getUniqueId())) continue;
 
-                                Location loc  = like.hologram.getLocation();
-                                double distance2d = Math.sqrt(Math.pow(origin.getX() - loc.getX(), 2) + Math.pow(origin.getZ() - loc.getZ(), 2));
+                                double distance2d = Math.sqrt(Math.pow(origin.getX() - like.x(), 2) + Math.pow(origin.getZ() - like.z(), 2));
                                 if (distance2d <= scopeRadius) likesInRange.add(like);
                             }
                         }
