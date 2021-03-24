@@ -71,6 +71,8 @@ public class LikeRangeSearchingUI extends AbstractSortableLikeListUI {
 
                     player.sendMessage("----------------------------------------------------------------------");
                     player.spigot().sendMessage(component);
+                    player.sendMessage(ChatColor.RED + "※視点移動中は水平方向へ動くことができません。");
+                    player.sendMessage(ChatColor.RED + "※スタックなどの不具合が生じた場合はログアウトを行ってください。元の位置にリセットされます。");
                     player.sendMessage("----------------------------------------------------------------------");
                 });
             }, slotIndex);

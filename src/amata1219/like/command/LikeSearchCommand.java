@@ -41,6 +41,7 @@ public class LikeSearchCommand implements BukkitCommandExecutor {
                 (sender, unparsedArguments, parsedArguments) -> {
                     if (Main.plugin().controlLikeViewListener.viewersToRespawnPoints.containsKey(sender)) {
                         sender.sendMessage(ChatColor.RED + "視点移動中にこのコマンドを実行することはできません。");
+                        sender.sendMessage(ChatColor.RED + "※スタックなどの不具合が生じた場合はログアウトを行ってください。元の位置にリセットされます。");
                         SoundEffects.FAILED.play(sender);
                         return;
                     }
