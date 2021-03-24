@@ -7,7 +7,7 @@ import org.bukkit.Chunk;
 import org.bukkit.Location;
 
 public class ChunkMap<V> {
-	
+
 	private final HashMap<Long, List<V>> map = new HashMap<>();
 	
 	public List<V> values(){
@@ -41,13 +41,16 @@ public class ChunkMap<V> {
 	public void remove(long x, long z, V value){
 		long hash = hash(x, z);
 		if (!map.containsKey(hash)) return;
+
 		List<V> list = map.get(hash);
 		list.remove(value);
+
 		if(list.isEmpty()) map.remove(hash);
 	}
 
 	private static long hash(long x, long z) {
-		return ((x >> 4) << 32) ^ (z >> 4);
+		long chunkX = x >> 4, chunkZ = z >> 4;
+		return (chunkX << 32) ^ chunkZ;
 	}
 
 }
