@@ -80,6 +80,8 @@ public class TpInvConfirmationUI implements InventoryUI {
 					economy.depositPlayer(Bukkit.getOfflinePlayer(like.owner()), config.teleportationCosts());
 					p.teleport(like.hologram.getLocation());
 					config.teleportationText().apply(like).accept(p::sendMessage);
+
+					SoundEffects.SUCCEEDED.play(p);
 				});
 			}, 4);
 			
