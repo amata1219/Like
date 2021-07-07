@@ -59,13 +59,13 @@ public class LikeRangeSearchTpConfirmationUI implements InventoryUI {
             l.put(s -> {
                 s.icon(i -> {
                     i.material = config.material(MainConfig.IconType.TELEPORT_TO_LIKE);
-                    i.displayName = Text.of("&a-このLikeにテレポートする！ (%sMP)").format(config.teleportationCosts());
+                    i.displayName = Text.of("&a-このLikeにテレポートする！ (%s" + config.unitOfCost() + ")").format(config.teleportationCosts());
                 });
 
                 s.onClick(e -> {
                     double costs = config.teleportationCosts();
                     if (!economy.has(player, costs)) {
-                        Text.of("&c-所持金が足りません。テレポートするには%sMP必要です。").apply(costs).sendTo(player);
+                        Text.of("&c-テレポートコストが足りません。テレポートするには%s" + config.unitOfCost() + "必要です。").apply(costs).sendTo(player);
                         SoundEffects.FAILED.play(player);
                         return;
                     }

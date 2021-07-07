@@ -137,7 +137,7 @@ public class Like {
 	}
 	
 	public void decrementFavorites(){
-		favorites = Math.min(favorites - 1, 0);
+		favorites = Math.max(favorites - 1, 0);
 		rewriteHologramLine(0, config.likeFavoritesText().apply(favorites));
 	}
 	

@@ -53,7 +53,7 @@ public class LikeSearchCommand implements BukkitCommandExecutor {
                     Main plugin = Main.plugin();
                     for (int chunkX = (origin.getBlockX() - scopeRadius) >> 4; chunkX <= (origin.getBlockX() + scopeRadius) >> 4; chunkX++) {
                         for (int chunkZ = (origin.getBlockZ() - scopeRadius) >> 4; chunkZ <= (origin.getBlockZ() + scopeRadius) >> 4; chunkZ++) {
-                            for (Like like : plugin.likeMap.get(ChunkMap.hash(chunkX << 4, chunkZ << 4))) {
+                            for (Like like : plugin.likeMap.get(ChunkMap.hash((long) chunkX << 4, (long) chunkZ << 4))) {
                                 if (like.owner().equals(sender.getUniqueId())) continue;
 
                                 double distance2d = Math.sqrt(Math.pow(origin.getX() - like.x(), 2) + Math.pow(origin.getZ() - like.z(), 2));

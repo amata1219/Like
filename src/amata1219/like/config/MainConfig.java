@@ -38,6 +38,7 @@ public class MainConfig extends Config {
 	private String randomTeleportationMessage;
 	private long randomTeleportationDelayedTicks;
 	private double randomTeleportationCosts;
+	private String unitOfCost;
 	
 	public MainConfig(){
 		super("config.yml");
@@ -105,6 +106,8 @@ public class MainConfig extends Config {
 		randomTeleportationMessage = color(randomTeleportation.getString("Message"));
 		randomTeleportationDelayedTicks = randomTeleportation.getLong("Delayed ticks");
 		randomTeleportationCosts = randomTeleportation.getDouble("Costs");
+
+		unitOfCost = config.getString("Unit of cost");
 	}
 	
 	public boolean canLikesBeCreatedIn(World world){
@@ -177,6 +180,10 @@ public class MainConfig extends Config {
 
 	public double randomTeleportationCosts() {
 		return randomTeleportationCosts;
+	}
+
+	public String unitOfCost() {
+		return unitOfCost;
 	}
 
 	public enum IconType {

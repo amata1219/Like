@@ -58,13 +58,13 @@
 'Teleportation':
 #Likeへのテレポートについて
   'Costs': 100.0
-  #1回のテレポートで消費するMP
+  #1回のテレポートで消費するコスト
   'Message': "&3&l【Like TP】Teleported to Like(%description% by %owner%\n&3)"
   #テレポート時に表示されるメッセージ
 'Invitation':
 #Likeへの招待について
   'Costs': 100.0
-  #1回の招待で消費するMP
+  #1回の招待で消費するコスト
   'Radius of scope': 32
   #プレイヤーから半径何ブロック以内にいるプレイヤーを招待するか
   'Message': "&3&l【Like TP】%description% by %owner%\n&3 [%inviter% >> %invitee%] Click to Teleport!"
@@ -74,7 +74,7 @@
   'Radius limit': 16
   #半径何ブロックの範囲を検索するか
   'Teleportation costs': 100.0
-  #1回のテレポートで消費するMP
+  #1回のテレポートで消費するコスト
 'Random teleportation':
 #/likerandomコマンドについて
   'Message': "&3&l【Like TP】行き先に次のLikeが選ばれました！"
@@ -82,4 +82,5 @@
   'Delayed ticks': 160
   #何tick後にテレポートするか
   'Costs': 100.0
-  #1回のテレポートで消費するMP
+  #1回のテレポートで消費するコスト
+'Unit of cost': "MP"

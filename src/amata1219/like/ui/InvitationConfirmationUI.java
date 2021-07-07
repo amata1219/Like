@@ -67,13 +67,13 @@ public class InvitationConfirmationUI implements InventoryUI {
 			l.put(s -> {
 				s.icon(i -> {
 					i.material = config.material(IconType.GO_TO_LIKE_TELEPORTATION_OR_LIKE_INVITATION_CONFIRMATION_PAGE);
-					i.displayName = Text.of("&a-このLikeに近くのプレイヤーを招待する！ (%sMP)").format(config.invitationCosts());
+					i.displayName = Text.of("&a-このLikeに近くのプレイヤーを招待する！ (%s" + config.unitOfCost() + ")").format(config.invitationCosts());
 				});
 				
 				s.onClick(e -> {
 					double costs = config.invitationCosts();
 					if(!economy.has(p, costs)){
-						Text.of("&c-所持金が足りません。招待するには%sMP必要です。").apply(costs).sendTo(p);
+						Text.of("&c-所持金が足りません。招待するには%s" + config.unitOfCost() + "必要です。").apply(costs).sendTo(p);
 						return;
 					}
 					
@@ -87,7 +87,7 @@ public class InvitationConfirmationUI implements InventoryUI {
 					
 					if(playersNearby.isEmpty()){
 						Text.of("&c-近くに誰もいないため招待出来ませんでした。").sendTo(p);
-						Text.of("&7-※MPは消費されていません。").sendTo(p);
+						Text.of("&7-※招待コストは消費されていません。").sendTo(p);
 						return;
 					}
 					

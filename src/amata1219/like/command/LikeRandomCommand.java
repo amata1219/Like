@@ -26,7 +26,7 @@ public class LikeRandomCommand implements BukkitCommandExecutor {
         MainConfig config = Main.plugin().config();
         double costs = config.randomTeleportationCosts();
         if (!economy.has(sender, costs)) {
-            sender.sendMessage(ChatColor.RED + "所持金が足りません。テレポートするには" + costs + "MP必要です。");
+            sender.sendMessage(ChatColor.RED + "テレポートコストが足りません。テレポートするには" + costs + "" + config.unitOfCost() + "必要です。");
             SoundEffects.FAILED.play(sender);
             return;
         }
@@ -34,7 +34,7 @@ public class LikeRandomCommand implements BukkitCommandExecutor {
         Like like = selectLikeRandomly();
         if (like == null) {
             sender.sendMessage(ChatColor.RED + "このサーバーにLikeが1つも存在しないため実行出来ません。");
-            sender.sendMessage(ChatColor.RED + "※MPは消費されていません。");
+            sender.sendMessage(ChatColor.RED + "※テレポートコストは消費されていません。");
             return;
         }
 
@@ -52,7 +52,7 @@ public class LikeRandomCommand implements BukkitCommandExecutor {
                 ChatColor.GRAY + "・お気に入り数: " + ChatColor.GREEN + like.favorites(),
                 ChatColor.GRAY + "・作成日時: " + ChatColor.GREEN + like.creationTimestamp(),
                 ChatColor.GRAY + "・座標: " + ChatColor.GREEN + config.worldAlias(like.world()) + ", " + like.x() + ", " + like.y() + ", " + like.z(),
-                ChatColor.RED + "" + costs + "MPを消費しました。",
+                ChatColor.RED + "" + costs + "" + config.unitOfCost() + "を消費しました。",
                 ChatColor.GREEN + "" + remainingSeconds + "秒後にテレポートします！"
         });
 

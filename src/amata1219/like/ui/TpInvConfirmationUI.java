@@ -67,13 +67,13 @@ public class TpInvConfirmationUI implements InventoryUI {
 			l.put(s -> {
 				s.icon(i -> {
 					i.material = config.material(IconType.TELEPORT_TO_LIKE);
-					i.displayName = Text.of("&a-このLikeにテレポートする！ (%sMP)").format(config.teleportationCosts());
+					i.displayName = Text.of("&a-このLikeにテレポートする！ (%s" + config.unitOfCost() + ")").format(config.teleportationCosts());
 				});
 				
 				s.onClick(e -> {
 					double costs = config.teleportationCosts();
 					if(!economy.has(p, costs)){
-						Text.of("&c-所持金が足りません。テレポートするには%sMP必要です。").apply(costs).sendTo(p);
+						Text.of("&c-テレポートコストが足りません。テレポートするには%s" + config.unitOfCost() + "必要です。").apply(costs).sendTo(p);
 						return;
 					}
 					economy.withdrawPlayer(p, costs);
@@ -88,13 +88,13 @@ public class TpInvConfirmationUI implements InventoryUI {
 			l.put(s -> {
 				s.icon(i -> {
 					i.material = config.material(IconType.GO_TO_LIKE_TELEPORTATION_OR_LIKE_INVITATION_CONFIRMATION_PAGE);
-					i.displayName = Text.of("&a-このLikeに近くのプレイヤーを招待する！ (%sMP)").format(config.invitationCosts());
+					i.displayName = Text.of("&a-このLikeに近くのプレイヤーを招待する！ (%s" + config.unitOfCost() + ")").format(config.invitationCosts());
 				});
 				
 				s.onClick(e -> {
 					double costs = config.invitationCosts();
 					if(!economy.has(p, costs)){
-						Text.of("&c-所持金が足りません。招待するには%sMP必要です。").apply(costs).sendTo(p);
+						Text.of("&c-招待コストが足りません。招待するには%sMP必要です。").apply(costs).sendTo(p);
 						return;
 					}
 					
@@ -108,7 +108,7 @@ public class TpInvConfirmationUI implements InventoryUI {
 					
 					if(playersNearby.isEmpty()){
 						Text.of("&c-近くに誰もいないため招待出来ませんでした。").accept(p::sendMessage);
-						Text.of("&7-※MPは消費されていません。").accept(p::sendMessage);
+						Text.of("&7-※招待コストは消費されていません。").accept(p::sendMessage);
 						return;
 					}
 					
@@ -173,8 +173,8 @@ public class TpInvConfirmationUI implements InventoryUI {
 							Text.of("&7-座標: &a-X-&7-: &a-%s Y-&7-: &a-%s Z-&7-: &a-%s").format(like.x(), like.y(), like.z()),
 							"",
 							Text.color("&7-クリック: 下記機能の実行確認画面に移行します！"),
-							Text.of("&7-: &a-このLikeにテレポートする！ (%sMP)").format(config.teleportationCosts()),
-							Text.of("&7-: &a-半径%sm以内にいるプレイヤーをこのLikeに招待する！ (%sMP)").format(config.radiusOfInvitationScope(), config.invitationCosts())
+							Text.of("&7-: &a-このLikeにテレポートする！ (%s" + config.unitOfCost() + ")").format(config.teleportationCosts()),
+							Text.of("&7-: &a-半径%sm以内にいるプレイヤーをこのLikeに招待する！ (%s" + config.unitOfCost() + ")").format(config.radiusOfInvitationScope(), config.invitationCosts())
 						);
 					});
 					
