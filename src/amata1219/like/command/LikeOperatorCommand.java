@@ -190,7 +190,7 @@ public class LikeOperatorCommand implements BukkitCommandExecutor {
 							limitation += operand;
 							break;
 						case "sub":
-							limitation = Math.min(limitation - operand, 0);
+							limitation = Math.max(limitation - operand, 0);
 							break;
 						default:
 							sender.sendMessage(limitDescription.get());
