@@ -23,7 +23,7 @@ public class ParserTemplates {
     });
 
     public static final FailableParser<OfflinePlayer> player = str.append(name -> {
-        UUID uuid = UUIDConverter.getUUIDFromNameAsUUID(name, Bukkit.getOnlineMode());
+        UUID uuid = UUIDConverter.getUUIDFromNameAsUUID(name, true); //本来はBungeecord使っているかをチェックすべき。
         return Main.plugin().players.containsKey(uuid) ? success(Bukkit.getOfflinePlayer(uuid)) : error("指定されたプレイヤーは存在しません。");
     });
 
